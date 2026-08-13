@@ -25,16 +25,13 @@ This document serves as the authoritative technical reference for the PulseGrid 
 ## Phase 1 — Bronze Layer (Data Ingestion)
 
 ### Objective
-
 Establish the real-time ingestion foundation. Raw electricity market data from three public APIs lands into a KQL Database as the Bronze layer — append-only, no transformations, schema-on-read. Five dedicated tables capture prices, load, generation mix, cross-border flows, and weather.
 
 ---
 
 ### 1.1 Fabric Workspace Setup
 
-A new Fabric workspace named **PulseGrid** was created under the Trial license with the following description:
-
-> *Real-time energy market intelligence platform on Microsoft Fabric. Medallion lakehouse (Bronze/Silver/Gold) with live electricity price ingestion, PySpark Spark optimizations, XGBoost price-spike prediction, and a Claude + Streamlit AI agent for natural language analytics.*
+A new Fabric workspace named **PulseGrid** was created under the Trial license.
 
 **Workspace items provisioned:**
 
@@ -52,7 +49,7 @@ A new Fabric workspace named **PulseGrid** was created under the Trial license w
 
 ### 1.2 Fabric Environment — Secret Management
 
-A Fabric Environment (`pulsegrid_env`) was created to store API credentials securely as Spark properties. This ensures API keys are never hardcoded in notebook source or committed to Git.
+A Fabric Environment (`pulsegrid_env`) was created to store API credentials securely as Spark properties. API keys are never hardcoded in notebook source or committed to Git.
 
 **Spark properties configured:**
 
@@ -61,13 +58,11 @@ A Fabric Environment (`pulsegrid_env`) was created to store API credentials secu
 | `spark.pulsegrid.entsoe_token` | ENTSO-E Transparency Platform API token |
 | `spark.pulsegrid.eia_key` | EIA Open Data API key |
 
-Keys are read at runtime in notebooks via:
+Keys read at runtime via:
 ```python
 ENTSOE_API_TOKEN = spark.conf.get("spark.pulsegrid.entsoe_token")
 EIA_API_KEY      = spark.conf.get("spark.pulsegrid.eia_key")
 ```
-
-Environment published and attached to all poller notebooks.
 
 ![Environment Keys](screenshots/phase1_env_keys_added.png)
 
@@ -97,8 +92,8 @@ ENTSO-E day-ahead prices are published once per day. Polling every 5 minutes fet
 | `01c_weather_eia_poller` | Every 30 min | Open-Meteo (30 cities) + EIA (13 RTOs) | `raw_weather`, `raw_electricity_prices` (US) |
 
 **Additional protections:**
-- Exponential backoff with jitter on every API call (`2^attempt + random(0, 1.0)` seconds)
-- Poll guard — skips cycle if last run was less than minimum interval ago (state stored in Lakehouse Files)
+- Exponential backoff with jitter — `2^attempt + random(0, 1.0)` seconds
+- Poll guard — skips cycle if last run < minimum interval (state in Lakehouse Files)
 - Temperature fetched once per region per cycle — not once per record
 - All API calls wrapped in `call_with_retry()` with `MAX_RETRIES = 3`
 
@@ -112,152 +107,197 @@ ENTSO-E day-ahead prices are published once per day. Polling every 5 minutes fet
 
 ---
 
-### 1.5 Eventhouse & KQL Database
-
-An **Eventhouse** (`pulsegrid_eventhouse`) was created as the managed container for KQL databases. The default KQL database was renamed to `pulsegrid_bronze`.
-
-**Design rationale:** Eventhouse is the correct Fabric-native store for real-time append-only workloads. KQL Database provides sub-second query latency on time-series data — ideal for raw electricity ticks before promotion to Silver Delta tables.
-
----
-
-### 1.6 Bronze Tables — Schema & Design
+### 1.5 Bronze Tables — Schema & Design
 
 All 5 tables created in `pulsegrid_bronze` with 90-day retention and recoverability disabled.
 
-![All Bronze Tables Created](screenshots/phase1_bronze_all_tables_created.png)
+![Bronze Table Created](screenshots/phase1_bronze_table_created.png)
+![All Bronze Tables](screenshots/phase1_bronze_all_tables_created.png)
 
----
+| Table | Source | Frequency | Key Columns |
+|---|---|---|---|
+| `raw_electricity_prices` | ENTSO-E + EIA | Once/day + hourly | region, event_time, price_eur_mwh |
+| `raw_electricity_load` | ENTSO-E | Every 15 min | region, event_time, load_mw |
+| `raw_generation_mix` | ENTSO-E | Every 15 min | region, event_time, fuel_type, generation_mw |
+| `raw_cross_border_flows` | ENTSO-E | Every 15 min | from_region, to_region, event_time, flow_mw |
+| `raw_weather` | Open-Meteo | Every 30 min | region, event_time, temperature_c, wind_speed_ms |
 
-#### Table 1 — `raw_electricity_prices`
-
-```kql
-.create table raw_electricity_prices (
-    ingestion_time : datetime,
-    event_time     : datetime,
-    region         : string,
-    price_eur_mwh  : real,
-    load_mw        : real,
-    temperature_c  : real,
-    source         : string
-)
-```
-
-| Column | Rationale |
-|---|---|
-| `ingestion_time` | System timestamp — when record landed in Fabric |
-| `event_time` | Market timestamp from API — used for dedup in Silver |
-| `region` | Market zone (DE, FR, US-ERCOT etc.) |
-| `price_eur_mwh` | Day-ahead price EUR/MWh (USD/MWh for EIA — tagged via source) |
-| `source` | API lineage tag (ENTSO-E / EIA-ERCOT etc.) |
-
----
-
-#### Table 2 — `raw_electricity_load`
-
-```kql
-.create table raw_electricity_load (
-    ingestion_time : datetime,
-    event_time     : datetime,
-    region         : string,
-    load_mw        : real,
-    source         : string
-)
-```
-
-Actual grid load in MW — updated every 15 minutes. Key demand-side feature for ML spike predictor.
-
----
-
-#### Table 3 — `raw_generation_mix`
-
-```kql
-.create table raw_generation_mix (
-    ingestion_time : datetime,
-    event_time     : datetime,
-    region         : string,
-    fuel_type      : string,
-    generation_mw  : real,
-    source         : string
-)
-```
-
-Generation by fuel type (solar, wind, nuclear, gas, hydro etc.) — one row per fuel type per region per timestamp. Wind % and solar % are strong negative price predictors (renewables suppress prices).
-
----
-
-#### Table 4 — `raw_cross_border_flows`
-
-```kql
-.create table raw_cross_border_flows (
-    ingestion_time : datetime,
-    event_time     : datetime,
-    from_region    : string,
-    to_region      : string,
-    flow_mw        : real,
-    source         : string
-)
-```
-
-Power flows between countries — positive = export, negative = import. Net import position is a strong price spike indicator.
-
----
-
-#### Table 5 — `raw_weather`
-
-```kql
-.create table raw_weather (
-    ingestion_time  : datetime,
-    event_time      : datetime,
-    region          : string,
-    temperature_c   : real,
-    wind_speed_ms   : real,
-    humidity_pct    : real,
-    solar_radiation : real,
-    source          : string
-)
-```
-
-Four weather variables per city — temperature drives heating/cooling demand; wind speed and solar radiation directly affect renewable generation output.
-
----
-
-### 1.7 Retention Policies
-
-Applied to all 5 tables:
-
+Retention policy applied to all tables:
 ```kql
 .alter table <table_name> policy retention
 @'{"SoftDeletePeriod": "90.00:00:00", "Recoverability": "Disabled"}'
 ```
 
-90 days provides sufficient history for ML training. Recoverability disabled to conserve Trial storage capacity.
-
 ---
 
-### 1.8 Phase 1 Summary
+### 1.6 Phase 1 Summary
 
 | Item | Status |
 |---|---|
 | Fabric workspace `PulseGrid` created | ✅ |
-| Eventhouse `pulsegrid_eventhouse` provisioned | ✅ |
-| KQL Database `pulsegrid_bronze` created | ✅ |
-| Eventstream `pulsegrid_eventstream` created | ✅ |
-| Lakehouse `pulsegrid_lakehouse` created | ✅ |
-| Environment `pulsegrid_env` created + published | ✅ |
-| API keys stored as Spark properties | ✅ |
-| ENTSO-E API token registered | ✅ |
-| EIA API key registered | ✅ |
-| `raw_electricity_prices` table + retention | ✅ |
-| `raw_electricity_load` table + retention | ✅ |
-| `raw_generation_mix` table + retention | ✅ |
-| `raw_cross_border_flows` table + retention | ✅ |
-| `raw_weather` table + retention | ✅ |
+| Eventhouse + KQL Database `pulsegrid_bronze` | ✅ |
+| Eventstream `pulsegrid_eventstream` | ✅ |
+| Lakehouse `pulsegrid_lakehouse` | ✅ |
+| Environment `pulsegrid_env` + API keys | ✅ |
+| All 5 Bronze tables + retention policies | ✅ |
 
 ---
 
 ## Phase 2 — Silver Layer (PySpark Cleansing + Spark Optimizations)
 
-> 🔄 In Progress — details will be added upon completion.
+### Objective
+Read raw data from all 5 Bronze KQL tables, apply business rules and Spark optimizations, and write clean Delta tables to the Silver layer in `pulsegrid_lakehouse`. All 5 tables processed in parallel using `ThreadPoolExecutor`.
+
+---
+
+### 2.1 Architecture Decision — Parallel Processing
+
+Rather than 5 separate notebooks or sequential processing, a single notebook (`02_silver_cleansing`) processes all 5 Bronze tables concurrently using Python's `ThreadPoolExecutor`.
+
+**Why ThreadPoolExecutor works with Spark:**
+- Spark DataFrame operations are thread-safe
+- Each thread submits independent Spark jobs to the cluster
+- Spark scheduler runs jobs concurrently on available executors
+- Total wall time ≈ slowest single table (not sum of all tables)
+
+```python
+MAX_WORKERS = 5  # One thread per Bronze table
+
+with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+    futures = {executor.submit(process_table, task): task for task in SILVER_TASKS}
+    for future in as_completed(futures):
+        result = future.result()
+        results.append(result)
+```
+
+---
+
+### 2.2 Spark Optimization Techniques Applied
+
+| Technique | Where Applied | Rationale |
+|---|---|---|
+| **Predicate pushdown** | KQL reader (all tables) | Filter `ago(7d)` executes on KQL engine before data reaches Spark — reduces wire transfer |
+| **Native functions only — no UDFs** | All cleansing functions | `F.when`, `F.coalesce`, `F.upper`, `F.trim`, `F.to_timestamp` — Catalyst-visible; UDFs are opaque and add Python↔JVM serialization per row |
+| **Window function for dedup** | All tables | `row_number()` over natural key ordered by `ingestion_time DESC` — fully distributed, no `collect()` to driver |
+| **`repartition()` by region + hour** | prices, load, weather | Aligns Spark partitions with Gold aggregation access patterns |
+| **`repartition()` by region + fuel_type** | generation_mix | Aligns with Gold fuel-type aggregations |
+| **`partitionBy(year, month, day)`** | All Silver writes | Enables partition pruning on Gold reads filtered by date range |
+| **Idempotent MERGE** | All Silver writes | Safe for reruns and pipeline retries — MERGE on natural key |
+
+---
+
+### 2.3 Table-Specific Cleansing Rules
+
+#### `silver_electricity_prices`
+| Rule | Implementation |
+|---|---|
+| Price range validation | Nullify if outside `[-500, 5000]` EUR/MWh — European markets allow negative prices during oversupply |
+| Load validation | Nullify if negative — physically impossible |
+| Temperature null fill | `coalesce(temperature_c, 0.0)` — sensor outage fallback |
+| Region normalization | `upper(trim(region))` — standardize "de ", "DE", "De" → "DE" |
+| Dedup key | `(region, event_time)` |
+
+#### `silver_electricity_load`
+| Rule | Implementation |
+|---|---|
+| Load validation | Nullify if `<= 0` or `> 1,000,000` MW — data error guard |
+| Region normalization | `upper(trim(region))` |
+| Dedup key | `(region, event_time)` |
+
+#### `silver_generation_mix`
+| Rule | Implementation |
+|---|---|
+| Generation validation | Nullify if negative — no negative physical generation |
+| Fuel type normalization | `initcap(trim(fuel_type))` — "wind onshore" → "Wind Onshore" |
+| Region normalization | `upper(trim(region))` |
+| Dedup key | `(region, event_time, fuel_type)` |
+
+#### `silver_cross_border_flows`
+| Rule | Implementation |
+|---|---|
+| Self-flow removal | Filter `from_region != to_region` — data error |
+| Region normalization | `upper(trim())` on both from/to |
+| Note | Negative `flow_mw` is valid — represents import direction |
+| Dedup key | `(from_region, to_region, event_time)` |
+
+#### `silver_weather`
+| Rule | Implementation |
+|---|---|
+| Temperature range | Nullify outside `[-60, 60]` °C |
+| Wind speed | Nullify if `< 0` or `> 100` m/s |
+| Humidity | Nullify outside `[0, 100]` % |
+| Solar radiation | Nullify if `< 0` or `> 1500` W/m² |
+| Null fill | `coalesce(col, 0.0)` for all numeric fields — sensor outage fallback |
+| Dedup key | `(region, event_time)` |
+
+---
+
+### 2.4 Silver Write Strategy — Idempotent MERGE
+
+```python
+merge_condition = " AND ".join(
+    [f"target.{k} = source.{k}" for k in merge_keys]
+)
+
+delta_table.alias("target").merge(
+    df.alias("source"), merge_condition
+) \
+.whenMatchedUpdateAll() \
+.whenNotMatchedInsertAll() \
+.execute()
+```
+
+- First run → full Delta write (table creation)
+- Subsequent runs → MERGE on natural key
+- `mergeSchema = false` — rejects unexpected schema changes
+
+---
+
+### 2.5 Bronze Seed Data
+
+103 test records seeded across all 5 Bronze tables to validate the Silver pipeline before live poller is wired:
+
+![Bronze Seed Data Verified](screenshots/phase2_bronze_seed_data_verified.png)
+
+| Table | Seeded Records |
+|---|---|
+| `raw_electricity_prices` | 30 |
+| `raw_electricity_load` | 20 |
+| `raw_generation_mix` | 20 |
+| `raw_cross_border_flows` | 15 |
+| `raw_weather` | 18 |
+
+---
+
+### 2.6 Silver Validation Results
+
+All 5 Silver Delta tables written and validated — zero nulls across all tables:
+
+![Silver Tables in Lakehouse](screenshots/phase2_lakehouse_silver_tables.png)
+![Silver Validation](screenshots/phase2_silver_tables_validated.png)
+
+| Table | Rows | Nulls | Date Range |
+|---|---|---|---|
+| `silver_electricity_prices` | 30 | 0 | 2026-08-13 06:00 → 10:00 |
+| `silver_electricity_load` | 20 | 0 | 2026-08-13 06:00 → 07:45 |
+| `silver_generation_mix` | 20 | 0 | 2026-08-13 06:00 → 07:00 |
+| `silver_cross_border_flows` | 15 | 0 | 2026-08-13 06:00 → 07:00 |
+| `silver_weather` | 18 | 0 | 2026-08-13 06:00 → 07:00 |
+| **Total** | **103** | **0** | |
+
+---
+
+### 2.7 Phase 2 Summary
+
+| Item | Status |
+|---|---|
+| `02_silver_cleansing` notebook created | ✅ |
+| `pulsegrid_env` attached to notebook | ✅ |
+| Parallel processing via ThreadPoolExecutor | ✅ |
+| All Spark optimizations applied | ✅ |
+| 5 Silver Delta tables created | ✅ |
+| Zero nulls across all tables | ✅ |
+| Idempotent MERGE strategy validated | ✅ |
 
 ---
 
@@ -292,13 +332,15 @@ Applied to all 5 tables:
 | Predicate pushdown on `ingestion_date`, `region` | Silver | Avoids full Delta scan; leverages file skipping |
 | Native Spark functions only (no UDFs) | Silver | Catalyst can optimize; no serialization overhead |
 | `repartition()` by `region` + `hour` | Silver | Aligns write partitions to downstream query patterns |
+| Window function for dedup (`row_number`) | Silver | Fully distributed; no `collect()` to driver |
 | `broadcast()` hint on holidays table | Gold | ~300 row table; eliminates shuffle on large price table |
-| Window functions for lag features | Gold | Fully distributed; no `collect()` to driver |
+| Window functions for lag features | Gold | Fully distributed lag feature engineering |
 | AQE (Adaptive Query Execution) | Gold | Post-shuffle partition coalescing on aggregations |
 | `cache()` on feature table | ML | Feature table read twice (train + score); avoids re-scan |
 | `persist(MEMORY_AND_DISK)` before train/test split | ML | Split computed twice otherwise |
-| Delta `OPTIMIZE` + `ZORDER BY (region, event_time)` | Gold | Improves read performance for Semantic Model + agent queries |
-| `partitionBy("year","month","day")` at write | Gold | Avoids over-partitioning; right-sized for data volume |
+| Delta `OPTIMIZE` + `ZORDER BY (region, event_time)` | Gold | Improves read performance for Semantic Model + agent |
+| `partitionBy("year","month","day")` at write | Silver + Gold | Avoids over-partitioning; right-sized for data volume |
+| Parallel ThreadPoolExecutor (5 workers) | Silver | All 5 tables processed simultaneously |
 
 ---
 
@@ -319,4 +361,4 @@ Applied to all 5 tables:
 
 ---
 
-*Last updated: Phase 1 complete — August 2026*
+*Last updated: Phase 2 complete — August 2026*

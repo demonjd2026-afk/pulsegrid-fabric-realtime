@@ -210,8 +210,8 @@ pulsegrid-fabric-realtime/
 | Phase | Description | Status |
 |---|---|---|
 | 1 | Bronze Layer — Workspace, Eventhouse, 5 KQL tables, Environment | ✅ Done |
-| 2 | Silver Layer — PySpark cleansing + Spark optimizations | 🔄 In Progress |
-| 3 | Gold Layer — Feature engineering, Delta OPTIMIZE + ZORDER | ⬜ Pending |
+| 2 | Silver Layer — PySpark cleansing + Spark optimizations | ✅ Done |
+| 3 | Gold Layer — Feature engineering, Delta OPTIMIZE + ZORDER | 🔄 In Progress |
 | 4 | ML — XGBoost spike predictor, MLflow tracking, SHAP | ⬜ Pending |
 | 5 | Power BI Semantic Model + real-time dashboard | ⬜ Pending |
 | 6 | AI Agent — Claude API + Streamlit | ⬜ Pending |
@@ -225,3 +225,7 @@ Senior Data Engineer — Azure · Databricks · Microsoft Fabric
 Certifications: Databricks DE Associate · DP-900 · DP-700 · DP-600 · Generative AI Associate
 
 [LinkedIn](https://www.linkedin.com/in/jayanth-dolai-7b115213a/) · [GitHub](https://github.com/demonjd2026-afk)
+
+---
+
+> **Note:** README last updated after Phase 2 completion. See [TECHSPEC.md](TECHSPEC.md) for full phase-by-phase technical details.
