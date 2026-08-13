@@ -362,3 +362,128 @@ All 5 Silver Delta tables written and validated — zero nulls across all tables
 ---
 
 *Last updated: Phase 2 complete — August 2026*
+
+---
+
+## Phase 3 — Gold Layer (Feature Engineering)
+
+### Objective
+Read from all 5 Silver Delta tables, apply feature engineering and aggregations using Spark optimizations, and write 4 curated Gold tables that feed the ML model and Power BI Semantic Model.
+
+---
+
+### 3.1 Gold Tables Built
+
+| Table | Purpose | Rows |
+|---|---|---|
+| `gold_price_features` | Core ML feature table — 23 features per record | 30 |
+| `gold_generation_summary` | Hourly generation mix ratios per region | 4 |
+| `gold_flow_summary` | Net cross-border flow position per region | 12 |
+| `gold_price_aggregates` | Hourly + daily aggregates for Power BI | 36 |
+
+![Gold Tables in Lakehouse](screenshots/phase3_lakehouse_gold_tables.png)
+
+---
+
+### 3.2 Spark Optimization Techniques Applied
+
+| Technique | Where | Rationale |
+|---|---|---|
+| `cache()` on Silver prices | Cell 2 | prices DataFrame read multiple times across joins — avoids Delta re-scan |
+| `broadcast()` on holidays | Cell 3 | ~16 row table — eliminates shuffle on join with large prices table |
+| Window functions — `lag()` | Cell 4 | `price_lag_1h/12h/24h` — fully distributed, no `collect()` to driver |
+| Window functions — `avg()`, `stddev()` | Cell 4 | Rolling 6h mean + std dev — range-based window in seconds |
+| `percentile_approx()` | Cell 4 | Catalyst-optimized — no UDF needed for p90 threshold |
+| Native functions only | All cells | `F.when`, `F.coalesce`, `F.date_trunc`, `F.abs` — Catalyst-safe throughout |
+| `drop()` before joins | Cells 4, 7 | Prevents `AnalysisException: DELTA_DUPLICATE_COLUMNS_FOUND` |
+| AQE — coalesce shuffle | Cells 5, 6, 7 | `groupBy` + `pivot` shuffles auto-coalesced by AQE post-aggregation |
+| `OPTIMIZE` + `ZORDER BY` | Cell 8 | Compacts small files after MERGE; co-locates by `(region, event_time)` for file skipping |
+| `partitionBy(year, month, day)` | All writes | Partition pruning on downstream reads filtered by date range |
+| Idempotent MERGE | All writes | Safe reruns — MERGE on natural key per table |
+
+---
+
+### 3.3 Feature Engineering — gold_price_features
+
+23 features engineered per record:
+
+| Feature | Type | Description |
+|---|---|---|
+| `price_eur_mwh` | Double | Raw day-ahead price |
+| `price_lag_1h` | Double | Price 1 hour ago — short-term momentum |
+| `price_lag_12h` | Double | Price 12 hours ago — half-day pattern |
+| `price_lag_24h` | Double | Price 24 hours ago — same-hour yesterday |
+| `price_rolling_avg_6h` | Double | 6-hour rolling mean — trend indicator |
+| `price_rolling_std_6h` | Double | 6-hour rolling std dev — volatility indicator |
+| `hour_of_day` | Integer | 0-23 — peak hour indicator |
+| `day_of_week` | Integer | 1-7 — weekday vs weekend demand pattern |
+| `is_weekend` | Boolean | Lower industrial demand flag |
+| `is_holiday` | Boolean | Demand profile shift flag |
+| `temperature_c` | Double | Heating/cooling demand proxy |
+| `wind_speed_ms` | Double | Wind generation proxy — suppresses prices |
+| `humidity_pct` | Double | Weather enrichment |
+| `solar_radiation` | Double | Solar generation proxy — suppresses prices |
+| `load_mw` | Double | Actual grid load — 15-min granularity |
+| `is_spike` | Boolean | **Target label** — price > 90th percentile |
+
+**Spike label distribution:**
+- Spikes (1): 0 — expected with seed data (narrow price range)
+- Non-spike (0): 30
+- Will distribute naturally with live data
+
+---
+
+### 3.4 Generation Mix Insights (seed data)
+
+| Region | Renewable % | Nuclear % | Fossil % |
+|---|---|---|---|
+| FR | ~15% | ~59% | ~10% |
+| DE | ~42% | 0% | ~45% |
+
+FR is nuclear-heavy — stable baseload, lower price volatility. DE is renewable + gas mix — higher volatility, stronger weather correlation.
+
+---
+
+### 3.5 Flow Position Insights (seed data)
+
+| Region | Position | Net Flow MW |
+|---|---|---|
+| CH | Exporter | +6,300 |
+| DE | Exporter | +1,300 |
+| BE | Importer | -1,550 |
+
+Net importers tend to have higher prices — key ML feature.
+
+---
+
+### 3.6 Price Aggregates (seed data)
+
+| Region | Daily Avg Price (EUR/MWh) |
+|---|---|
+| DE | 122.46 |
+| BE | 120.46 |
+| FR | 113.28 |
+| ES | 105.72 |
+| US-ERCOT | 60.88 |
+
+---
+
+### 3.7 Phase 3 Summary
+
+| Item | Status |
+|---|---|
+| `03_gold_features` notebook created | ✅ |
+| AQE explicitly enabled | ✅ |
+| `gold_price_features` — 23 features | ✅ |
+| `gold_generation_summary` — mix ratios | ✅ |
+| `gold_flow_summary` — net positions | ✅ |
+| `gold_price_aggregates` — hourly + daily | ✅ |
+| Delta OPTIMIZE + ZORDER on all tables | ✅ |
+| Duplicate column conflicts resolved | ✅ |
+| All 4 Gold tables validated | ✅ |
+
+![Gold Validation](screenshots/phase3_gold_validation.png)
+
+---
+
+*Last updated: Phase 3 complete — August 2026*
