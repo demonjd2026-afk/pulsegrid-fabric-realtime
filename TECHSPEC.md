@@ -487,3 +487,157 @@ Net importers tend to have higher prices — key ML feature.
 ---
 
 *Last updated: Phase 3 complete — August 2026*
+
+---
+
+## Phase 4 — ML (XGBoost Spike Predictor + MLflow)
+
+### Objective
+Train an XGBoost binary classifier to predict electricity price spikes, track experiments with MLflow, compute SHAP explainability values, and write predictions back to Gold Delta tables for Power BI and the AI agent.
+
+---
+
+### 4.1 ML Architecture
+
+```
+gold_price_features (23 features)
+         │
+         ▼
+   Time-aware split
+   (80% train / 20% test)
+         │
+         ▼
+XGBoost Binary Classifier
+   scale_pos_weight (class balance)
+   max_depth=4, lr=0.1
+         │
+    ┌────┴────┐
+    ▼         ▼
+Predictions  SHAP Values
+    │         │
+    ▼         ▼
+gold_price_predictions  gold_shap_values
+         │
+         ▼
+    MLflow Experiment
+    pulsegrid_spike_predictor
+```
+
+---
+
+### 4.2 Spark Optimizations Applied
+
+| Technique | Cell | Rationale |
+|---|---|---|
+| `persist(MEMORY_AND_DISK)` | Cell 3 | Feature DataFrame read twice — training + SHAP join |
+| `toPandas()` at model boundary only | Cell 3 | All null handling + casting done in Spark; only final clean DataFrame crosses to pandas |
+| `unpersist()` after use | Cell 7 | Releases cluster memory after predictions written |
+| Native functions for null fill | Cell 3 | `F.coalesce()` — Catalyst-safe, no UDFs |
+| `partitionBy(year, month, day)` | Cell 7 | Partition pruning on prediction reads |
+| Idempotent MERGE | Cells 6, 7 | Safe reruns on weekly retraining schedule |
+
+---
+
+### 4.3 Model Configuration
+
+| Parameter | Value | Rationale |
+|---|---|---|
+| Algorithm | XGBoost Binary Classifier | Handles tabular data, interpretable, SHAP-compatible |
+| n_estimators | 100 | Sufficient for feature count; not overfit on small data |
+| max_depth | 4 | Shallow trees — prevents overfitting on seed data |
+| learning_rate | 0.1 | Conservative — stable convergence |
+| subsample | 0.8 | Row sampling — regularization |
+| colsample_bytree | 0.8 | Feature sampling — reduces correlation between trees |
+| min_child_weight | 5 | Requires 5 samples per leaf — regularization |
+| scale_pos_weight | Dynamic | `non_spike / spike` ratio — handles class imbalance |
+| eval_metric | logloss | Probabilistic — better than error for imbalanced classes |
+| split_strategy | Time-aware | Older → train, newer → test — prevents data leakage |
+
+---
+
+### 4.4 Target Label Definition
+
+```python
+# is_spike = True when price > 90th percentile for that region
+df_percentile = df_prices.groupBy("region") \
+    .agg(F.percentile_approx("price_eur_mwh", 0.9).alias("p90_price"))
+
+is_spike = price_eur_mwh > p90_price
+```
+
+---
+
+### 4.5 Feature Importance (seed data)
+
+SHAP values all zero with seed data — expected since no positive spike class exists. With live data, expected top features based on domain knowledge:
+
+| Feature | Expected Importance | Reason |
+|---|---|---|
+| `price_lag_1h` | High | Strong autocorrelation in electricity prices |
+| `price_rolling_avg_6h` | High | Trend indicator |
+| `load_mw` | High | Demand-side driver |
+| `wind_speed_ms` | Medium | Renewable suppression effect |
+| `hour_of_day` | Medium | Peak demand hours (8-10 AM, 6-8 PM) |
+| `temperature_c` | Medium | Heating/cooling demand |
+| `is_weekend` | Low-Medium | Lower industrial demand |
+
+---
+
+### 4.6 Gold Tables Created
+
+| Table | Rows | Purpose |
+|---|---|---|
+| `gold_price_predictions` | 6 | Predicted spike + probability per record |
+| `gold_shap_values` | 84 | SHAP contribution per feature per prediction |
+
+---
+
+### 4.7 MLflow Experiment
+
+| Item | Value |
+|---|---|
+| Experiment | `pulsegrid_spike_predictor` |
+| Run ID | `a9024327-d3d0-43f5-96b2-e9ba2ce01ea8` |
+| Accuracy | 1.0000 (seed data — trivially correct) |
+| F1 Score | 0.0000 (no positive class in seed data) |
+| ROC AUC | 0.0000 (undefined — one class only) |
+
+> **Note:** Metrics will reflect real performance once live data produces spike events. Model architecture and MLflow tracking fully validated.
+
+---
+
+### 4.8 SHAP Explainability — AI Agent Integration
+
+SHAP values stored in `gold_shap_values` in long format:
+
+```
+region | event_time | feature_name | shap_value | feature_value
+DE     | 2026-08-13 | price_lag_1h | +0.42      | 145.2
+DE     | 2026-08-13 | load_mw      | +0.31      | 47500.0
+DE     | 2026-08-13 | wind_speed_ms| -0.18      | 2.1
+```
+
+The Claude AI agent (Phase 6) queries this table to answer:
+> *"Why is a price spike predicted for Germany at 6 PM?"*
+> → "Price lag is 145 EUR/MWh (↑), load is high at 47,500 MW (↑), wind speed is low at 2.1 m/s (↓ renewable generation)"
+
+---
+
+### 4.9 Phase 4 Summary
+
+| Item | Status |
+|---|---|
+| `04_ml_spike_predictor` notebook created | ✅ |
+| XGBoost classifier trained | ✅ |
+| Time-aware train/test split | ✅ |
+| MLflow experiment tracked | ✅ |
+| SHAP values computed + stored | ✅ |
+| `gold_price_predictions` written | ✅ |
+| `gold_shap_values` written | ✅ |
+| Spark optimizations applied | ✅ |
+
+![ML Validation](screenshots/phase4_ml_validation.png)
+
+---
+
+*Last updated: Phase 4 complete — August 2026*
