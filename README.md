@@ -19,51 +19,57 @@ The platform answers one core question:
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        DATA SOURCES                             │
-│   ENTSO-E API        EIA Open Data        Open-Meteo Weather    │
-└────────┬─────────────────┬──────────────────────┬──────────────┘
-         │                 │                      │
-         └─────────────────┴──────────────────────┘
-                           │
-                           ▼
-              ┌────────────────────────┐
-              │   Fabric Eventstream   │  ← Python poller (rate-gated)
-              └────────────┬───────────┘
-                           │
-                           ▼
-         ┌─────────────────────────────────┐
-         │  BRONZE — KQL Database          │
-         │  pulsegrid_bronze               │
-         │  raw_electricity_prices         │
-         │  Append-only · Schema-on-read   │
-         └─────────────────┬───────────────┘
-                           │
-                           ▼
-         ┌─────────────────────────────────┐
-         │  SILVER — Lakehouse (Delta)     │
-         │  PySpark cleansing              │
-         │  Dedup · Nulls · Schema enforce │
-         │  Repartition by region + hour   │
-         └─────────────────┬───────────────┘
-                           │
-                           ▼
-         ┌─────────────────────────────────┐
-         │  GOLD — Lakehouse (Delta)       │
-         │  Window functions · Aggregates  │
-         │  ML feature table               │
-         │  Spike predictions (XGBoost)    │
-         │  Delta OPTIMIZE + ZORDER        │
-         └──────────┬──────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                          DATA SOURCES                               │
+│  ENTSO-E Transparency    EIA Open Data       Open-Meteo Weather     │
+│  26 European zones       13 US RTOs          30 cities worldwide    │
+└──────────┬───────────────────┬──────────────────────┬──────────────┘
+           │                   │                      │
+           └───────────────────┴──────────────────────┘
+                               │
+              ┌────────────────▼───────────────┐
+              │     3 Scheduled Notebooks       │
+              │  01a — Daily price poller       │
+              │  01b — 15-min realtime poller   │
+              │  01c — 30-min weather/EIA poller│
+              └────────────────┬───────────────┘
+                               │
+         ┌─────────────────────▼──────────────────────┐
+         │         BRONZE — KQL Database               │
+         │         pulsegrid_bronze (Eventhouse)        │
+         │                                             │
+         │  raw_electricity_prices  (once/day)         │
+         │  raw_electricity_load    (every 15 min)     │
+         │  raw_generation_mix      (every 15 min)     │
+         │  raw_cross_border_flows  (every 15 min)     │
+         │  raw_weather             (every 30 min)     │
+         │                                             │
+         │  Append-only · Schema-on-read · 90d retain  │
+         └─────────────────────┬──────────────────────┘
+                               │
+         ┌─────────────────────▼──────────────────────┐
+         │         SILVER — Lakehouse (Delta)          │
+         │  PySpark cleansing + Spark optimizations    │
+         │  Dedup · Nulls · Schema enforce             │
+         │  Repartition · Native functions only        │
+         └─────────────────────┬──────────────────────┘
+                               │
+         ┌─────────────────────▼──────────────────────┐
+         │         GOLD — Lakehouse (Delta)            │
+         │  Window functions · Aggregates              │
+         │  ML feature table                           │
+         │  Spike predictions (XGBoost)                │
+         │  Delta OPTIMIZE + ZORDER                    │
+         └──────────┬──────────────────────────────────┘
                     │
-         ┌──────────┴──────────────┐
-         │                         │
-         ▼                         ▼
-┌─────────────────┐    ┌────────────────────────┐
-│ Power BI        │    │ Claude API + Streamlit  │
-│ Semantic Model  │    │ AI Agent                │
-│ Direct Lake     │    │ Natural language → SQL  │
-└─────────────────┘    └────────────────────────┘
+         ┌──────────┴──────────────────┐
+         │                             │
+         ▼                             ▼
+┌─────────────────┐       ┌────────────────────────────┐
+│   Power BI      │       │  Claude API + Streamlit     │
+│ Semantic Model  │       │  AI Agent                   │
+│  Direct Lake    │       │  Natural language → SQL     │
+└─────────────────┘       └────────────────────────────┘
 ```
 
 ---
@@ -73,10 +79,11 @@ The platform answers one core question:
 | Component | Technology |
 |---|---|
 | Platform | Microsoft Fabric Trial |
-| Real-Time Ingestion | Fabric Eventstream |
-| Bronze Store | KQL Database (Eventhouse) |
+| Real-Time Ingestion | KQL Database (Eventhouse) + Scheduled Notebooks |
+| Bronze Store | KQL Database — 5 tables |
 | Silver / Gold Store | Lakehouse — Delta tables |
 | Transformations | PySpark (Fabric Notebooks) |
+| Secret Management | Fabric Environment (Spark properties) |
 | ML Framework | XGBoost + MLflow + SHAP |
 | Orchestration | Fabric Data Pipeline |
 | BI Layer | Power BI Semantic Model (Direct Lake) |
@@ -86,13 +93,42 @@ The platform answers one core question:
 
 ## Data Sources
 
-| Source | Data | API Limit | Pull Frequency |
+| Source | Data | Zones / Regions | Poll Frequency |
 |---|---|---|---|
-| [ENTSO-E Transparency Platform](https://transparency.entsoe.eu/) | European day-ahead electricity prices + grid load | Free, registration required | Every 5 min |
-| [EIA Open Data](https://www.eia.gov/opendata/) | US hourly electricity prices | Free API key | Every 5 min |
-| [Open-Meteo](https://open-meteo.com/) | Temperature (weather correlation feature) | 10,000 calls/day, no auth | Every 5 min |
+| [ENTSO-E](https://transparency.entsoe.eu/) | Day-ahead prices | 26 European bidding zones | Once/day |
+| [ENTSO-E](https://transparency.entsoe.eu/) | Actual load, generation mix, cross-border flows | 26 zones + 15 borders | Every 15 min |
+| [EIA Open Data](https://www.eia.gov/opendata/) | RTO demand + price | 13 US regions | Every 30 min |
+| [Open-Meteo](https://open-meteo.com/) | Temperature, wind, humidity, solar radiation | 30 cities | Every 30 min |
 
-> **Rate Limiting Strategy:** Python poller notebook uses exponential backoff with jitter. All three APIs are polled every 5 minutes — well within free tier limits. Fabric Pipeline schedules the poller with built-in retry logic.
+---
+
+## Rate Limiting Strategy
+
+| Source | Limit | Our Usage | Headroom |
+|---|---|---|---|
+| ENTSO-E | 400 req/min per token | ~2 req/min average | 99% headroom |
+| EIA | Throttled per hour (unpublished) | ~1 req/min average | Very conservative |
+| Open-Meteo | 10,000 calls/day | ~1,440 calls/day | 85% headroom |
+
+**Protections applied:**
+- Event-aligned polling — each source polled at its actual update frequency, not wastefully every 5 min
+- Exponential backoff with jitter on all API calls
+- Poll guard — skips cycle if last run was less than minimum interval ago
+- API keys stored in Fabric Environment (Spark properties) — never hardcoded
+
+---
+
+## Bronze Layer — 5 KQL Tables
+
+| Table | Source | Frequency | Purpose |
+|---|---|---|---|
+| `raw_electricity_prices` | ENTSO-E + EIA | Once/day + hourly | Day-ahead market prices |
+| `raw_electricity_load` | ENTSO-E | Every 15 min | Actual grid load (MW) |
+| `raw_generation_mix` | ENTSO-E | Every 15 min | Generation by fuel type |
+| `raw_cross_border_flows` | ENTSO-E | Every 15 min | Power flows between zones |
+| `raw_weather` | Open-Meteo | Every 30 min | Temperature, wind, humidity, solar |
+
+All tables: 90-day retention, recoverability disabled (Trial-optimised).
 
 ---
 
@@ -100,18 +136,17 @@ The platform answers one core question:
 
 ### Bronze — Raw Ingestion
 - **Storage:** KQL Database (`pulsegrid_bronze`)
-- **Table:** `raw_electricity_prices`
 - **Pattern:** Append-only, no transformations, schema-on-read
 - **Retention:** 90 days
 
 ### Silver — Cleansed
-- **Storage:** Lakehouse Delta (`silver.electricity_prices`)
+- **Storage:** Lakehouse Delta
 - **Transformations:** Deduplication, null handling, unit normalization, schema enforcement
-- **Spark Optimizations:** Predicate pushdown, native functions (no UDFs), repartition by `region` + `hour`
+- **Spark Optimizations:** Predicate pushdown, native functions (no UDFs), repartition by region + hour
 
 ### Gold — Curated + ML-Ready
-- **Storage:** Lakehouse Delta (`gold.electricity_features`, `gold.price_predictions`)
-- **Features:** Lag-12h price, rolling volatility, load factor, temperature delta, hour-of-week, is-holiday flag
+- **Storage:** Lakehouse Delta
+- **Features:** Lag-12h price, rolling volatility, load factor, generation mix ratios, weather features, hour-of-week, is-holiday
 - **Spark Optimizations:** Window functions, AQE, broadcast join (holidays), Delta OPTIMIZE + ZORDER
 - **Predictions:** XGBoost binary classifier results written back with SHAP values
 
@@ -123,7 +158,7 @@ The platform answers one core question:
 |---|---|
 | Problem | Binary classification — will price exceed 90th percentile in next 2 hours? |
 | Algorithm | XGBoost |
-| Features | Lag-12h price, rolling mean/volatility, temperature delta, hour-of-week, is-holiday |
+| Features | Lag-12h price, rolling mean/volatility, load factor, wind %, solar %, nuclear %, cross-border net flow, temperature, hour-of-week, is-holiday |
 | Explainability | SHAP values stored in Gold for AI agent consumption |
 | Tracking | MLflow experiment tracking (Fabric-native) |
 | Retraining | Weekly via Fabric Pipeline |
@@ -137,9 +172,8 @@ A **Claude API + Streamlit** application that lets users query the Gold lakehous
 **Example queries:**
 - *"Why is a price spike predicted for tonight at 6 PM?"*
 - *"Which region had the highest price volatility this week?"*
+- *"How does wind generation affect German prices?"*
 - *"Show me the top 5 hours with predicted spikes for tomorrow"*
-
-Claude translates the question into Spark SQL, queries the Gold Delta table, retrieves SHAP values, and explains the prediction in plain English.
 
 ---
 
@@ -148,19 +182,25 @@ Claude translates the question into Spark SQL, queries the Gold Delta table, ret
 ```
 pulsegrid-fabric-realtime/
 │
-├── screenshots/                        # Phase-wise progress screenshots
+├── screenshots/
+│   ├── phase1_workspace_overview.png
+│   ├── phase1_bronze_table_created.png
+│   ├── phase1_bronze_all_tables_created.png
+│   └── phase1_env_keys_added.png
 │
 ├── notebooks/
-│   ├── 01_bronze_poller.ipynb         # Python poller — API ingestion
-│   ├── 02_silver_cleansing.ipynb      # PySpark Silver transformations
-│   ├── 03_gold_features.ipynb         # Gold feature engineering
-│   └── 04_ml_spike_predictor.ipynb    # XGBoost training + SHAP
+│   ├── 01a_daily_price_poller.ipynb
+│   ├── 01b_realtime_poller.ipynb
+│   ├── 01c_weather_eia_poller.ipynb
+│   ├── 02_silver_cleansing.ipynb
+│   ├── 03_gold_features.ipynb
+│   └── 04_ml_spike_predictor.ipynb
 │
 ├── streamlit/
-│   └── app.py                         # Claude + Streamlit AI agent
+│   └── app.py
 │
-├── README.md                          # Project overview (this file)
-└── TECHSPEC.md                        # Phase-by-phase technical specification
+├── README.md
+└── TECHSPEC.md
 ```
 
 ---
@@ -169,7 +209,7 @@ pulsegrid-fabric-realtime/
 
 | Phase | Description | Status |
 |---|---|---|
-| 1 | Bronze Layer — Workspace, Eventhouse, KQL table, Eventstream | ✅ Done |
+| 1 | Bronze Layer — Workspace, Eventhouse, 5 KQL tables, Environment | ✅ Done |
 | 2 | Silver Layer — PySpark cleansing + Spark optimizations | 🔄 In Progress |
 | 3 | Gold Layer — Feature engineering, Delta OPTIMIZE + ZORDER | ⬜ Pending |
 | 4 | ML — XGBoost spike predictor, MLflow tracking, SHAP | ⬜ Pending |
