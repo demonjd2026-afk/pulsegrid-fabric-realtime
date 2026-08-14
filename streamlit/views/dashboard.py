@@ -29,7 +29,7 @@ def _price_curve(prices: pd.DataFrame, picked: list[str]) -> None:
         line=dict(width=2.1),
         hovertemplate="%{y:,.1f} EUR/MWh<extra>%{fullData.name}</extra>",
     )
-    st.plotly_chart(T.style_fig(fig, 372, "EUR / MWh"), use_container_width=True)
+    st.plotly_chart(T.style_fig(fig, 372, "EUR / MWh"), use_container_width=True, theme=None)
 
 
 def _spread(zones: pd.DataFrame) -> None:
@@ -51,7 +51,7 @@ def _spread(zones: pd.DataFrame) -> None:
                     line=dict(width=0)),
         hovertemplate="%{y} · %{x:,.1f} EUR/MWh<extra></extra>", showlegend=False,
     ))
-    st.plotly_chart(T.style_fig(fig, 372, ""), use_container_width=True)
+    st.plotly_chart(T.style_fig(fig, 372, ""), use_container_width=True, theme=None)
 
 
 def _generation(gen: pd.DataFrame) -> None:
@@ -70,7 +70,7 @@ def _generation(gen: pd.DataFrame) -> None:
                         marker_color=colour, marker_line_width=0,
                         hovertemplate=f"%{{x}} · {name} %{{y:.1f}}%<extra></extra>")
     fig.update_layout(barmode="stack", bargap=0.36)
-    st.plotly_chart(T.style_fig(fig, 330, "% of output"), use_container_width=True)
+    st.plotly_chart(T.style_fig(fig, 330, "% of output"), use_container_width=True, theme=None)
     st.caption(f"{len(gen)} zones reporting output. Zones publishing nothing for "
                "this interval are excluded rather than drawn as empty bars.")
 
@@ -88,7 +88,7 @@ def _drivers(shap: pd.DataFrame, region: str) -> None:
                     line=dict(width=0)),
         hovertemplate="%{y} · %{x:.3f}<extra></extra>",
     ))
-    st.plotly_chart(T.style_fig(fig, 330, ""), use_container_width=True)
+    st.plotly_chart(T.style_fig(fig, 330, ""), use_container_width=True, theme=None)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -126,9 +126,9 @@ def render() -> None:
     T.kpis(
         [
             {"value": n_zones, "label": "Bidding zones", "foot": "ENTSO-E + EIA",
-             "accent": T.AMBER},
+             "accent": T.SKY},
             {"value": avg, "unit": "€", "label": "Mean price", "foot": "EUR/MWh, latest hour",
-             "accent": T.BLUE},
+             "accent": T.AMBER},
             {"value": peak, "unit": "€", "label": "Peak zone", "foot": "highest clearing price",
              "accent": T.CORAL},
             {"value": spikes, "label": "Spike alerts", "foot": f"of {scored} zones scored",

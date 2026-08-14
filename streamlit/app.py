@@ -32,11 +32,11 @@ from views import about, agent, dashboard  # noqa: E402
 # url_path is explicit: all three view functions are named `render`, so
 # Streamlit would otherwise infer the same pathname for each and raise.
 nav = st.navigation([
-    st.Page(dashboard.render, title="Dashboard",    icon=":material/monitoring:",
+    st.Page(dashboard.render, title="Dashboard",    icon="📊",
             url_path="dashboard", default=True),
-    st.Page(agent.render,     title="AI Analyst",   icon=":material/neurology:",
+    st.Page(agent.render,     title="AI Analyst",   icon="🤖",
             url_path="analyst"),
-    st.Page(about.render,     title="Architecture", icon=":material/account_tree:",
+    st.Page(about.render,     title="Architecture", icon="🏗️",
             url_path="architecture"),
 ])
 
