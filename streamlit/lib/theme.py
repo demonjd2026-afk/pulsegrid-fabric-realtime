@@ -145,15 +145,9 @@ section[data-testid="stSidebar"] [data-testid="stSidebarNav"] span {{
 /* ── KPI cards ────────────────────────────────────────────────────────── */
 .pg-kpis {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:13px; }}
 .pg-kpi {{
-  background:linear-gradient(180deg, rgba(56,189,248,.075) 0%, rgba(12,20,37,0) 34%), {PANEL};
-  border:1px solid {LINE}; border-radius:15px; padding:20px 16px 17px 16px;
-  text-align:center; position:relative;
-  box-shadow:0 10px 34px rgba(2,8,23,.44);
-}}
-.pg-kpi::before {{
-  content:''; position:absolute; top:0; left:14%; right:14%; height:1px;
-  background:linear-gradient(90deg, transparent, var(--a,{SKY}), transparent);
-  opacity:.85;
+  background:{PANEL};
+  border:1px solid {LINE}; border-radius:13px; padding:19px 16px 16px 16px;
+  text-align:center; box-shadow:0 6px 22px rgba(2,8,23,.30);
 }}
 .pg-kpi-v {{
   font-family:{FONT_MONO}; font-size:2.05rem; font-weight:700; line-height:1;
@@ -173,14 +167,12 @@ section[data-testid="stSidebar"] [data-testid="stSidebarNav"] span {{
 
 /* ── panels ───────────────────────────────────────────────────────────── */
 div[data-testid="stVerticalBlockBorderWrapper"] {{
-  position:relative;
-  background:linear-gradient(180deg, rgba(56,189,248,.05) 0%, rgba(12,20,37,0) 26%), {PANEL};
-  border:1px solid {LINE} !important; border-radius:16px;
-  padding:10px 8px; box-shadow:0 12px 40px rgba(2,8,23,.42);
+  background:{PANEL};
+  border:1px solid {LINE} !important; border-radius:14px;
+  padding:12px 10px; box-shadow:0 8px 28px rgba(2,8,23,.35);
 }}
-div[data-testid="stVerticalBlockBorderWrapper"]::before {{
-  content:''; position:absolute; top:0; left:8%; right:8%; height:1px;
-  background:linear-gradient(90deg, transparent, rgba(56,189,248,.55), transparent);
+div[data-testid="stVerticalBlockBorderWrapper"] > div {{
+  border:none !important; box-shadow:none !important; background:transparent !important;
 }}
 .pg-ph {{
   display:flex; align-items:baseline; justify-content:space-between;
@@ -215,8 +207,8 @@ div[data-testid="stVerticalBlockBorderWrapper"]::before {{
   margin-right:.5rem; vertical-align:middle; }}
 .pg-extremes {{ display:flex; gap:11px; margin-top:1.05rem; flex-wrap:wrap; }}
 .pg-ex {{
-  flex:1; min-width:170px; background:{RAISED}; border:1px solid {LINE};
-  border-radius:12px; padding:12px 15px; text-align:center;
+  flex:1; min-width:170px; background:{RAISED}; border:none;
+  border-radius:11px; padding:12px 15px; text-align:center;
 }}
 .pg-ex-k {{ font-family:{FONT_MONO}; font-size:.555rem; letter-spacing:.16em;
   text-transform:uppercase; color:{MUTED}; }}
@@ -227,7 +219,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]::before {{
 /* ── watchlist ────────────────────────────────────────────────────────── */
 .pg-row {{
   display:flex; align-items:center; gap:12px; padding:11px 14px;
-  border:1px solid {LINE}; border-radius:11px; background:{RAISED}; margin-bottom:8px;
+  border:1px solid transparent; border-radius:11px; background:{RAISED}; margin-bottom:8px;
 }}
 .pg-row.hot {{ border-color:rgba(251,113,133,.45); background:rgba(251,113,133,.08); }}
 .pg-row-z {{ font-family:{FONT_MONO}; font-weight:700; font-size:.82rem;
@@ -319,19 +311,21 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
 # ─────────────────────────────────────────────────────────────────────────────
 pio.templates["pulsegrid"] = go.layout.Template(
     layout=dict(
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor=PANEL,
+        plot_bgcolor="#0A1120",
         font=dict(family="Inter, sans-serif", color=MUTED, size=12),
         colorway=SERIES,
         xaxis=dict(gridcolor="rgba(29,43,71,.65)", zerolinecolor=LINE, linecolor=LINE,
+                   automargin=True,
                    tickfont=dict(family="JetBrains Mono", size=10, color=MUTED)),
         yaxis=dict(gridcolor="rgba(29,43,71,.65)", zerolinecolor=LINE, linecolor=LINE,
+                   automargin=True, title_standoff=14,
                    tickfont=dict(family="JetBrains Mono", size=10, color=MUTED)),
         legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(size=11, color=MUTED),
-                    orientation="h", y=1.14, x=0),
+                    orientation="h", y=1.02, yanchor="bottom", x=0),
         hoverlabel=dict(bgcolor=RAISED, bordercolor=LINE,
                         font=dict(family="JetBrains Mono", size=11, color=TEXT)),
-        margin=dict(l=6, r=6, t=28, b=6),
+        margin=dict(l=56, r=18, t=46, b=44),
     )
 )
 

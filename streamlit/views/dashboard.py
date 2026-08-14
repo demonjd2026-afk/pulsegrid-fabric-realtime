@@ -84,8 +84,7 @@ def _drivers(shap: pd.DataFrame, region: str) -> None:
     df = imp.head(9).iloc[::-1]
     fig = go.Figure(go.Bar(
         x=df["impact"], y=df["feature_name"], orientation="h",
-        marker=dict(color=df["impact"], colorscale=[[0, T.VIOLET], [1, T.AMBER]],
-                    line=dict(width=0)),
+        marker=dict(color=T.SKY, line=dict(width=0)),
         hovertemplate="%{y} · %{x:.3f}<extra></extra>",
     ))
     st.plotly_chart(T.style_fig(fig, 330, ""), use_container_width=True, theme=None)
