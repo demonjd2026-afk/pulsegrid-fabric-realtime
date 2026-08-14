@@ -456,3 +456,129 @@ Columns: `avg_price`, `min_price`, `max_price`, `price_range`, `record_count`, `
 | Delta OPTIMIZE + ZORDER on all 4 tables | ✅ |
 | All 4 Gold tables visible in Lakehouse | ✅ |
 
+
+---
+
+## Phase 4 — ML (XGBoost Spike Predictor + MLflow + SHAP)
+
+### Objective
+
+Train an XGBoost binary classifier on the Gold feature table to predict electricity price spikes (price > 90th percentile in the next 2 hours). Track the experiment with MLflow, compute SHAP explainability values, and write predictions + SHAP back to Gold Delta tables for consumption by the AI agent in Phase 6.
+
+---
+
+### 4.1 Notebook — `04_ml_spike_predictor`
+
+**Environment:** `pulsegrid_env` attached. **Default lakehouse:** `pulsegrid_lakehouse`.
+
+**Structure:**
+
+| Cell | Purpose |
+|---|---|
+| Cell 1 | Install xgboost, shap, scikit-learn |
+| Cell 2 | Imports, feature config, XGBoost params, MLflow experiment setup |
+| Cell 3 | Load Gold features, null handling in Spark, persist(), toPandas() at boundary |
+| Cell 4 | Time-aware train/test split (older → train, newer → test) |
+| Cell 5 | XGBoost training + full MLflow experiment tracking |
+| Cell 6 | SHAP TreeExplainer — long-format SHAP values written to Gold |
+| Cell 7 | Predictions written to `gold_price_predictions` |
+| Cell 8 | Validation — predictions, SHAP, MLflow |
+
+---
+
+### 4.2 Spark Optimizations Applied
+
+| Technique | Cell | Rationale |
+|---|---|---|
+| **`persist(MEMORY_AND_DISK)`** | Cell 3 | Feature DataFrame read twice — training + SHAP join; persist avoids re-reading Gold Delta |
+| **`toPandas()` only at model boundary** | Cell 3 | All null handling + casting stays in Spark; only final clean DataFrame crosses to XGBoost — avoids driver OOM on larger datasets |
+| **Native functions for null handling** | Cell 3 | `F.coalesce()` throughout — Catalyst-visible, no UDFs |
+| **`unpersist()` after use** | Cell 7 | Cache released after predictions written — frees Trial cluster memory |
+| **Idempotent MERGE on all writes** | Cells 6, 7 | Predictions + SHAP safe for reruns and pipeline retries |
+| **`partitionBy(year, month, day)`** | Cell 7 | Partition pruning on downstream reads by date |
+
+---
+
+### 4.3 Model Configuration
+
+| Parameter | Value | Rationale |
+|---|---|---|
+| Algorithm | XGBoost binary classifier | Handles tabular features well; supports SHAP natively |
+| `n_estimators` | 100 | Balanced — not too few to underfit, not too many to overfit small data |
+| `max_depth` | 4 | Shallow trees — prevents overfitting on initial small dataset |
+| `learning_rate` | 0.1 | Standard starting point |
+| `min_child_weight` | 5 | Regularization — requires 5 samples per leaf |
+| `scale_pos_weight` | Auto | Adjusted from class distribution — handles spike imbalance |
+| `eval_metric` | logloss | Probabilistic metric — better than error for imbalanced classes |
+| Split strategy | Time-aware | Older records → train, newer → test — prevents data leakage |
+| Test size | 20% | 80/20 split |
+
+**Feature columns (14):** `price_eur_mwh`, `price_lag_1h`, `price_lag_12h`, `price_lag_24h`, `price_rolling_avg_6h`, `price_rolling_std_6h`, `hour_of_day`, `day_of_week`, `is_weekend`, `temperature_c`, `wind_speed_ms`, `humidity_pct`, `solar_radiation`, `load_mw`
+
+---
+
+### 4.4 MLflow Experiment
+
+**Experiment:** `pulsegrid_spike_predictor`
+**Run:** `xgboost_spike_predictor_v1`
+**Status:** Completed ✅
+
+**Logged:**
+- Parameters: all 14 XGBoost params + feature count + data sizes + split strategy
+- Metrics: accuracy, f1_score, roc_auc, confusion matrix (TP/TN/FP/FN), per-feature importance
+- Model artifact: `xgboost_model` (MLmodel, model.xgb, conda.yaml, requirements.txt)
+- Tags: phase, dataset, model_type, project
+
+![MLflow Experiment](screenshots/phase4_mlflow_experiment.png)
+
+---
+
+### 4.5 SHAP Explainability
+
+**Storage format:** Long format — one row per `(region, event_time, feature_name)`.
+
+This enables the AI agent to query: *"What were the top 3 factors driving the spike prediction for DE at 18:00?"* — answered by filtering `gold_shap_values` by region + event_time and ordering by `abs(shap_value) DESC`.
+
+| Column | Description |
+|---|---|
+| `region` | Market zone |
+| `event_time` | Prediction timestamp |
+| `feature_name` | Feature identifier |
+| `shap_value` | Positive = pushed toward spike, Negative = pushed toward non-spike |
+| `feature_value` | Actual feature value at prediction time |
+
+---
+
+### 4.6 Validation Results
+
+![ML Validated](screenshots/phase4_ml_validated.png)
+
+| Output | Value | Notes |
+|---|---|---|
+| `gold_price_predictions` rows | 20 | 20% test set of 66 Gold records |
+| Correct predictions | 20 / 20 | Expected — 0 spikes in current data |
+| `gold_shap_values` rows | 280 | 20 records × 14 features |
+| MLflow Run ID | `6578ccf5-97f3-48dd-b9be-7b622b4ef5ee` | Completed, model artifact saved |
+| Accuracy | 1.0000 | Trivially correct — single class (no spikes yet) |
+| F1 Score | 0.0000 | Undefined — no positive class in test set |
+| ROC AUC | 0.0000 | Undefined — single class in test set |
+| SHAP mean abs | 0.0 | All zero — no class separation to explain yet |
+
+**Note on metrics:** All metrics reflect the current data state — only 2 days of live data with no price spikes. Once pollers accumulate several days of data with real European price spikes, rerunning this notebook will produce meaningful SHAP values, real F1/ROC scores, and a fully validated spike predictor. The pipeline architecture, MLflow tracking, and SHAP storage are all fully validated.
+
+---
+
+### 4.7 Phase 4 Summary
+
+| Item | Status |
+|---|---|
+| `04_ml_spike_predictor` notebook created | ✅ |
+| Gold features loaded + null handling in Spark | ✅ |
+| `persist()` + `toPandas()` at boundary applied | ✅ |
+| Time-aware train/test split | ✅ |
+| XGBoost model trained | ✅ |
+| MLflow experiment logged (params + metrics + model) | ✅ |
+| SHAP values computed + written to `gold_shap_values` | ✅ |
+| Predictions written to `gold_price_predictions` | ✅ |
+| Cache released with `unpersist()` | ✅ |
+
