@@ -21,8 +21,8 @@ The platform answers one core question:
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                          DATA SOURCES                               │
-│  ENTSO-E Transparency    EIA Open Data       Open-Meteo Weather     │
-│  26 European zones       13 US RTOs          30 cities worldwide    │
+│  ENTSO-E Transparency    EIA Open Data       Visual Crossing        │
+│  27 European zones       13 US RTOs          20 cities worldwide    │
 └──────────┬───────────────────┬──────────────────────┬──────────────┘
            │                   │                      │
            └───────────────────┴──────────────────────┘
@@ -38,11 +38,11 @@ The platform answers one core question:
          │         BRONZE — KQL Database               │
          │         pulsegrid_bronze (Eventhouse)        │
          │                                             │
-         │  raw_electricity_prices  (once/day)         │
-         │  raw_electricity_load    (every 15 min)     │
-         │  raw_generation_mix      (every 15 min)     │
-         │  raw_cross_border_flows  (every 15 min)     │
-         │  raw_weather             (every 30 min)     │
+         │  raw_electricity_prices  (2,556 records)    │
+         │  raw_electricity_load    (120 records)      │
+         │  raw_generation_mix      (1,669 records)    │
+         │  raw_cross_border_flows  (90 records)       │
+         │  raw_weather             (20 records)       │
          │                                             │
          │  Append-only · Schema-on-read · 90d retain  │
          └─────────────────────┬──────────────────────┘
@@ -95,10 +95,12 @@ The platform answers one core question:
 
 | Source | Data | Zones / Regions | Poll Frequency |
 |---|---|---|---|
-| [ENTSO-E](https://transparency.entsoe.eu/) | Day-ahead prices | 26 European bidding zones | Once/day |
-| [ENTSO-E](https://transparency.entsoe.eu/) | Actual load, generation mix, cross-border flows | 26 zones + 15 borders | Every 15 min |
-| [EIA Open Data](https://www.eia.gov/opendata/) | RTO demand + price | 13 US regions | Every 30 min |
-| [Open-Meteo](https://open-meteo.com/) | Temperature, wind, humidity, solar radiation | 30 cities | Every 30 min |
+| [ENTSO-E](https://transparency.entsoe.eu/) | Day-ahead electricity prices | 27 European bidding zones | Once/day |
+| [ENTSO-E](https://transparency.entsoe.eu/) | Actual load, generation mix, cross-border flows | 27 zones + 15 borders | Every 15 min |
+| [EIA Open Data](https://www.eia.gov/opendata/) | RTO electricity demand | 13 US regions | Every 30 min |
+| [Visual Crossing](https://www.visualcrossing.com/) | Temperature, wind, humidity, solar radiation | 20 cities | Every 30 min |
+
+> **Note:** Open-Meteo is blocked on Fabric Trial Spark network. Visual Crossing used as replacement — 1,000 records/day free tier, commercial use allowed.
 
 ---
 
@@ -106,27 +108,28 @@ The platform answers one core question:
 
 | Source | Limit | Our Usage | Headroom |
 |---|---|---|---|
-| ENTSO-E | 400 req/min per token | ~2 req/min average | 99% headroom |
-| EIA | Throttled per hour (unpublished) | ~1 req/min average | Very conservative |
-| Open-Meteo | 10,000 calls/day | ~1,440 calls/day | 85% headroom |
+| ENTSO-E | 400 req/min per token | ~2 req/min average | 99% |
+| EIA | Throttled per hour (unpublished) | ~1 req/min average | Conservative |
+| Visual Crossing | 1,000 records/day | 960/day (20 cities × 48 cycles) | 4% |
 
 **Protections applied:**
-- Event-aligned polling — each source polled at its actual update frequency, not wastefully every 5 min
-- Exponential backoff with jitter on all API calls
-- Poll guard — skips cycle if last run was less than minimum interval ago
+- Event-aligned polling — each source polled at its actual update frequency
+- Exponential backoff with jitter on all API calls (`2^attempt + random jitter`)
+- `NoMatchingDataError` skipped immediately — no point retrying missing data
 - API keys stored in Fabric Environment (Spark properties) — never hardcoded
+- Arrow optimization disabled for nullable float64 columns — prevents BufferHolder error
 
 ---
 
 ## Bronze Layer — 5 KQL Tables
 
-| Table | Source | Frequency | Purpose |
+| Table | Source | Frequency | Live Records |
 |---|---|---|---|
-| `raw_electricity_prices` | ENTSO-E + EIA | Once/day + hourly | Day-ahead market prices |
-| `raw_electricity_load` | ENTSO-E | Every 15 min | Actual grid load (MW) |
-| `raw_generation_mix` | ENTSO-E | Every 15 min | Generation by fuel type |
-| `raw_cross_border_flows` | ENTSO-E | Every 15 min | Power flows between zones |
-| `raw_weather` | Open-Meteo | Every 30 min | Temperature, wind, humidity, solar |
+| `raw_electricity_prices` | ENTSO-E (27 zones) + EIA (13 RTOs) | Once/day + every 30 min | 2,556 |
+| `raw_electricity_load` | ENTSO-E | Every 15 min | 120 |
+| `raw_generation_mix` | ENTSO-E | Every 15 min | 1,669 |
+| `raw_cross_border_flows` | ENTSO-E | Every 15 min | 90 |
+| `raw_weather` | Visual Crossing | Every 30 min | 20 |
 
 All tables: 90-day retention, recoverability disabled (Trial-optimised).
 
@@ -142,7 +145,7 @@ All tables: 90-day retention, recoverability disabled (Trial-optimised).
 ### Silver — Cleansed
 - **Storage:** Lakehouse Delta
 - **Transformations:** Deduplication, null handling, unit normalization, schema enforcement
-- **Spark Optimizations:** Predicate pushdown, native functions (no UDFs), repartition by region + hour
+- **Spark Optimizations:** Predicate pushdown, native functions (no UDFs), repartition by region + hour, parallel processing via ThreadPoolExecutor
 
 ### Gold — Curated + ML-Ready
 - **Storage:** Lakehouse Delta
@@ -186,7 +189,11 @@ pulsegrid-fabric-realtime/
 │   ├── phase1_workspace_overview.png
 │   ├── phase1_bronze_table_created.png
 │   ├── phase1_bronze_all_tables_created.png
-│   └── phase1_env_keys_added.png
+│   ├── phase1_env_keys_added.png
+│   ├── phase1_poller_01a_output.png
+│   ├── phase1_poller_01b_output.png
+│   ├── phase1_poller_01c_output.png
+│   └── phase1_bronze_live_data_verified.png
 │
 ├── notebooks/
 │   ├── 01a_daily_price_poller.ipynb
@@ -209,11 +216,11 @@ pulsegrid-fabric-realtime/
 
 | Phase | Description | Status |
 |---|---|---|
-| 1 | Bronze Layer — Workspace, Eventhouse, 5 KQL tables, Environment | ✅ Done |
-| 2 | Silver Layer — PySpark cleansing + Spark optimizations | ✅ Done |
-| 3 | Gold Layer — Feature engineering, Delta OPTIMIZE + ZORDER | ✅ Done |
-| 4 | ML — XGBoost spike predictor, MLflow tracking, SHAP | ✅ Done |
-| 5 | Power BI Semantic Model + real-time dashboard | 🔄 In Progress |
+| 1 | Bronze Layer — Workspace, Eventhouse, 5 KQL tables, 3 pollers, live data | ✅ Done |
+| 2 | Silver Layer — Parallel PySpark cleansing + Spark optimizations | 🔄 In Progress |
+| 3 | Gold Layer — Feature engineering, Delta OPTIMIZE + ZORDER | ⬜ Pending |
+| 4 | ML — XGBoost spike predictor, MLflow tracking, SHAP | ⬜ Pending |
+| 5 | Power BI Semantic Model + real-time dashboard | ⬜ Pending |
 | 6 | AI Agent — Claude API + Streamlit | ⬜ Pending |
 
 ---
@@ -225,7 +232,3 @@ Senior Data Engineer — Azure · Databricks · Microsoft Fabric
 Certifications: Databricks DE Associate · DP-900 · DP-700 · DP-600 · Generative AI Associate
 
 [LinkedIn](https://www.linkedin.com/in/jayanth-dolai-7b115213a/) · [GitHub](https://github.com/demonjd2026-afk)
-
----
-
-> **Note:** README last updated after Phase 2 completion. See [TECHSPEC.md](TECHSPEC.md) for full phase-by-phase technical details.
