@@ -6,51 +6,51 @@ from lib import data as D
 from lib import theme as T
 
 FLOW = [
-    ("Sources", T.MUTED,  "ENTSO-E · EIA · Visual Crossing", "4 public APIs"),
-    ("Bronze",  T.AMBER,  "KQL Database, append-only, 90-day retention", "5 tables"),
-    ("Silver",  T.CYAN,   "PySpark cleansing, dedup, schema enforcement", "5 Delta tables"),
-    ("Gold",    T.MINT,   "Window features, aggregates, predictions", "6 Delta tables"),
-    ("Serving", T.VIOLET, "Power BI Direct Lake · this app", "2 surfaces"),
+    ("Sources", T.MUTED,  "ENTSO-E transparency, EIA open data, Visual Crossing weather", "4 public APIs"),
+    ("Bronze",  T.AMBER,  "KQL Database, append-only, schema-on-read, 90-day retention", "5 tables"),
+    ("Silver",  T.BLUE,   "PySpark cleansing, deduplication, schema enforcement", "5 Delta tables"),
+    ("Gold",    T.TEAL,   "Window features, aggregates, predictions, SHAP", "6 Delta tables"),
+    ("Serving", T.VIOLET, "Power BI Direct Lake semantic model and this app", "2 surfaces"),
 ]
 
 CADENCE = [
-    ("01a_daily_price_poller",  "Daily 13:00 CET",  "ENTSO-E day-ahead prices, 27 zones"),
-    ("01b_realtime_poller",     "Every 15 min",     "Load, generation mix, cross-border flows"),
-    ("01c_weather_eia_poller",  "Every 30 min",     "Weather for 20 cities, 13 US balancing authorities"),
-    ("02_silver_cleansing",     "Every 30 min",     "All 5 Bronze tables, processed in parallel"),
-    ("03_gold_features",        "Hourly",           "Lag and rolling features, aggregates"),
-    ("04_ml_spike_predictor",   "Daily 02:00 CET",  "XGBoost retrain, SHAP, write-back to Gold"),
+    ("Daily 13:00 CET", "01a_daily_price_poller", "ENTSO-E day-ahead prices, 27 bidding zones"),
+    ("Every 15 min",    "01b_realtime_poller",    "Actual load, generation mix, cross-border flows"),
+    ("Every 30 min",    "01c_weather_eia_poller", "Weather for 20 cities, 13 US balancing authorities"),
+    ("Every 30 min",    "02_silver_cleansing",    "All five Bronze tables, processed in parallel"),
+    ("Hourly",          "03_gold_features",       "Lag and rolling features, curated aggregates"),
+    ("Daily 02:00 CET", "04_ml_spike_predictor",  "XGBoost retrain, SHAP, write-back to Gold"),
 ]
 
 DECISIONS = [
-    ("Event-aligned polling",
-     "Day-ahead prices publish once daily; load publishes every 15 minutes. Polling "
-     "everything on one fast schedule would spend the rate-limit budget re-fetching "
-     "identical values, so each source runs on its own cadence.",
+    ("Poll each source on its own cadence", T.AMBER,
+     "Day-ahead prices publish once a day; load publishes every fifteen minutes. "
+     "Running everything on one fast schedule would spend the rate-limit budget "
+     "re-fetching identical values, so each source has its own pipeline.",
      "ENTSO-E usage sits near 2 req/min against a 400 req/min ceiling."),
-    ("Parallel Silver processing",
-     "The five Bronze tables are independent, so the cleansing notebook submits them "
-     "concurrently through a ThreadPoolExecutor. Wall time tracks the slowest table "
-     "rather than the sum of all five.",
-     "Deduplication uses row_number() over the natural key — deterministic, fully distributed."),
-    ("Predicate pushdown into KQL",
-     "The Silver reader filters on ingestion_time inside the KQL query, so the Kusto "
-     "engine trims the result before anything crosses into Spark.",
+    ("Process Silver tables in parallel", T.BLUE,
+     "The five Bronze tables are independent, so the cleansing notebook submits "
+     "them concurrently through a ThreadPoolExecutor. Wall time tracks the "
+     "slowest table rather than the sum of all five.",
+     "Deduplication uses row_number() over the natural key — deterministic and fully distributed."),
+    ("Push predicates down into KQL", T.TEAL,
+     "The Silver reader filters on ingestion_time inside the KQL query itself, so "
+     "the Kusto engine trims the result before anything crosses into Spark.",
      "Keeps memory pressure low on a Trial capacity."),
-    ("Native functions, no UDFs",
-     "Every transformation uses Spark SQL functions. Python UDFs are opaque to Catalyst "
-     "and pay a serialisation cost per row.",
-     "Window functions handle lag and rolling features without collecting to the driver."),
-    ("Libraries in the Fabric Environment",
-     "%pip magic is disabled in pipeline-triggered notebook runs. Dependencies moved to "
-     "pulsegrid_env public libraries, pinned to versions that resolve on the Spark "
-     "runtime's Python 3.10.",
-     "xgboost 3.3+ requires Python 3.12 and will not install there."),
-    ("JSON snapshot instead of a live API call",
-     "Fabric bearer tokens expire after about an hour, which would break a deployed app "
-     "within one session. The Gold tables are exported to JSON and committed to the repo, "
-     "so this page has no runtime auth dependency.",
-     "Refreshed by Cell 11 in 03_gold_features, pushed through the GitHub API."),
+    ("Native functions, no UDFs", T.VIOLET,
+     "Every transformation uses Spark SQL functions. Python UDFs are opaque to "
+     "Catalyst and pay a serialisation cost on every row.",
+     "Window functions compute lag and rolling features without collecting to the driver."),
+    ("Manage libraries in the Fabric Environment", T.CORAL,
+     "%pip magic is disabled in pipeline-triggered notebook runs. Dependencies "
+     "moved into pulsegrid_env public libraries, pinned to versions that resolve "
+     "against the Spark runtime's Python 3.10.",
+     "xgboost 3.3 and above require Python 3.12 and will not install there."),
+    ("Ship a JSON snapshot, not a live API call", T.AMBER,
+     "Fabric bearer tokens expire after about an hour, which would break a "
+     "deployed app inside a single session. The Gold tables are serialised and "
+     "committed to this repo, so the app has no runtime auth dependency.",
+     "Published by Cell 11 in 03_gold_features straight through the GitHub API."),
 ]
 
 
@@ -58,54 +58,69 @@ def render() -> None:
     frames = D.load_all()
     stamp, _ = D.freshness(frames)
 
-    T.section("Pipeline", "MEDALLION ARCHITECTURE ON MICROSOFT FABRIC")
-    st.markdown(
-        '<div class="pg-flow">'
-        + "".join(
-            f'<div class="pg-flow-node" style="--n:{c}">'
-            f'<h4>{name}</h4><p>{desc}</p><code>{tag}</code></div>'
-            for name, c, desc, tag in FLOW
-        )
-        + "</div>",
-        unsafe_allow_html=True,
+    T.hero(
+        badge="Reference",
+        eyebrow="Medallion lakehouse on Microsoft Fabric",
+        title="How PulseGrid is",
+        accent="Built",
+        subtitle="Six scheduled pipelines move data from four public APIs through "
+                 "Bronze, Silver and Gold, train a spike classifier nightly, and "
+                 "serve the result to Power BI and this app.",
+        kind="build",
     )
 
-    T.section("Schedule", "SIX FABRIC DATA PIPELINES")
-    st.markdown(
-        "".join(
-            f'<div class="pg-spec"><dt>{cad}</dt>'
-            f'<dd>{name}<br><em>{what}</em></dd></div>'
-            for name, cad, what in CADENCE
-        ),
-        unsafe_allow_html=True,
-    )
-
-    T.section("Engineering decisions", "WHAT WAS CHOSEN, AND WHY")
-    for title, body, note in DECISIONS:
+    with st.container(border=True):
+        T.panel_header("Pipeline", "bronze → silver → gold")
         st.markdown(
-            f'<div class="pg-panel" style="margin-bottom:10px">'
-            f'<h4 style="font-family:{T.FONT_DISPLAY};font-size:1.02rem;'
-            f'text-transform:uppercase;letter-spacing:.04em;margin:0 0 .5rem 0;'
-            f'color:{T.TEXT}">{title}</h4>'
-            f'<p style="margin:0 0 .55rem 0;font-size:.88rem;line-height:1.6;'
-            f'color:{T.TEXT}">{body}</p>'
-            f'<p style="margin:0;font-family:{T.FONT_MONO};font-size:.70rem;'
-            f'color:{T.MUTED};line-height:1.5">{note}</p></div>',
+            '<div class="pg-flow">'
+            + "".join(
+                f'<div class="pg-node" style="--n:{c}"><h4>{n}</h4>'
+                f"<p>{d}</p><code>{t}</code></div>"
+                for n, c, d, t in FLOW
+            )
+            + "</div>",
             unsafe_allow_html=True,
         )
 
-    T.section("Stack", "")
-    stack = [
-        ("Platform",     "Microsoft Fabric Trial"),
-        ("Bronze",       "KQL Database (Eventhouse), append-only"),
-        ("Silver / Gold","Lakehouse Delta tables, OPTIMIZE + ZORDER"),
-        ("Transform",    "PySpark, AQE, broadcast joins, window functions"),
-        ("Model",        "XGBoost binary classifier, MLflow tracking, SHAP"),
-        ("BI",           "Power BI semantic model, Direct Lake"),
-        ("This app",     "Streamlit, Plotly, Claude"),
-        ("Snapshot",     stamp),
-    ]
-    st.markdown(
-        "".join(f'<div class="pg-spec"><dt>{k}</dt><dd>{v}</dd></div>' for k, v in stack),
-        unsafe_allow_html=True,
-    )
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    with st.container(border=True):
+        T.panel_header("Schedule", "six fabric data pipelines")
+        st.markdown(
+            "".join(
+                f'<div class="pg-spec"><dt>{cad}</dt>'
+                f"<dd>{name}<br><em>{what}</em></dd></div>"
+                for cad, name, what in CADENCE
+            ),
+            unsafe_allow_html=True,
+        )
+
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    with st.container(border=True):
+        T.panel_header("Engineering decisions", "what was chosen, and why")
+        st.markdown(
+            "".join(
+                f'<div class="pg-note" style="--n:{c}"><h4>{t}</h4>'
+                f"<p>{b}</p><code>{n}</code></div>"
+                for t, c, b, n in DECISIONS
+            ),
+            unsafe_allow_html=True,
+        )
+
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    with st.container(border=True):
+        T.panel_header("Stack", "")
+        stack = [
+            ("Platform",      "Microsoft Fabric Trial"),
+            ("Bronze",        "KQL Database in an Eventhouse, append-only"),
+            ("Silver / Gold", "Lakehouse Delta tables, OPTIMIZE with ZORDER"),
+            ("Transform",     "PySpark — AQE, broadcast joins, window functions"),
+            ("Model",         "XGBoost binary classifier, MLflow tracking, SHAP explanations"),
+            ("BI",            "Power BI semantic model over Direct Lake"),
+            ("This app",      "Streamlit, Plotly, Claude"),
+            ("Snapshot",      stamp),
+        ]
+        st.markdown(
+            "".join(f'<div class="pg-spec"><dt>{k}</dt><dd>{v}</dd></div>'
+                    for k, v in stack),
+            unsafe_allow_html=True,
+        )
