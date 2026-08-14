@@ -66,27 +66,33 @@ st.markdown('<div class="sub-header">Real-time electricity market intelligence p
 with st.sidebar:
     st.header("⚙️ Configuration")
 
-    anthropic_key = st.text_input(
-        "Anthropic API Key",
-        type="password",
-        help="Enter your Claude API key"
-    )
-
-    fabric_token = st.text_input(
-        "Fabric Bearer Token",
-        type="password",
-        help="Fabric REST API token for Gold table access"
-    )
-
-    workspace_id = st.text_input(
-        "Fabric Workspace ID",
-        help="Your PulseGrid workspace ID"
-    )
-
-    lakehouse_id = st.text_input(
-        "Lakehouse ID",
-        help="pulsegrid_lakehouse ID"
-    )
+    # Load from Streamlit Secrets (set in Streamlit Cloud App Settings → Secrets)
+    # Falls back to text input if secrets not configured (local development)
+    try:
+        anthropic_key = st.secrets["ANTHROPIC_API_KEY"]
+        fabric_token  = st.secrets["FABRIC_TOKEN"]
+        workspace_id  = st.secrets["WORKSPACE_ID"]
+        lakehouse_id  = st.secrets["LAKEHOUSE_ID"]
+        st.success("✅ Credentials loaded from Secrets")
+    except:
+        anthropic_key = st.text_input(
+            "Anthropic API Key",
+            type="password",
+            help="Enter your Claude API key"
+        )
+        fabric_token = st.text_input(
+            "Fabric Bearer Token",
+            type="password",
+            help="Fabric REST API token for Gold table access"
+        )
+        workspace_id = st.text_input(
+            "Fabric Workspace ID",
+            help="Your PulseGrid workspace ID"
+        )
+        lakehouse_id = st.text_input(
+            "Lakehouse ID",
+            help="pulsegrid_lakehouse ID"
+        )
 
     st.divider()
     st.markdown("### 📊 Data Status")
