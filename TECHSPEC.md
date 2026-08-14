@@ -339,3 +339,120 @@ All 5 tables processed simultaneously. Execution order determined by Spark job c
 ---
 
 *Last updated: Phase 2 complete — August 2026*
+
+---
+
+## Phase 3 — Gold Layer (Feature Engineering)
+
+### Objective
+
+Read all 5 Silver Delta tables, apply feature engineering using Spark window functions, aggregations, and broadcast joins, and write 4 curated Gold Delta tables. Gold is the serving layer for both the ML model and the Power BI Semantic Model.
+
+---
+
+### 3.1 Notebook — `03_gold_features`
+
+**Environment:** `pulsegrid_env` attached. **Default lakehouse:** `pulsegrid_lakehouse`.
+
+**Structure:**
+
+| Cell | Purpose |
+|---|---|
+| Cell 1 | Imports, config, AQE enabled explicitly |
+| Cell 2 | Load all 5 Silver Delta tables, cache prices |
+| Cell 3 | Holidays reference table + broadcast hint |
+| Cell 4 | `gold_price_features` — ML feature table |
+| Cell 5 | `gold_generation_summary` — generation mix ratios |
+| Cell 6 | `gold_flow_summary` — net cross-border flow position |
+| Cell 7 | `gold_price_aggregates` — hourly + daily aggregates (Power BI) |
+| Cell 8 | Delta OPTIMIZE + ZORDER on all 4 Gold tables |
+| Cell 9 | Validation — all 4 Gold tables |
+
+---
+
+### 3.2 Spark Optimizations Applied
+
+| Technique | Cell | Rationale |
+|---|---|---|
+| **`cache()` on prices DataFrame** | Cell 2 | Prices read multiple times across joins — caching avoids re-reading Delta |
+| **`broadcast()` on holidays table** | Cell 3 | ~16 row table — eliminates shuffle on join with large prices table |
+| **Window functions for lag features** | Cell 4 | `F.lag()` over `(region, event_time)` — fully distributed, no `collect()` |
+| **Rolling window (`rangeBetween`)** | Cell 4 | 6-hour rolling avg + stddev using seconds-based range window |
+| **`percentile_approx()`** | Cell 4 | Catalyst-optimized percentile — no UDF needed for p90 threshold |
+| **Native functions only** | All cells | `F.avg`, `F.stddev`, `F.sum`, `F.when` — all Catalyst-visible |
+| **AQE (Adaptive Query Execution)** | Cells 5, 7 | Coalesces shuffle partitions post-groupBy + pivot automatically |
+| **`drop()` before joins** | Cells 4, 7 | Removes duplicate columns (`load_mw`, `temperature_c`) from Bronze schema before joining Silver versions — prevents `AnalysisException` |
+| **Delta OPTIMIZE + ZORDER** | Cell 8 | Compacts small MERGE files; co-locates rows by `(region, event_time)` for file skipping |
+| **`partitionBy(year, month, day)`** | All writes | Partition pruning on downstream date-filtered reads |
+| **Idempotent MERGE** | All writes | Safe for reruns — natural key match, update + insert |
+
+---
+
+### 3.3 Gold Tables Built
+
+**`gold_price_features`** — Primary ML input table
+
+| Feature | Type | Description |
+|---|---|---|
+| `price_eur_mwh` | Double | Day-ahead price |
+| `price_lag_1h` | Double | Price 1 hour ago |
+| `price_lag_12h` | Double | Price 12 hours ago |
+| `price_lag_24h` | Double | Same hour yesterday |
+| `price_rolling_avg_6h` | Double | 6-hour rolling mean |
+| `price_rolling_std_6h` | Double | 6-hour rolling volatility |
+| `hour_of_day` | Int | 0–23 peak hour indicator |
+| `day_of_week` | Int | 1–7 weekday/weekend |
+| `is_weekend` | Boolean | Lower industrial demand |
+| `is_holiday` | Boolean | Demand profile shift |
+| `temperature_c` | Double | Heating/cooling demand |
+| `wind_speed_ms` | Double | Wind generation proxy |
+| `humidity_pct` | Double | Weather enrichment |
+| `solar_radiation` | Double | Solar generation proxy |
+| `load_mw` | Double | Actual grid load |
+| `is_spike` | Boolean | Target label (price > p90) |
+
+**`gold_generation_summary`** — Generation mix ratios per region per hour
+
+Columns: `solar_mw`, `wind_onshore_mw`, `nuclear_mw`, `gas_mw`, `hydro_mw`, `total_generation_mw`, `renewable_pct`, `nuclear_pct`, `fossil_pct`
+
+**`gold_flow_summary`** — Net cross-border flow position per region per hour
+
+Columns: `total_exports_mw`, `total_imports_mw`, `net_flow_mw`, `flow_position` (Exporter/Importer/Balanced)
+
+**`gold_price_aggregates`** — Hourly + daily price aggregates (Power BI serving layer)
+
+Columns: `avg_price`, `min_price`, `max_price`, `price_range`, `record_count`, `avg_load`, `avg_temp`, `granularity`
+
+---
+
+### 3.4 Gold Validation Results
+
+![Gold Validated](screenshots/phase3_gold_validated.png)
+![Gold Tables in Lakehouse](screenshots/phase3_gold_tables_in_lakehouse.png)
+
+| Table | Rows | Notes |
+|---|---|---|
+| `gold_price_features` | 66 | 23 columns, 41 lag nulls (expected — first records per region) |
+| `gold_generation_summary` | 58 | 27 regions, renewable/nuclear/fossil % computed |
+| `gold_flow_summary` | 44 | BE net importer ✅, AT net exporter ✅ — market-accurate |
+| `gold_price_aggregates` | 84 | 66 hourly + 18 daily records |
+
+**Spike distribution:** 0 spikes in current dataset — expected with only 2 days of data. The 90th percentile threshold is computed from the available records; once pollers accumulate several days of data, price spikes will appear naturally.
+
+---
+
+### 3.5 Phase 3 Summary
+
+| Item | Status |
+|---|---|
+| `03_gold_features` notebook created | ✅ |
+| All 5 Silver tables read + prices cached | ✅ |
+| Holidays broadcast join applied | ✅ |
+| 15 ML features engineered via window functions | ✅ |
+| `gold_price_features` written + MERGE | ✅ |
+| `gold_generation_summary` written + MERGE | ✅ |
+| `gold_flow_summary` written + MERGE | ✅ |
+| `gold_price_aggregates` written + MERGE | ✅ |
+| Delta OPTIMIZE + ZORDER on all 4 tables | ✅ |
+| All 4 Gold tables visible in Lakehouse | ✅ |
+
