@@ -104,13 +104,21 @@ with st.sidebar:
 @st.cache_data(ttl=300)
 def load_gold_table(table_name, *args, **kwargs):
     """Load a Gold table from local JSON file committed to the repo."""
-    try:
-        import os
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        json_path = os.path.join(base_path, "data", f"{table_name}.json")
-        return pd.read_json(json_path)
-    except Exception as e:
-        return pd.DataFrame()
+    import os
+    # Try multiple path locations for Streamlit Cloud compatibility
+    candidates = [
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", f"{table_name}.json"),
+        os.path.join("/mount/src/pulsegrid-fabric-realtime/streamlit/data", f"{table_name}.json"),
+        f"streamlit/data/{table_name}.json",
+        f"data/{table_name}.json",
+    ]
+    for path in candidates:
+        try:
+            if os.path.exists(path):
+                return pd.read_json(path)
+        except:
+            continue
+    return pd.DataFrame()
 
 # =============================================================================
 # Main App
