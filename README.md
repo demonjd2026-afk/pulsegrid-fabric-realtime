@@ -220,8 +220,8 @@ pulsegrid-fabric-realtime/
 | 2 | Silver Layer — Parallel PySpark cleansing + Spark optimizations | ✅ Done |
 | 3 | Gold Layer — Feature engineering, Delta OPTIMIZE + ZORDER | ✅ Done |
 | 4 | ML — XGBoost spike predictor, MLflow tracking, SHAP | ✅ Done |
-| 5 | Power BI Semantic Model + real-time dashboard | 🔄 In Progress |
-| 6 | AI Agent — Claude API + Streamlit | ⬜ Pending |
+| 5 | Power BI Semantic Model + real-time dashboard | ✅ Done |
+| 6 | AI Agent — Claude API + Streamlit | 🔄 In Progress |
 
 ---
 

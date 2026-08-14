@@ -582,3 +582,93 @@ This enables the AI agent to query: *"What were the top 3 factors driving the sp
 | Predictions written to `gold_price_predictions` | ✅ |
 | Cache released with `unpersist()` | ✅ |
 
+
+---
+
+## Phase 5 — Power BI Semantic Model + Dashboard
+
+### Objective
+
+Create a Direct Lake Semantic Model on top of the Gold Delta tables and build a 5-visual Power BI dashboard for real-time energy market monitoring. Direct Lake mode reads directly from OneLake — no data movement, no import, no scheduled refresh needed.
+
+---
+
+### 5.1 Gold Table Registration
+
+Before creating the Semantic Model, all Gold tables were registered in the Lakehouse metastore using `saveAsTable` (Cell 10 of `03_gold_features`). This is the Fabric-native registration method required for Direct Lake connectivity.
+
+**Tables registered:**
+
+| Table | Rows |
+|---|---|
+| `gold_price_features` | 66 |
+| `gold_generation_summary` | 58 |
+| `gold_flow_summary` | 44 |
+| `gold_price_aggregates` | 84 |
+| `gold_price_predictions` | 20 |
+| `gold_shap_values` | 280 |
+
+---
+
+### 5.2 Semantic Model — `pulsegrid_semantic_model`
+
+**Mode:** Direct Lake — reads directly from OneLake Delta tables. No import, no scheduled refresh, no data duplication.
+
+**Tables included:**
+
+| Table | Purpose |
+|---|---|
+| `gold_price_features` | Central fact table — ML features + spike labels |
+| `gold_price_aggregates` | Hourly + daily price aggregates — trend visuals |
+| `gold_price_predictions` | XGBoost predictions + probabilities |
+| `gold_generation_summary` | Renewable/nuclear/fossil generation ratios |
+
+![Semantic Model Created](screenshots/phase5_semantic_model_created.png)
+
+---
+
+### 5.3 Relationships
+
+3 active Many-to-Many relationships, all bidirectional cross-filter.
+
+| From Table | Column | To Table | Column | Cardinality | Cross Filter |
+|---|---|---|---|---|---|
+| `gold_price_aggregates` | `region` | `gold_price_features` | `region` | Many to Many | Both |
+| `gold_price_predictions` | `region` | `gold_price_features` | `region` | Many to Many | Both |
+| `gold_generation_summary` | `region` | `gold_price_features` | `region` | Many to Many | Both |
+
+**Design decision:** Region-only relationships — time columns not joined because `gold_price_aggregates` uses `period_start` (truncated hourly/daily) while `gold_price_features` uses raw `event_time`. Mismatched time granularities would produce incorrect cross-filter results. Time filtering handled via individual date slicers per visual.
+
+![Semantic Model Relationships](screenshots/phase5_semantic_model_relationships.png)
+
+---
+
+### 5.4 Power BI Dashboard — `PulseGrid — Energy Market Dashboard`
+
+**Page:** Market Overview
+
+**5 visuals built:**
+
+| Visual | Type | Fields | Purpose |
+|---|---|---|---|
+| Region Slicer | Dropdown Slicer | `gold_price_features[region]` | Cross-filter all visuals by market zone |
+| Average Price by Hour of Day | Line Chart | X: `hour_of_day`, Y: avg `price_eur_mwh` | Intraday price pattern |
+| Price Trend (Hourly vs Daily) | Line Chart | X: `period_start`, Y: avg `avg_price`, Legend: `granularity` | Price trend comparison |
+| Price Spike Predictions | Table | `region`, `event_time`, `predicted_spike`, `spike_probability`, `actual_spike` | Model output visibility |
+| Renewable Generation % by Region | Clustered Bar Chart | Y: `region`, X: avg `renewable_pct` | Generation mix by zone |
+
+![Power BI Dashboard](screenshots/phase5_powerbi_dashboard_final.png)
+
+---
+
+### 5.5 Phase 5 Summary
+
+| Item | Status |
+|---|---|
+| Gold tables registered in Lakehouse metastore | ✅ |
+| `pulsegrid_semantic_model` created (Direct Lake) | ✅ |
+| 3 active bidirectional relationships | ✅ |
+| Region Slicer cross-filtering all visuals | ✅ |
+| 5 visuals built and validated | ✅ |
+| Report saved as `PulseGrid — Energy Market Dashboard` | ✅ |
+
