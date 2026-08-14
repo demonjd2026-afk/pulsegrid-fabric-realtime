@@ -99,23 +99,16 @@ with st.sidebar:
     """)
 
 # =============================================================================
-# Data Loading — Fabric REST API
+# Data Loading — Local JSON files (exported from Fabric Gold tables)
 # =============================================================================
 @st.cache_data(ttl=300)
-def load_gold_table(table_name, token, workspace_id, lakehouse_id):
-    """Load a Gold Delta table via Fabric REST API."""
+def load_gold_table(table_name, *args, **kwargs):
+    """Load a Gold table from local JSON file committed to the repo."""
     try:
-        url = f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/lakehouses/{lakehouse_id}/tables/{table_name}/rows"
-        headers = {
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json"
-        }
-        response = requests.get(url, headers=headers, timeout=30)
-        if response.status_code == 200:
-            data = response.json()
-            return pd.DataFrame(data.get("data", []))
-        else:
-            return pd.DataFrame()
+        import os
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        json_path = os.path.join(base_path, "data", f"{table_name}.json")
+        return pd.read_json(json_path)
     except Exception as e:
         return pd.DataFrame()
 
