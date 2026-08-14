@@ -217,8 +217,8 @@ pulsegrid-fabric-realtime/
 | Phase | Description | Status |
 |---|---|---|
 | 1 | Bronze Layer — Workspace, Eventhouse, 5 KQL tables, 3 pollers, live data | ✅ Done |
-| 2 | Silver Layer — Parallel PySpark cleansing + Spark optimizations | 🔄 In Progress |
-| 3 | Gold Layer — Feature engineering, Delta OPTIMIZE + ZORDER | ⬜ Pending |
+| 2 | Silver Layer — Parallel PySpark cleansing + Spark optimizations | ✅ Done |
+| 3 | Gold Layer — Feature engineering, Delta OPTIMIZE + ZORDER | 🔄 In Progress |
 | 4 | ML — XGBoost spike predictor, MLflow tracking, SHAP | ⬜ Pending |
 | 5 | Power BI Semantic Model + real-time dashboard | ⬜ Pending |
 | 6 | AI Agent — Claude API + Streamlit | ⬜ Pending |

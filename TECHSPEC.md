@@ -28,13 +28,13 @@ This document serves as the authoritative technical reference for the PulseGrid 
 
 ### Objective
 
-Establish the real-time ingestion foundation. Raw electricity market data from four public APIs lands into a KQL Database as the Bronze layer — append-only, no transformations, schema-on-read. Five dedicated tables capture prices, load, generation mix, cross-border flows, and weather. Three event-aligned poller notebooks feed the tables at different cadences matching each source's actual update frequency.
+Establish the real-time ingestion foundation. Raw electricity market data from four public APIs lands into a KQL Database as the Bronze layer — append-only, no transformations, schema-on-read. Five dedicated tables capture prices, load, generation mix, cross-border flows, and weather.
 
 ---
 
 ### 1.1 Fabric Workspace Setup
 
-**Workspace:** `PulseGrid` — created on Microsoft Fabric Trial (54 days remaining at project start).
+**Workspace:** `PulseGrid` — Microsoft Fabric Trial.
 
 **Items provisioned:**
 
@@ -52,9 +52,7 @@ Establish the real-time ingestion foundation. Raw electricity market data from f
 
 ### 1.2 Fabric Environment — Secret Management
 
-**Environment:** `pulsegrid_env` — stores all API credentials as Spark properties. Keys read at runtime via `spark.conf.get()`. Never hardcoded in notebooks or committed to Git.
-
-**Spark properties configured:**
+**Environment:** `pulsegrid_env` — stores all API credentials as Spark properties.
 
 | Property | Source |
 |---|---|
@@ -68,22 +66,18 @@ Establish the real-time ingestion foundation. Raw electricity market data from f
 
 ### 1.3 API Registration & Rate Limits
 
-| Source | Registration | Limit | Daily Usage | Headroom |
-|---|---|---|---|---|
-| ENTSO-E | Free, email verification | 400 req/min per token | ~6,500 calls | 99% |
-| EIA | Free, instant API key | Throttled/hour (unpublished) | ~624 calls | Conservative |
-| Visual Crossing | Free, email verification | 1,000 records/day | 960 records | 4% |
-| Open-Meteo | No registration | 10,000 calls/day | **Blocked on Fabric** | N/A |
+| Source | Limit | Daily Usage | Headroom |
+|---|---|---|---|
+| ENTSO-E | 400 req/min per token | ~6,500 calls | 99% |
+| EIA | Throttled/hour (unpublished) | ~624 calls | Conservative |
+| Visual Crossing | 1,000 records/day | 960 records | 4% |
+| Open-Meteo | 10,000 calls/day | **Blocked on Fabric** | N/A |
 
-**Open-Meteo finding:** Fabric Trial Spark executors block outbound HTTP to `api.open-meteo.com` (ReadTimeout on all attempts). EIA (`api.eia.gov`) is reachable. Visual Crossing (`weather.visualcrossing.com`) confirmed reachable and used as replacement.
+**Open-Meteo finding:** Fabric Trial Spark executors block outbound HTTP to `api.open-meteo.com`. Visual Crossing used as replacement — confirmed reachable from Fabric.
 
 ---
 
 ### 1.4 Rate Limiting Strategy — Event-Aligned Polling
-
-**Problem:** Naive 5-minute polling fetches the same value repeatedly. ENTSO-E day-ahead prices are published once per day — polling every 5 minutes wastes 287 of 288 daily calls on duplicate data.
-
-**Solution:** Three notebooks, each polling at the source's actual update frequency.
 
 | Notebook | Schedule | Sources | Tables Written |
 |---|---|---|---|
@@ -92,74 +86,41 @@ Establish the real-time ingestion foundation. Raw electricity market data from f
 | `01c_weather_eia_poller` | Every 30 min | Visual Crossing (20 cities) + EIA (13 RTOs) | `raw_weather`, `raw_electricity_prices` |
 
 **Additional protections:**
-- Exponential backoff with jitter: `2^attempt + random(0, 1.5)` seconds between retries
-- `NoMatchingDataError` skipped immediately — data doesn't exist, retrying wastes quota
+- Exponential backoff with jitter on every API call
+- `NoMatchingDataError` skipped immediately — no retries on missing data
 - Two-stage fetch in `01b`: narrow 30-min window first, wide 6-hour fallback for slow TSOs
-- Temperature fetched once per region per cycle — not once per record
-- Arrow optimization disabled for nullable float64 columns — prevents `BufferHolder negative size` error
-- Sequential poller execution — Fabric Trial 430 capacity error triggered when running simultaneously
+- Arrow optimization disabled for nullable float64 columns
+- Sequential poller execution — Fabric Trial 430 error triggered on simultaneous runs
 
 ---
 
 ### 1.5 Poller Results — First Live Run
 
-**`01a_daily_price_poller`** — 2026-08-14 06:41 UTC
-
-| Metric | Value |
-|---|---|
-| Zones polled | 27 / 27 |
-| Records written | 2,520 |
-| Failed regions | None |
-| Duration | 246.4s |
+| Poller | Records Written | Duration | Failed |
+|---|---|---|---|
+| `01a` — ENTSO-E prices | 2,520 (27/27 zones) | 246.4s | None |
+| `01b` — load + generation + flows | 1,879 | 207.3s | SE-3→DK-2 flow (unavailable) |
+| `01c` — weather + EIA | 56 (20 cities + 13 RTOs) | 220.2s | None |
 
 ![01a Poller Output](screenshots/phase1_poller_01a_output.png)
-
----
-
-**`01b_realtime_poller`** — 2026-08-14 07:06 UTC
-
-| Metric | Value |
-|---|---|
-| Load records | 120 (23 narrow + 4 wide window) |
-| Generation records | 1,669 (22 narrow + 5 wide window) |
-| Flow records | 90 (14 pairs — SE-3→DK-2 unavailable) |
-| Total written | 1,879 |
-| Duration | 207.3s |
-
-> SE-3→DK-2 cross-border flow not published by ENTSO-E — `NoMatchingDataError`, skipped immediately without retry.
-
 ![01b Poller Output](screenshots/phase1_poller_01b_output.png)
-
----
-
-**`01c_weather_eia_poller`** — 2026-08-14 08:29 UTC
-
-| Metric | Value |
-|---|---|
-| Weather records | 20 / 20 cities |
-| EIA records | 36 (13 RTOs × 3 hourly records) |
-| Total written | 56 |
-| Duration | 220.2s |
-
 ![01c Poller Output](screenshots/phase1_poller_01c_output.png)
 
 ---
 
-### 1.6 Bronze Tables — Schema & Live Record Counts
+### 1.6 Bronze Tables — Live Record Counts
 
 ![All Bronze Tables](screenshots/phase1_bronze_all_tables_created.png)
 ![Live Data Verified](screenshots/phase1_bronze_live_data_verified.png)
 
-| Table | Records | Update Frequency |
+| Table | Records | Frequency |
 |---|---|---|
-| `raw_electricity_prices` | 2,556 | Once/day (EU) + every 30 min (US) |
+| `raw_electricity_prices` | 2,556 | Once/day + every 30 min |
 | `raw_electricity_load` | 120 | Every 15 min |
 | `raw_generation_mix` | 1,669 | Every 15 min |
 | `raw_cross_border_flows` | 90 | Every 15 min |
 | `raw_weather` | 20 | Every 30 min |
 | **Total** | **4,455** | |
-
-All tables created with 90-day soft-delete retention, recoverability disabled.
 
 ---
 
@@ -167,14 +128,10 @@ All tables created with 90-day soft-delete retention, recoverability disabled.
 
 | Item | Status |
 |---|---|
-| Fabric workspace `PulseGrid` created | ✅ |
-| Eventhouse + KQL Database `pulsegrid_bronze` | ✅ |
-| Lakehouse `pulsegrid_lakehouse` | ✅ |
-| Environment `pulsegrid_env` + 3 API keys | ✅ |
+| Fabric workspace + all items provisioned | ✅ |
+| 3 API keys registered + stored in Environment | ✅ |
 | All 5 Bronze KQL tables + retention policies | ✅ |
-| `01a_daily_price_poller` — 2,520 records live | ✅ |
-| `01b_realtime_poller` — 1,879 records live | ✅ |
-| `01c_weather_eia_poller` — 56 records live | ✅ |
+| 3 pollers running with live data | ✅ |
 | Open-Meteo blocked → Visual Crossing substituted | ✅ |
 | Total Bronze records: 4,455 | ✅ |
 
@@ -182,13 +139,131 @@ All tables created with 90-day soft-delete retention, recoverability disabled.
 
 ## Phase 2 — Silver Layer (Parallel PySpark Cleansing)
 
-> 🔄 In Progress — details will be added upon completion.
+### Objective
+
+Read all 5 Bronze KQL tables into Spark, apply table-specific cleansing rules and Spark optimizations, and write clean Delta tables to the Silver layer of `pulsegrid_lakehouse`. All 5 tables processed in parallel using `ThreadPoolExecutor` — total execution time equals the slowest single table, not the sum.
+
+---
+
+### 2.1 Notebook — `02_silver_cleansing`
+
+**Environment:** `pulsegrid_env` attached. **Default lakehouse:** `pulsegrid_lakehouse`.
+
+**Structure:**
+
+| Cell | Purpose |
+|---|---|
+| Cell 1 | Imports, config, Silver paths, parallel worker count |
+| Cell 2 | Generic KQL Bronze reader with predicate pushdown |
+| Cell 3 | Table-specific cleansing functions (5 tables) |
+| Cell 4 | Generic Silver Delta writer — idempotent MERGE |
+| Cell 5 | Parallel executor — ThreadPoolExecutor (MAX_WORKERS=5) |
+| Cell 6 | Validation — all 5 Silver tables |
+
+---
+
+### 2.2 Spark Optimizations Applied
+
+| Technique | Where | Rationale |
+|---|---|---|
+| **Predicate pushdown** | Cell 2 — KQL reader | `ago(7d)` filter executes on KQL engine before Spark ingestion — reduces data transferred across wire |
+| **Native functions only (no UDFs)** | Cell 3 — all cleansing | `F.when`, `F.coalesce`, `F.upper`, `F.trim`, `F.to_timestamp` — Catalyst-visible, no Python↔JVM serialization |
+| **Window function dedup** | Cell 3 — `deduplicate()` | `row_number()` over natural key ordered by `ingestion_time DESC` — fully distributed, no `collect()` |
+| **`repartition()` by region + hour** | Cell 3 — `add_partitions_and_repartition()` | Aligns Spark partitions with Gold aggregation access patterns |
+| **`partitionBy(year, month, day)`** | Cell 4 — writer | Right-sized Delta partitioning — avoids small-files problem from 5-min tick writes |
+| **Idempotent MERGE** | Cell 4 — writer | Safe for reruns and pipeline retries — natural key match, update existing + insert new |
+| **Parallel ThreadPoolExecutor** | Cell 5 | All 5 tables run simultaneously — total time ≈ slowest table (not sum) |
+
+---
+
+### 2.3 Cleansing Rules Per Table
+
+**`silver_electricity_prices`**
+- Nullify `price_eur_mwh` outside [-500, 5000] EUR/MWh (European markets allow negative prices during oversupply)
+- Nullify negative `load_mw` (physically impossible)
+- Fill null `temperature_c` with 0.0
+- Normalize `region` to uppercase
+- Deduplicate on `(region, event_time)`
+
+**`silver_electricity_load`**
+- Nullify `load_mw` ≤ 0 or > 1,000,000 MW (data errors)
+- Normalize `region` to uppercase
+- Deduplicate on `(region, event_time)`
+
+**`silver_generation_mix`**
+- Nullify negative `generation_mw`
+- Normalize `fuel_type` to title case (`wind onshore` → `Wind Onshore`)
+- Deduplicate on `(region, event_time, fuel_type)`
+
+**`silver_cross_border_flows`**
+- Normalize `from_region` and `to_region` to uppercase
+- Remove self-flows (`from_region == to_region` — data error)
+- Note: negative `flow_mw` is valid (import direction)
+- Deduplicate on `(from_region, to_region, event_time)`
+
+**`silver_weather`**
+- `temperature_c`: valid range [-60, 60] °C
+- `wind_speed_ms`: non-negative, cap at 100 m/s
+- `humidity_pct`: valid range [0, 100] %
+- `solar_radiation`: non-negative, cap at 1,500 W/m²
+- Fill all nulls with 0.0 (sensor outage fallback)
+- Deduplicate on `(region, event_time)`
+
+---
+
+### 2.4 Parallel Execution Results
+
+All 5 tables processed simultaneously. Execution order determined by Spark job completion, not submission order.
+
+![Silver Parallel Output](screenshots/phase2_silver_parallel_output.png)
+
+| Table | Bronze Records | Silver Records | Status |
+|---|---|---|---|
+| `electricity_prices` | 36 | 66 | ✅ |
+| `electricity_load` | 120 | 140 | ✅ |
+| `generation_mix` | 1,669 | 1,689 | ✅ |
+| `cross_border_flows` | 90 | 105 | ✅ |
+| `weather` | 20 | 38 | ✅ |
+
+> Silver row counts are higher than Bronze for some tables because Silver picked up both the initial live run and the previously cleared seed data remnants that were still within the 7-day KQL filter window. Deduplication on natural key ensured no duplicate records in Silver.
+
+---
+
+### 2.5 Silver Validation Report
+
+![Silver Validation Output](screenshots/phase2_silver_validation_output.png)
+
+| Table | Rows | Nulls | Date Range |
+|---|---|---|---|
+| `silver_electricity_prices` | 66 | 36 (EIA records — no price, load only) | 2026-08-13 → 2026-08-14 |
+| `silver_electricity_load` | 140 | 1 (invalid value nullified) | 2026-08-13 → 2026-08-14 |
+| `silver_generation_mix` | 1,689 | 0 | 2026-08-13 → 2026-08-14 |
+| `silver_cross_border_flows` | 105 | 0 | 2026-08-13 → 2026-08-14 |
+| `silver_weather` | 38 | 0 | 2026-08-13 → 2026-08-14 |
+
+**Notes on nulls:**
+- `silver_electricity_prices` — 36 nulls on `price_eur_mwh` are EIA demand records. EIA provides load (MW) only, not price. Expected and correct.
+- `silver_electricity_load` — 1 null on `load_mw` — one Bronze record had an invalid value, correctly nullified by cleansing rule.
+
+---
+
+### 2.6 Phase 2 Summary
+
+| Item | Status |
+|---|---|
+| `02_silver_cleansing` notebook created | ✅ |
+| All 5 Bronze tables read via KQL connector | ✅ |
+| Parallel ThreadPoolExecutor — 5 workers | ✅ |
+| All Spark optimizations applied | ✅ |
+| All 5 Silver Delta tables written | ✅ |
+| Idempotent MERGE validated | ✅ |
+| Data quality validation passed | ✅ |
 
 ---
 
 ## Phase 3 — Gold Layer (Feature Engineering)
 
-> ⬜ Pending
+> 🔄 In Progress — details will be added upon completion.
 
 ---
 
@@ -214,16 +289,17 @@ All tables created with 90-day soft-delete retention, recoverability disabled.
 
 | Technique | Phase | Rationale |
 |---|---|---|
-| Predicate pushdown on `ingestion_date`, `region` | Silver | Avoids full Delta scan; leverages KQL + Delta file skipping |
-| Native Spark functions only (no UDFs) | Silver | Catalyst can optimize; no Python↔JVM serialization overhead |
-| `repartition()` by `region` + `hour` | Silver | Aligns write partitions to Gold aggregation access patterns |
-| Parallel processing via `ThreadPoolExecutor` | Silver | All 5 tables cleansed simultaneously; total time ≈ slowest table |
+| Predicate pushdown on `ingestion_date`, `region` | Silver | Avoids full scan; leverages KQL + Delta file skipping |
+| Native Spark functions only (no UDFs) | Silver | Catalyst can optimize; no serialization overhead |
+| `repartition()` by `region` + `hour` | Silver | Aligns write partitions to Gold aggregation patterns |
+| Parallel processing via `ThreadPoolExecutor` | Silver | All 5 tables simultaneously; total time ≈ slowest table |
+| Window function dedup `row_number()` | Silver | Deterministic dedup; fully distributed; no `collect()` |
 | `broadcast()` hint on holidays table | Gold | ~300 row table; eliminates shuffle on large price table |
-| Window functions for lag features | Gold | Fully distributed; no `collect()` to driver |
+| Window functions for lag features | Gold | Fully distributed lag computation; no `collect()` |
 | AQE (Adaptive Query Execution) | Gold | Post-shuffle partition coalescing on aggregations |
-| `cache()` on feature table | ML | Feature table read twice (train + score); avoids re-scan |
+| `cache()` on feature table | ML | Feature table read twice; avoids re-scan |
 | `persist(MEMORY_AND_DISK)` before train/test split | ML | Split computed twice otherwise |
-| Delta `OPTIMIZE` + `ZORDER BY (region, event_time)` | Gold | Improves read performance for Semantic Model + agent queries |
+| Delta `OPTIMIZE` + `ZORDER BY (region, event_time)` | Gold | Improves read performance for Semantic Model + agent |
 | `partitionBy("year","month","day")` at write | Silver/Gold | Right-sized partitioning; avoids small-files problem |
 
 ---
@@ -262,4 +338,4 @@ All tables created with 90-day soft-delete retention, recoverability disabled.
 
 ---
 
-*Last updated: Phase 1 complete — August 2026*
+*Last updated: Phase 2 complete — August 2026*
