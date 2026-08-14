@@ -64,35 +64,19 @@ st.markdown('<div class="sub-header">Real-time electricity market intelligence p
 # Sidebar — Configuration
 # =============================================================================
 with st.sidebar:
-    st.header("⚙️ Configuration")
+    st.markdown("# ⚡ PulseGrid")
 
-    # Load from Streamlit Secrets (set in Streamlit Cloud App Settings → Secrets)
-    # Falls back to text input if secrets not configured (local development)
+    # Load from Streamlit Secrets silently
     try:
         anthropic_key = st.secrets["ANTHROPIC_API_KEY"]
         fabric_token  = st.secrets["FABRIC_TOKEN"]
         workspace_id  = st.secrets["WORKSPACE_ID"]
         lakehouse_id  = st.secrets["LAKEHOUSE_ID"]
-        st.success("✅ Credentials loaded from Secrets")
     except:
-        anthropic_key = st.text_input(
-            "Anthropic API Key",
-            type="password",
-            help="Enter your Claude API key"
-        )
-        fabric_token = st.text_input(
-            "Fabric Bearer Token",
-            type="password",
-            help="Fabric REST API token for Gold table access"
-        )
-        workspace_id = st.text_input(
-            "Fabric Workspace ID",
-            help="Your PulseGrid workspace ID"
-        )
-        lakehouse_id = st.text_input(
-            "Lakehouse ID",
-            help="pulsegrid_lakehouse ID"
-        )
+        anthropic_key = ""
+        fabric_token  = ""
+        workspace_id  = ""
+        lakehouse_id  = ""
 
     st.divider()
     st.markdown("### 📊 Data Status")
@@ -151,12 +135,11 @@ df_predictions = pd.DataFrame()
 df_shap = pd.DataFrame()
 df_generation = pd.DataFrame()
 
-if fabric_token and workspace_id and lakehouse_id:
-    with st.spinner("Loading live data from Fabric..."):
-        df_prices      = load_gold_table("gold_price_aggregates",  fabric_token, workspace_id, lakehouse_id)
-        df_predictions = load_gold_table("gold_price_predictions",  fabric_token, workspace_id, lakehouse_id)
-        df_shap        = load_gold_table("gold_shap_values",        fabric_token, workspace_id, lakehouse_id)
-        df_generation  = load_gold_table("gold_generation_summary", fabric_token, workspace_id, lakehouse_id)
+with st.spinner("Loading live data from Fabric..."):
+    df_prices      = load_gold_table("gold_price_aggregates",  fabric_token, workspace_id, lakehouse_id)
+    df_predictions = load_gold_table("gold_price_predictions",  fabric_token, workspace_id, lakehouse_id)
+    df_shap        = load_gold_table("gold_shap_values",        fabric_token, workspace_id, lakehouse_id)
+    df_generation  = load_gold_table("gold_generation_summary", fabric_token, workspace_id, lakehouse_id)
 
 # =============================================================================
 # Dashboard Metrics
@@ -284,7 +267,7 @@ with tab1:
             fig.update_layout(template="plotly_dark")
             st.plotly_chart(fig, use_container_width=True)
     else:
-        st.info("Connect Fabric credentials to view live price trends.")
+        st.info("No price data available yet — pollers are running on schedule.")
 
 with tab2:
     if not df_predictions.empty:
@@ -317,7 +300,7 @@ with tab2:
             fig2.update_layout(template="plotly_dark")
             st.plotly_chart(fig2, use_container_width=True)
     else:
-        st.info("Connect Fabric credentials to view spike predictions.")
+        st.info("No prediction data available yet — ML pipeline runs daily at 02:00 CET.")
 
 with tab3:
     if not df_generation.empty and "renewable_pct" in df_generation.columns:
@@ -333,7 +316,7 @@ with tab3:
         fig.update_layout(template="plotly_dark")
         st.plotly_chart(fig, use_container_width=True)
     else:
-        st.info("Connect Fabric credentials to view generation mix.")
+        st.info("No generation data available yet — realtime poller runs every 15 minutes.")
 
 # =============================================================================
 # Footer
