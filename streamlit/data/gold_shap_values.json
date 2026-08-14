@@ -1,0 +1,4520 @@
+[
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.2127919793,
+    "feature_value":65.6
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.0206454657,
+    "feature_value":125.6708
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-1.4311494827,
+    "feature_value":43.0216314699
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.9640192986,
+    "feature_value":17.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0236705542,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.9484586716,
+    "feature_value":300.53
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.310058713,
+    "feature_value":258.26
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.201446116,
+    "feature_value":144.74
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.7777125835,
+    "feature_value":21.63
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6598787904,
+    "feature_value":129.25
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.6508020759,
+    "feature_value":74.3237966603
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6231552958,
+    "feature_value":17.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0361566208,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.1764125824,
+    "feature_value":294.5
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.310058713,
+    "feature_value":255.83
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.2569906712,
+    "feature_value":144.74
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-1.1873980761,
+    "feature_value":50.58
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.5238493681,
+    "feature_value":134.6816
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.7074818611,
+    "feature_value":66.476422492
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.408377856,
+    "feature_value":17.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0361566208,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":-5.0689921379,
+    "feature_value":20.99
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.0509909019,
+    "feature_value":26.73
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.1064613312,
+    "feature_value":63.21
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.0460479148,
+    "feature_value":28.26
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":0.3493185937,
+    "feature_value":36.7224
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.0489223786,
+    "feature_value":11.4859531167
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.4777733684,
+    "feature_value":17.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0018315297,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":-1.981575489,
+    "feature_value":159.72
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":0.1618845761,
+    "feature_value":162.03
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.0077926405,
+    "feature_value":144.74
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.1940224022,
+    "feature_value":25.21
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.1146928221,
+    "feature_value":110.9884
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-1.4580833912,
+    "feature_value":46.9117747017
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.7925701141,
+    "feature_value":17.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":-0.0045534028,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.9484586716,
+    "feature_value":301.32
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.310058713,
+    "feature_value":258.58
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.201446116,
+    "feature_value":144.74
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.7777125835,
+    "feature_value":16.03
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6598787904,
+    "feature_value":127.6948
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.6508020759,
+    "feature_value":76.3920263684
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6231552958,
+    "feature_value":17.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0361566208,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.1650292873,
+    "feature_value":183.19
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.1736459732,
+    "feature_value":173.56
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.1560729146,
+    "feature_value":95.06
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.6442763209,
+    "feature_value":30.01
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.5327222347,
+    "feature_value":100.0176
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.5936516523,
+    "feature_value":41.6728353047
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.8945685625,
+    "feature_value":17.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0275703557,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.9543151855,
+    "feature_value":303.65
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3074263334,
+    "feature_value":259.52
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.2418452501,
+    "feature_value":144.74
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.819075644,
+    "feature_value":28.36
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.1719369441,
+    "feature_value":126.1568
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.69648844,
+    "feature_value":78.5533099621
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6601200104,
+    "feature_value":17.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0361566208,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.0805385113,
+    "feature_value":298.53
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.310058713,
+    "feature_value":257.46
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.2569906712,
+    "feature_value":144.74
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.8135327101,
+    "feature_value":30.01
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6530259252,
+    "feature_value":131.21
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.6972078085,
+    "feature_value":71.5415554066
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.5747400522,
+    "feature_value":17.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0361566208,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":-1.9479256868,
+    "feature_value":159.72
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":0.0872623175,
+    "feature_value":162.03
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.0015097335,
+    "feature_value":135.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.5095685124,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.2291164547,
+    "feature_value":82.372
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-1.5776759386,
+    "feature_value":75.1905250569
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.8950868249,
+    "feature_value":17.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":-0.0131444708,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.0246341228,
+    "feature_value":303.49
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.9893844724,
+    "feature_value":259.46
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.1632648706,
+    "feature_value":144.74
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.124589622,
+    "feature_value":0.86
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.1620101184,
+    "feature_value":123.2136
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.5611433983,
+    "feature_value":82.6674884139
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.7468112707,
+    "feature_value":17.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0361566208,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.0105745792,
+    "feature_value":237.02
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.1429616213,
+    "feature_value":237.02
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.1725329906,
+    "feature_value":146.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.5860306025,
+    "feature_value":90.28
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-3.2800984383,
+    "feature_value":155.8448
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.490423739,
+    "feature_value":48.787893061
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.5565598607,
+    "feature_value":17.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.033976011,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.0246341228,
+    "feature_value":304.119995
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.9893844724,
+    "feature_value":259.720001
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.1632648706,
+    "feature_value":144.740005
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.124589622,
+    "feature_value":9.1
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.1620101184,
+    "feature_value":123.95039996
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.5611433983,
+    "feature_value":81.6694476751
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.7468112707,
+    "feature_value":17.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0361566208,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.0805385113,
+    "feature_value":280.08
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.310058713,
+    "feature_value":250.01
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.2569906712,
+    "feature_value":144.74
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.8135327101,
+    "feature_value":30.01
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6530259252,
+    "feature_value":130.0876
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.6972078085,
+    "feature_value":69.1777538471
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.5747400522,
+    "feature_value":17.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0361566208,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.150857687,
+    "feature_value":301.68
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.9920168519,
+    "feature_value":258.73
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.1784103215,
+    "feature_value":144.74
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.130132556,
+    "feature_value":11.01
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6430991888,
+    "feature_value":126.7352
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.5618628263,
+    "feature_value":77.7352948645
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6614313126,
+    "feature_value":17.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0361566208,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.0805385113,
+    "feature_value":298.8
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.310058713,
+    "feature_value":257.56
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.2569906712,
+    "feature_value":144.74
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.8135327101,
+    "feature_value":28.38
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6530259252,
+    "feature_value":130.8128
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.6972078085,
+    "feature_value":72.0677315401
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.5747400522,
+    "feature_value":17.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0361566208,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.9484586716,
+    "feature_value":299.83
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.310058713,
+    "feature_value":257.98
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.201446116,
+    "feature_value":144.74
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.7777125835,
+    "feature_value":25.13
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6598787904,
+    "feature_value":130.0796
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.6508020759,
+    "feature_value":73.1645354367
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6231552958,
+    "feature_value":17.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0361566208,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.2027683258,
+    "feature_value":280.08
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.0181452036,
+    "feature_value":250.01
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-1.0235099792,
+    "feature_value":183.54
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.8534324169,
+    "feature_value":140.57
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-3.2092080116,
+    "feature_value":174.7176
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.2611229122,
+    "feature_value":36.6801933701
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.4635329545,
+    "feature_value":17.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0041802768,
+    "feature_value":6.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 17:45:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0343581326,
+    "feature_value":0.0
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.1206905842,
+    "feature_value":268.78
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":300.03
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0699028745,
+    "feature_value":124.21
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-1.0483291149,
+    "feature_value":37.36
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6914281249,
+    "feature_value":139.8464
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.719633162,
+    "feature_value":74.826311041
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.4100764692,
+    "feature_value":18.0
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.2983002663,
+    "feature_value":255.0
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.7562785745,
+    "feature_value":257.23
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.5566825271,
+    "feature_value":158.4
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.3262921572,
+    "feature_value":255.0
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-2.983206749,
+    "feature_value":157.5028571429
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.2504225969,
+    "feature_value":81.5640949835
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.5034114718,
+    "feature_value":18.0
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0041802768,
+    "feature_value":6.0
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CH",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0357013643,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.0893852711,
+    "feature_value":269.5
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":300.53
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0699028745,
+    "feature_value":124.21
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.8299744129,
+    "feature_value":32.43
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.8469166756,
+    "feature_value":139.1648
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.7093591094,
+    "feature_value":75.8856207899
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.4900974333,
+    "feature_value":18.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SK",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.2494401932,
+    "feature_value":240.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.0162402391,
+    "feature_value":280.08
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-1.0235099792,
+    "feature_value":172.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.7425038815,
+    "feature_value":145.99
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-3.222830534,
+    "feature_value":178.6948
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.1566197127,
+    "feature_value":38.1830886563
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.5091163516,
+    "feature_value":18.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0041802768,
+    "feature_value":6.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"IT-NO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0343581326,
+    "feature_value":0.0
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":0.1904583275,
+    "feature_value":115.68
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.0423003361,
+    "feature_value":108.08
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.0689944625,
+    "feature_value":26.02
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.413564831,
+    "feature_value":24.9
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.0990355462,
+    "feature_value":68.7944
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.9514868855,
+    "feature_value":37.1873307369
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.9300070405,
+    "feature_value":18.0
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0052174283,
+    "feature_value":6.0
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SE-3",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":-0.02810142,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":-2.1132566929,
+    "feature_value":145.64
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":0.1271877587,
+    "feature_value":159.72
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.0237258393,
+    "feature_value":124.21
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.5360695124,
+    "feature_value":37.42
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.2080441415,
+    "feature_value":115.8056
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-1.7686495781,
+    "feature_value":43.8177164588
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6262611151,
+    "feature_value":18.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BG",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":-0.0131444708,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.1206905842,
+    "feature_value":267.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":298.8
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0699028745,
+    "feature_value":124.21
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-1.0483291149,
+    "feature_value":41.82
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6914281249,
+    "feature_value":140.3576
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.719633162,
+    "feature_value":73.7188027394
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.4100764692,
+    "feature_value":18.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"HR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":-1.958948493,
+    "feature_value":145.64
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":0.0156548545,
+    "feature_value":159.72
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0158435553,
+    "feature_value":124.21
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.4935152829,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.2337898761,
+    "feature_value":88.1976
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-1.5666209459,
+    "feature_value":74.177718593
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.8899850845,
+    "feature_value":18.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"GR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":-0.0131444708,
+    "feature_value":0.0
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":-0.3143421412,
+    "feature_value":166.78
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.5590581894,
+    "feature_value":172.43
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.2547618449,
+    "feature_value":26.23
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.1091095731,
+    "feature_value":24.65
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.4323055744,
+    "feature_value":91.4524
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-1.4698603153,
+    "feature_value":64.1335729344
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.9982197881,
+    "feature_value":18.0
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"LT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0149142994,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.0691723824,
+    "feature_value":230.04
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.9482744932,
+    "feature_value":237.02
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.8786690831,
+    "feature_value":159.4
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.6731317639,
+    "feature_value":97.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-3.2232084274,
+    "feature_value":161.4352
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.4435777366,
+    "feature_value":48.968984497
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.4906133115,
+    "feature_value":18.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0041802768,
+    "feature_value":6.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.033976011,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.9156552553,
+    "feature_value":274.02
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":303.65
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0240873285,
+    "feature_value":124.2
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.7469306588,
+    "feature_value":25.04
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.5946310163,
+    "feature_value":135.9832
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.651548028,
+    "feature_value":81.132684162
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6871963143,
+    "feature_value":18.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.0893852711,
+    "feature_value":267.07
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":298.85
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0699028745,
+    "feature_value":124.21
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.8299744129,
+    "feature_value":30.11
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.8469166756,
+    "feature_value":138.6008
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.7093591094,
+    "feature_value":76.1546942589
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.4900974333,
+    "feature_value":18.0
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"AT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.9156552553,
+    "feature_value":270.63
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":301.32
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0240873285,
+    "feature_value":124.21
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.7469306588,
+    "feature_value":23.97
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.5946310163,
+    "feature_value":137.8788
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.651548028,
+    "feature_value":77.8423615563
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6871963143,
+    "feature_value":18.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"CZ",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":-0.3143421412,
+    "feature_value":166.78
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.5590581894,
+    "feature_value":172.43
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.2547618449,
+    "feature_value":26.23
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.1091095731,
+    "feature_value":24.65
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.4323055744,
+    "feature_value":91.4524
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-1.4698603153,
+    "feature_value":64.1335729344
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.9982197881,
+    "feature_value":18.0
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"LV",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0149142994,
+    "feature_value":0.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":0.3665394187,
+    "feature_value":169.17
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.4716845751,
+    "feature_value":171.94
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.0675153062,
+    "feature_value":135.92
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.2155065238,
+    "feature_value":66.76
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.5229488611,
+    "feature_value":129.8136
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.9878652096,
+    "feature_value":41.9698642759
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.9065038562,
+    "feature_value":18.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NO-2",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0236705542,
+    "feature_value":0.0
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.9156552553,
+    "feature_value":271.5
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":301.9
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0240873285,
+    "feature_value":124.21
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.7469306588,
+    "feature_value":15.2
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.5946310163,
+    "feature_value":134.8816
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.651548028,
+    "feature_value":81.9923898745
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6871963143,
+    "feature_value":18.0
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"NL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":-5.0183720589,
+    "feature_value":46.19
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.0920594633,
+    "feature_value":20.99
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.2158856839,
+    "feature_value":24.45
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.0923615545,
+    "feature_value":24.65
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":0.2550038695,
+    "feature_value":37.4396
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.1784463972,
+    "feature_value":11.4953155242
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.5854994655,
+    "feature_value":18.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0018315297,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.2200367451,
+    "feature_value":260.78
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":294.5
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0699028745,
+    "feature_value":124.21
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.3483968079,
+    "feature_value":65.12
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.8515033126,
+    "feature_value":143.0896
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.6993528008,
+    "feature_value":68.653453329
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6368655562,
+    "feature_value":18.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"BE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0288718008,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.1206905842,
+    "feature_value":266.6
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":298.53
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0699028745,
+    "feature_value":124.21
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-1.0483291149,
+    "feature_value":44.14
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6914281249,
+    "feature_value":140.6736
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.719633162,
+    "feature_value":73.2253025987
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.4100764692,
+    "feature_value":18.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"SI",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.5731173754,
+    "feature_value":176.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.8569268584,
+    "feature_value":183.19
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.1711112559,
+    "feature_value":100.27
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-1.0043305159,
+    "feature_value":44.14
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.052978389,
+    "feature_value":105.8572
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.4245733619,
+    "feature_value":41.6827015999
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6877100468,
+    "feature_value":18.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PT",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0275703557,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.1260561943,
+    "feature_value":273.8
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.0304745436,
+    "feature_value":303.49
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0070330873,
+    "feature_value":124.21
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.1923867315,
+    "feature_value":0.01
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.5843305588,
+    "feature_value":134.1312
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.5626086593,
+    "feature_value":83.8500492109
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.725472331,
+    "feature_value":18.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DE-LU",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":-1.7085965872,
+    "feature_value":130.26
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.095672965,
+    "feature_value":130.8
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.059895955,
+    "feature_value":26.23
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.4281973839,
+    "feature_value":24.65
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.1502765715,
+    "feature_value":65.5152
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.9230442047,
+    "feature_value":38.9596276206
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.9529709816,
+    "feature_value":18.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0052174283,
+    "feature_value":6.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":-0.0240084101,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.9156552553,
+    "feature_value":271.16
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":301.68
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0240873285,
+    "feature_value":124.21
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.7469306588,
+    "feature_value":17.83
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.5946310163,
+    "feature_value":137.1412
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.651548028,
+    "feature_value":79.0004498046
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6871963143,
+    "feature_value":18.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"PL",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.1260561943,
+    "feature_value":274.700012
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.0304745436,
+    "feature_value":304.119995
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0070330873,
+    "feature_value":124.209999
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":0.1923867315,
+    "feature_value":6.94
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.5843305588,
+    "feature_value":134.57440044
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.5626086593,
+    "feature_value":83.3643271304
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.725472331,
+    "feature_value":18.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"DK-1",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.1206905842,
+    "feature_value":268.48
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":299.83
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.0699028745,
+    "feature_value":124.21
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-1.0483291149,
+    "feature_value":37.31
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6914281249,
+    "feature_value":139.8136
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.719633162,
+    "feature_value":74.7898904643
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.4100764692,
+    "feature_value":18.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"RO",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.1206905842,
+    "feature_value":240.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-1.3485165834,
+    "feature_value":280.08
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":0.0150314383,
+    "feature_value":124.21
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-1.1730417013,
+    "feature_value":44.14
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.587800324,
+    "feature_value":138.4872
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.7170262933,
+    "feature_value":69.2684562361
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.4724189341,
+    "feature_value":18.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"FR",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.027439829,
+    "feature_value":0.0
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.5731173754,
+    "feature_value":176.0
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.8569268584,
+    "feature_value":183.19
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.1711112559,
+    "feature_value":100.27
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-1.0043305159,
+    "feature_value":44.14
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.052978389,
+    "feature_value":105.8572
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-0.4245733619,
+    "feature_value":41.6827015999
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6877100468,
+    "feature_value":18.0
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0023583702,
+    "feature_value":6.0
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"ES",
+    "event_time":"2026-08-14 18:00:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0275703557,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":1.7171705961,
+    "feature_value":231.1
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":0.0487437472,
+    "feature_value":130.26
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.2078759968,
+    "feature_value":40.42
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.1838903278,
+    "feature_value":24.63
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"price_rolling_avg_6h",
+    "shap_value":-0.6075585485,
+    "feature_value":73.7732
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"price_rolling_std_6h",
+    "shap_value":-1.0038774014,
+    "feature_value":50.196264529
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"hour_of_day",
+    "shap_value":0.6830917597,
+    "feature_value":18.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"day_of_week",
+    "shap_value":-0.0052174283,
+    "feature_value":6.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"is_weekend",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"temperature_c",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"wind_speed_ms",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"humidity_pct",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"solar_radiation",
+    "shap_value":0.0,
+    "feature_value":0.0
+  },
+  {
+    "region":"EE",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"load_mw",
+    "shap_value":0.0141328871,
+    "feature_value":0.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"price_eur_mwh",
+    "shap_value":2.0691723824,
+    "feature_value":230.04
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"price_lag_1h",
+    "shap_value":-0.9482744932,
+    "feature_value":230.04
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"price_lag_12h",
+    "shap_value":-0.8786690831,
+    "feature_value":159.4
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"price_lag_24h",
+    "shap_value":-0.6731317639,
+    "feature_value":97.0
+  },
+  {
+    "region":"RS",
+    "event_time":"2026-08-14 18:15:00",
+    "feature_name":"price_rolling_avg_6
