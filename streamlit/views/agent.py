@@ -115,20 +115,24 @@ def render() -> None:
     # anymore, so this is now genuinely wide.
     left, chat = st.columns([1, 3.4], gap="large")
 
+    # Suggestion rail gets a right-hand vertical rule, the way Claude
+    # separates its sidebar from the conversation pane, instead of relying
+    # on column spacing alone.
     with left:
-        with st.container(key="pg_sugg"):
-            st.markdown('<div class="pg-sugg-h">Try asking</div>',
-                        unsafe_allow_html=True)
-            for i, p in enumerate(PROMPTS):
-                if st.button(p, key=f"sg{i}", use_container_width=True):
-                    st.session_state.pending = p
-                    st.rerun()
+        with st.container(key="pg_rail"):
+            with st.container(key="pg_sugg"):
+                st.markdown('<div class="pg-sugg-h">Try asking</div>',
+                            unsafe_allow_html=True)
+                for i, p in enumerate(PROMPTS):
+                    if st.button(p, key=f"sg{i}", use_container_width=True):
+                        st.session_state.pending = p
+                        st.rerun()
 
-        if st.session_state.chat:
-            with st.container(key="pg_clear"):
-                if st.button("Clear conversation"):
-                    st.session_state.chat = []
-                    st.rerun()
+            if st.session_state.chat:
+                with st.container(key="pg_clear"):
+                    if st.button("Clear conversation"):
+                        st.session_state.chat = []
+                        st.rerun()
 
     with chat:
         if not st.session_state.chat:

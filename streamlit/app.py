@@ -33,22 +33,25 @@ T.inject_css()
 from views import agent, dashboard  # noqa: E402
 
 pages = [
-    st.Page(dashboard.render, title="Dashboard",  icon="📊",
+    st.Page(dashboard.render, title="Dashboard", icon="📊",
             url_path="dashboard", default=True),
-    st.Page(agent.render,     title="AI Analyst", icon="🤖",
+    st.Page(agent.render,     title="AI Chat",   icon="🤖",
             url_path="analyst"),
 ]
 
 # position="hidden" suppresses Streamlit's own sidebar nav widget entirely;
-# we render the links ourselves below so the logo can sit above them.
+# we render the links ourselves below so the logo can sit above them, and
+# style them as one segmented pill (Claude's Home/Code pattern) instead of
+# two stacked rows.
 nav = st.navigation(pages, position="hidden")
 
 with st.sidebar:
     T.sidebar_brand()
-    for pg in pages:
-        st.page_link(pg, label=pg.title, icon=pg.icon)
 
-    st.markdown("<div class='pg-divider'></div>", unsafe_allow_html=True)
+    with st.container(key="pg_segctl"):
+        for pg in pages:
+            st.page_link(pg, label=pg.title, icon=pg.icon)
+
     if st.button("Reload snapshot", use_container_width=True):
         st.cache_data.clear()
         st.rerun()

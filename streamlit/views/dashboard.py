@@ -211,7 +211,7 @@ def render() -> None:
 
     # ── price movement + watchlist ───────────────────────────────────────
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-    left, right = st.columns([1.62, 1], gap="medium")
+    left, right = st.columns([1.62, 1], gap="large")
 
     with left:
         with st.container(border=True, key="pg_panel_2"):
@@ -246,7 +246,7 @@ def render() -> None:
 
     # ── spread + generation ──────────────────────────────────────────────
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-    a, b = st.columns(2, gap="medium")
+    a, b = st.columns(2, gap="large")
 
     with a:
         with st.container(border=True, key="pg_panel_4"):

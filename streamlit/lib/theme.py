@@ -73,40 +73,49 @@ section[data-testid="stSidebar"] {{
 }}
 section[data-testid="stSidebar"] .block-container {{ padding-top:1.6rem; }}
 
-/* manual nav — built with st.page_link so we control ordering:
-   the built-in st.navigation widget always claims the top of the sidebar
-   regardless of call order, which is why the logo kept ending up below it. */
-div[data-testid="stPageLink"] {{ margin:1px 0; }}
-div[data-testid="stPageLink"] a {{
-  border-radius:10px; padding:.5rem .75rem !important; gap:.6rem;
-  color:{MUTED} !important; font-family:{FONT_BODY}; font-size:.9rem; font-weight:500;
-  text-decoration:none !important;
+/* compact top-left brand lockup — icon + wordmark on one line, the way
+   Linear/Vercel/Stripe present theirs, rather than a large centred tile */
+.pg-brand {{
+  display:flex; align-items:center; gap:.55rem;
+  margin:.1rem 0 1.1rem 0; padding:0 .15rem;
 }}
-div[data-testid="stPageLink"] a:hover {{
-  background:rgba(56,189,248,.07); color:{TEXT} !important;
-}}
-div[data-testid="stPageLink"] a[aria-current="page"] {{
-  background:rgba(56,189,248,.12); color:{TEXT} !important;
-  box-shadow:inset 3px 0 0 {SKY};
-}}
-div[data-testid="stPageLink"] a p {{ color:inherit !important; font-size:.9rem !important; }}
-
-.pg-logo {{ text-align:center; margin-bottom:.3rem; padding-top:.2rem; }}
-.pg-logo-mark {{
-  width:52px; height:52px; margin:0 auto .75rem auto; border-radius:15px;
+.pg-brand-icon {{
+  width:26px; height:26px; flex-shrink:0; border-radius:8px;
   background:linear-gradient(140deg,{SKY},{VIOLET});
   display:flex; align-items:center; justify-content:center;
-  font-size:1.55rem; box-shadow:0 8px 28px rgba(56,189,248,.32);
+  font-size:.85rem; box-shadow:0 4px 14px rgba(56,189,248,.28);
 }}
-.pg-logo-name {{
-  font-family:{FONT_DISPLAY}; font-size:1.3rem; font-weight:700;
-  color:{TEXT}; letter-spacing:-.01em;
+.pg-brand-name {{
+  font-family:{FONT_DISPLAY}; font-size:1.08rem; font-weight:700;
+  color:{TEXT}; letter-spacing:-.01em; line-height:1;
 }}
-.pg-logo-name em {{ font-style:normal; color:{SKY}; }}
-.pg-logo-sub {{
-  font-family:{FONT_MONO}; font-size:.575rem; color:{MUTED};
-  letter-spacing:.22em; text-transform:uppercase; margin-top:.34rem;
+.pg-brand-name em {{ font-style:normal; color:{SKY}; }}
+
+/* segmented nav toggle — Claude's Home/Code pattern: one pill container,
+   two equal segments, the active one lit. Built on st.page_link so page
+   routing still works; the pill chrome comes from wrapping both links in
+   a keyed container (.st-key-pg_segctl) and forcing that row to flex. */
+.st-key-pg_segctl {{
+  display:flex; gap:2px; background:{RAISED}; border:1px solid {LINE};
+  border-radius:11px; padding:3px; margin-bottom:1.1rem;
 }}
+.st-key-pg_segctl > div {{ display:contents; }}
+.st-key-pg_segctl div[data-testid="stPageLink"] {{ flex:1; margin:0; }}
+.st-key-pg_segctl div[data-testid="stPageLink"] a {{
+  border-radius:8px !important; justify-content:center; padding:.5rem .4rem !important;
+}}
+.st-key-pg_segctl div[data-testid="stPageLink"] a[aria-current="page"] {{
+  background:{PANEL} !important; box-shadow:0 0 0 1px {LINE};
+}}
+
+div[data-testid="stPageLink"] a {{
+  border-radius:8px; gap:.5rem;
+  color:{MUTED} !important; font-family:{FONT_BODY}; font-size:.87rem; font-weight:500;
+  text-decoration:none !important; transition:background .12s ease, color .12s ease;
+}}
+div[data-testid="stPageLink"] a:hover {{ color:{TEXT} !important; }}
+div[data-testid="stPageLink"] a[aria-current="page"] {{ color:{TEXT} !important; }}
+div[data-testid="stPageLink"] a p {{ color:inherit !important; font-size:.87rem !important; }}
 
 .pg-meta-block {{ margin-bottom:1.0rem; }}
 .pg-meta-k {{
@@ -345,6 +354,12 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
 }}
 .st-key-pg_clear .stButton button:hover {{ color:{CORAL}; box-shadow:none; }}
 
+/* vertical rule between the suggestion rail and the conversation, the way
+   Claude separates its history sidebar from the chat pane */
+.st-key-pg_rail {{
+  border-right:1px solid {LINE}; padding-right:1.4rem; min-height:70vh;
+}}
+
 /* zone code reference grid */
 .pg-zoneref {{
   display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
@@ -386,47 +401,53 @@ details[data-testid="stExpander"] summary:hover {{ color:{SKY}; }}
 # ─────────────────────────────────────────────────────────────────────────────
 # Plotly theme
 # ─────────────────────────────────────────────────────────────────────────────
-pio.templates["pulsegrid"] = go.layout.Template(
-    layout=dict(
-        paper_bgcolor=PANEL,
-        plot_bgcolor="#0A1120",
-        font=dict(family="Inter, sans-serif", color=MUTED, size=12),
-        colorway=SERIES,
-        xaxis=dict(gridcolor="rgba(29,43,71,.65)", zerolinecolor=LINE, linecolor=LINE,
-                   automargin=True,
-                   tickfont=dict(family="JetBrains Mono", size=10, color=MUTED)),
-        yaxis=dict(gridcolor="rgba(29,43,71,.65)", zerolinecolor=LINE, linecolor=LINE,
-                   automargin=True, title_standoff=14,
-                   tickfont=dict(family="JetBrains Mono", size=10, color=MUTED)),
-        legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(size=11, color=MUTED),
-                    orientation="h", y=1.02, yanchor="bottom", x=0),
-        hoverlabel=dict(bgcolor="#050810", bordercolor=SKY,
-                        font=dict(family="JetBrains Mono", size=12, color=TEXT),
-                        align="left"),
-        margin=dict(l=56, r=18, t=46, b=44),
-    )
-)
+# style_fig applies every property as an explicit literal via update_layout,
+# never through pio.templates["pulsegrid"] by name. A named template has to
+# be registered before the figure that references it is built; under
+# Streamlit's rerun model that ordering isn't guaranteed, and when the
+# lookup misses, Plotly falls back to its own default light theme — which
+# is exactly the beige background and washed-out tooltip this replaces.
+# Nothing here depends on module import order.
+_CHART_FLOOR = "#050810"   # darker than the card — gives the plot its own frame
+_HOVER_BG    = "#000000"   # pure black: maximum, unmistakable contrast
+_HOVER_FONT  = "#FFFFFF"   # pure white: same reasoning
 
 
 def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
               xtitle: str = "") -> go.Figure:
-    """Apply the shared chart look, including a hover style that is fixed
-    and identical across every trace and every chart — never left to
-    Plotly's per-trace default colouring, which is what made some tooltips
-    unreadable depending on the line colour underneath them.
+    """Apply the shared chart look. Every value is literal — none of it is
+    resolved through a named template — and the hover style is set at both
+    the layout AND the trace level so no individual trace can ever render
+    with different (or default) hover colours.
     """
+    axis_common = dict(
+        gridcolor="rgba(29,43,71,.6)", zerolinecolor=LINE,
+        linecolor=LINE, linewidth=1, showline=True, mirror=True,
+        automargin=True,
+        tickfont=dict(family="JetBrains Mono", size=10, color=MUTED),
+        title_font=dict(family="Inter, sans-serif", size=11, color=MUTED),
+    )
+    hover = dict(bgcolor=_HOVER_BG, bordercolor=SKY,
+                font=dict(family="JetBrains Mono", size=13, color=_HOVER_FONT))
+
     fig.update_layout(
-        template="pulsegrid", height=height,
-        yaxis_title=ytitle, xaxis_title=xtitle, title=None,
+        paper_bgcolor=PANEL,
+        plot_bgcolor=_CHART_FLOOR,
+        font=dict(family="Inter, sans-serif", color=MUTED, size=12),
+        colorway=SERIES,
+        height=height,
+        title=None,
         legend_title_text="",
+        xaxis=dict(title=xtitle, **axis_common),
+        yaxis=dict(title=ytitle, title_standoff=14, **axis_common),
+        legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(size=11, color=MUTED),
+                    orientation="h", y=1.05, yanchor="bottom", x=0),
+        margin=dict(l=58, r=20, t=40, b=46),
         modebar=dict(bgcolor="rgba(0,0,0,0)", color=MUTED, activecolor=SKY),
+        hoverlabel=hover,
+        hovermode="closest",
     )
-    # Belt-and-braces: set hoverlabel on every trace directly, not just the
-    # layout default, so no trace can render with a different hover style.
-    fig.update_traces(
-        hoverlabel=dict(bgcolor="#050810", bordercolor=SKY,
-                        font=dict(family="JetBrains Mono", size=12, color=TEXT))
-    )
+    fig.update_traces(hoverlabel=hover)
     return fig
 
 
@@ -434,11 +455,13 @@ def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
 # Components
 # ─────────────────────────────────────────────────────────────────────────────
 def sidebar_brand() -> None:
+    """Compact top-left lockup — icon and wordmark on one line, matching
+    how Claude, Linear, and Vercel present their brand: small, inline,
+    not a large centred hero tile."""
     st.markdown(
-        '<div class="pg-logo">'
-        '<div class="pg-logo-mark">⚡</div>'
-        '<div class="pg-logo-name">Pulse<em>Grid</em></div>'
-        '<div class="pg-logo-sub">Energy Market Intelligence</div>'
+        '<div class="pg-brand">'
+        '<span class="pg-brand-icon">⚡</span>'
+        '<span class="pg-brand-name">Pulse<em>Grid</em></span>'
         "</div>",
         unsafe_allow_html=True,
     )
