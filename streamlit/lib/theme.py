@@ -14,6 +14,14 @@ import plotly.graph_objects as go
 import plotly.io as pio
 import streamlit as st
 
+# Belt-and-suspenders: make the GLOBAL Plotly default a dark theme, not the
+# factory light one. If anything downstream ever fails to apply the explicit
+# per-figure colors below, the chart still renders dark instead of falling
+# back to Plotly's beige "plotly" default — which is the symptom this
+# addresses (charts rendering with a light/beige plot area despite the
+# figure's own layout specifying dark colors).
+pio.templates.default = "plotly_dark"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Tokens
 # ─────────────────────────────────────────────────────────────────────────────
@@ -66,40 +74,42 @@ html, body, [class*="css"] {{ font-family:{FONT_BODY}; color:{TEXT}; }}
 h1,h2,h3,h4 {{ font-family:{FONT_DISPLAY}; color:{TEXT}; }}
 a {{ color:{SKY}; }}
 
-/* ── sidebar ──────────────────────────────────────────────────────────── */
-section[data-testid="stSidebar"] {{
-  background:linear-gradient(180deg,#0A1322 0%,#080F1D 100%);
-  border-right:1px solid {LINE};
-}}
-section[data-testid="stSidebar"] .block-container {{ padding-top:1.6rem; }}
+/* ── sidebar: unused now — everything moved into a top header bar ──────── */
+section[data-testid="stSidebar"] {{ display:none !important; }}
+div[data-testid="stSidebarCollapsedControl"] {{ display:none !important; }}
 
-/* compact top-left brand lockup — icon + wordmark on one line, the way
-   Linear/Vercel/Stripe present theirs, rather than a large centred tile */
+/* ── top header bar: brand, segmented nav, reload — shared by both pages,
+   rendered once in app.py above nav.run() ──────────────────────────────── */
+.st-key-pg_topbar {{
+  border-bottom:1px solid {LINE}; padding-bottom:1.1rem; margin-bottom:1.8rem;
+}}
+.st-key-pg_topbar [data-testid="stHorizontalBlock"] {{ align-items:center; }}
+
 .pg-brand {{
-  display:flex; align-items:center; gap:.55rem;
-  margin:.1rem 0 1.1rem 0; padding:0 .15rem;
+  display:flex; align-items:center; gap:.55rem; padding:0 .15rem;
 }}
 .pg-brand-icon {{
-  width:26px; height:26px; flex-shrink:0; border-radius:8px;
+  width:28px; height:28px; flex-shrink:0; border-radius:8px;
   background:linear-gradient(140deg,{SKY},{VIOLET});
   display:flex; align-items:center; justify-content:center;
-  font-size:.85rem; box-shadow:0 4px 14px rgba(56,189,248,.28);
+  font-size:.9rem; box-shadow:0 4px 14px rgba(56,189,248,.28);
 }}
 .pg-brand-name {{
-  font-family:{FONT_DISPLAY}; font-size:1.08rem; font-weight:700;
+  font-family:{FONT_DISPLAY}; font-size:1.14rem; font-weight:700;
   color:{TEXT}; letter-spacing:-.01em; line-height:1;
 }}
 .pg-brand-name em {{ font-style:normal; color:{SKY}; }}
 
-/* segmented nav toggle — Claude's Home/Code pattern: one pill container,
-   two equal segments, the active one lit. Built on st.page_link so page
-   routing still works; the pill chrome comes from wrapping both links in
-   a keyed container (.st-key-pg_segctl) and forcing that row to flex. */
+/* segmented nav toggle — Claude's Home/Code pattern: one pill, two equal
+   segments side by side, the active one lit. Built on st.page_link so
+   page routing still works; the pill chrome comes from forcing the
+   keyed container's row to flex. */
 .st-key-pg_segctl {{
-  display:flex; gap:2px; background:{RAISED}; border:1px solid {LINE};
-  border-radius:11px; padding:3px; margin-bottom:1.1rem;
+  display:flex !important; flex-direction:row !important; gap:2px;
+  background:{RAISED}; border:1px solid {LINE};
+  border-radius:11px; padding:3px; max-width:360px;
 }}
-.st-key-pg_segctl > div {{ display:contents; }}
+.st-key-pg_segctl > div {{ display:contents !important; }}
 .st-key-pg_segctl div[data-testid="stPageLink"] {{ flex:1; margin:0; }}
 .st-key-pg_segctl div[data-testid="stPageLink"] a {{
   border-radius:8px !important; justify-content:center; padding:.5rem .4rem !important;
@@ -107,6 +117,8 @@ section[data-testid="stSidebar"] .block-container {{ padding-top:1.6rem; }}
 .st-key-pg_segctl div[data-testid="stPageLink"] a[aria-current="page"] {{
   background:{PANEL} !important; box-shadow:0 0 0 1px {LINE};
 }}
+
+.st-key-pg_reload button {{ float:right; }}
 
 div[data-testid="stPageLink"] a {{
   border-radius:8px; gap:.5rem;
@@ -339,9 +351,9 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
   text-transform:uppercase; color:{MUTED}; margin:0 0 .6rem 2px;
 }}
 .st-key-pg_sugg .stButton button {{
-  font-size:.755rem; font-weight:400; color:{MUTED};
+  font-size:.685rem; font-weight:400; color:{MUTED};
   text-align:left; justify-content:flex-start;
-  padding:.5rem .7rem; border-radius:9px; line-height:1.4;
+  padding:.42rem .6rem; border-radius:8px; line-height:1.35;
   background:transparent; border:1px solid {LINE}; width:100%;
 }}
 .st-key-pg_sugg .stButton button:hover {{
@@ -358,6 +370,15 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
    Claude separates its history sidebar from the chat pane */
 .st-key-pg_rail {{
   border-right:1px solid {LINE}; padding-right:1.4rem; min-height:70vh;
+}}
+
+/* guaranteed chart frame — pure CSS, independent of Plotly's own theming.
+   Gives every visualization a visible border distinct from both the outer
+   panel card and its caption text, and never overlaps a neighbouring
+   chart since each one gets its own inset box. */
+[class*="st-key-pg_frame_"] {{
+  background:#050810; border:1px solid {LINE}; border-radius:12px;
+  padding:10px 12px 4px 12px; margin-top:.3rem;
 }}
 
 /* zone code reference grid */
@@ -543,6 +564,22 @@ def panel_header(title: str, meta: str = "") -> None:
         f'<div class="pg-ph"><h3>{title}</h3><span>{meta}</span></div>',
         unsafe_allow_html=True,
     )
+
+
+import contextlib
+
+
+@contextlib.contextmanager
+def chart_frame(key: str):
+    """A visible border around the plot area itself, separate from the
+    caption text and from the outer panel card. This is pure CSS on a
+    Streamlit container, so the border renders regardless of anything
+    Plotly does internally — it does not depend on the chart's own theme
+    resolving correctly, which is the layer that kept intermittently
+    failing to apply on its own.
+    """
+    with st.container(key=f"pg_frame_{key}"):
+        yield
 
 
 def price_colour(pct: float) -> str:
