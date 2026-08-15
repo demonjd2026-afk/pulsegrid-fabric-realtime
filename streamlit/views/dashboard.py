@@ -232,17 +232,20 @@ def render() -> None:
 
     with right:
         with st.container(border=True, key="pg_panel_3"):
-            T.panel_header("Spike watchlist", "xgboost · 2h horizon")
+            T.panel_header("Spike watchlist", f"xgboost · 2h horizon · {len(lpred)} zones")
             if lpred.empty:
                 T.empty("No predictions scored",
                         "The model runs daily at 02:00 CET and writes back to Gold.")
             else:
-                T.watchlist([
-                    (r["region"], D.zone_name(r["region"]),
-                     float(r["spike_probability"]),
-                     int(r.get("predicted_spike", 0)))
-                    for _, r in lpred.head(9).iterrows()
-                ])
+                with st.container(key="pg_watchscroll"):
+                    T.watchlist([
+                        (r["region"], D.zone_name(r["region"]),
+                         float(r["spike_probability"]),
+                         int(r.get("predicted_spike", 0)))
+                        for _, r in lpred.sort_values(
+                            "spike_probability", ascending=False
+                        ).iterrows()
+                    ])
                 ok = lpred.get("prediction_correct")
                 if ok is not None and ok.notna().any():
                     st.caption(f"Latest run scored {int(ok.sum())} of {len(lpred)} "

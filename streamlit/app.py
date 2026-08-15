@@ -43,18 +43,17 @@ pages = [
 nav = st.navigation(pages, position="hidden")
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Top header — brand, segmented nav, reload — one row, shared by both pages
+# Top header — large brand with the nav pill directly beneath it, reload
+# action right-aligned on the same row. Full-bleed bottom rule (CSS).
 # ─────────────────────────────────────────────────────────────────────────────
 with st.container(key="pg_topbar"):
-    c1, c2, c3 = st.columns([1.1, 2.0, 1.1], gap="medium",
-                            vertical_alignment="center")
-    with c1:
+    left, right = st.columns([5, 1.2], gap="medium", vertical_alignment="top")
+    with left:
         T.sidebar_brand()
-    with c2:
         with st.container(key="pg_segctl"):
             for pg in pages:
                 st.page_link(pg, label=pg.title, icon=pg.icon)
-    with c3:
+    with right:
         with st.container(key="pg_reload"):
             if st.button("Reload snapshot", use_container_width=True):
                 st.cache_data.clear()

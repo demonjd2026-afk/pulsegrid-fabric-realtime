@@ -29,13 +29,13 @@ it and when that table next refreshes. Never invent a number.
 - Keep it tight: two or three short paragraphs, or a compact table."""
 
 PROMPTS = [
-    "Which zones are closest to a price spike right now?",
-    "Compare the highest and lowest priced zones.",
-    "Does renewable share line up with price today?",
-    "Which features move the spike model most?",
-    "Summarise the European market in five lines.",
-    "Explain the spike prediction for the riskiest zone.",
-    "Which zones look mispriced vs their generation mix?",
+    "Zones closest to a price spike?",
+    "Highest vs lowest priced zone?",
+    "Renewable share vs price today?",
+    "Top features driving spikes?",
+    "5-line market summary",
+    "Explain the riskiest zone's spike",
+    "Zones mispriced vs generation?",
 ]
 
 

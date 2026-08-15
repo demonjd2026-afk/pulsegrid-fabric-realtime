@@ -79,26 +79,36 @@ section[data-testid="stSidebar"] {{ display:none !important; }}
 div[data-testid="stSidebarCollapsedControl"] {{ display:none !important; }}
 
 /* ── top header bar: brand, segmented nav, reload — shared by both pages,
-   rendered once in app.py above nav.run() ──────────────────────────────── */
+   rendered once in app.py above nav.run(). The bottom rule is full-bleed
+   (breaks out of block-container's max-width) so it spans the entire
+   viewport edge to edge, not just the content column. ─────────────────── */
 .st-key-pg_topbar {{
-  border-bottom:1px solid {LINE}; padding-bottom:1.1rem; margin-bottom:1.8rem;
+  position:relative; left:50%; right:50%;
+  margin-left:-50vw; margin-right:-50vw; width:100vw;
+  padding:0 max(24px, calc(50vw - 780px)) 1.3rem max(24px, calc(50vw - 780px));
+  border-bottom:1px solid {LINE}; margin-bottom:2rem;
+  box-sizing:border-box;
 }}
-.st-key-pg_topbar [data-testid="stHorizontalBlock"] {{ align-items:center; }}
+.st-key-pg_topbar [data-testid="stHorizontalBlock"] {{ align-items:flex-start; }}
 
 .pg-brand {{
-  display:flex; align-items:center; gap:.55rem; padding:0 .15rem;
+  display:flex; align-items:center; gap:.7rem; padding:.1rem .15rem 0 .15rem;
+  margin-bottom:.7rem;
 }}
 .pg-brand-icon {{
-  width:28px; height:28px; flex-shrink:0; border-radius:8px;
+  width:36px; height:36px; flex-shrink:0; border-radius:10px;
   background:linear-gradient(140deg,{SKY},{VIOLET});
   display:flex; align-items:center; justify-content:center;
-  font-size:.9rem; box-shadow:0 4px 14px rgba(56,189,248,.28);
+  font-size:1.1rem; box-shadow:0 4px 16px rgba(56,189,248,.3);
 }}
 .pg-brand-name {{
-  font-family:{FONT_DISPLAY}; font-size:1.14rem; font-weight:700;
-  color:{TEXT}; letter-spacing:-.01em; line-height:1;
+  font-family:{FONT_DISPLAY}; font-size:1.5rem; font-weight:700;
+  color:{TEXT}; letter-spacing:-.015em; line-height:1;
 }}
 .pg-brand-name em {{ font-style:normal; color:{SKY}; }}
+
+.st-key-pg_reload {{ padding-top:.35rem; }}
+.st-key-pg_reload button {{ font-size:.82rem; }}
 
 /* segmented nav toggle — Claude's Home/Code pattern: one pill, two equal
    segments side by side, the active one lit. Built on st.page_link so
@@ -107,18 +117,17 @@ div[data-testid="stSidebarCollapsedControl"] {{ display:none !important; }}
 .st-key-pg_segctl {{
   display:flex !important; flex-direction:row !important; gap:2px;
   background:{RAISED}; border:1px solid {LINE};
-  border-radius:11px; padding:3px; max-width:360px;
+  border-radius:9px; padding:2px; max-width:210px;
 }}
 .st-key-pg_segctl > div {{ display:contents !important; }}
 .st-key-pg_segctl div[data-testid="stPageLink"] {{ flex:1; margin:0; }}
 .st-key-pg_segctl div[data-testid="stPageLink"] a {{
-  border-radius:8px !important; justify-content:center; padding:.5rem .4rem !important;
+  border-radius:7px !important; justify-content:center; padding:.34rem .3rem !important;
 }}
+.st-key-pg_segctl div[data-testid="stPageLink"] a p {{ font-size:.76rem !important; }}
 .st-key-pg_segctl div[data-testid="stPageLink"] a[aria-current="page"] {{
   background:{PANEL} !important; box-shadow:0 0 0 1px {LINE};
 }}
-
-.st-key-pg_reload button {{ float:right; }}
 
 div[data-testid="stPageLink"] a {{
   border-radius:8px; gap:.5rem;
@@ -353,8 +362,12 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
 .st-key-pg_sugg .stButton button {{
   font-size:.685rem; font-weight:400; color:{MUTED};
   text-align:left; justify-content:flex-start;
-  padding:.42rem .6rem; border-radius:8px; line-height:1.35;
+  padding:.42rem .6rem; border-radius:8px; line-height:1.3;
   background:transparent; border:1px solid {LINE}; width:100%;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;
+}}
+.st-key-pg_sugg .stButton button p {{
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0;
 }}
 .st-key-pg_sugg .stButton button:hover {{
   color:{TEXT}; border-color:{SKY}; background:rgba(56,189,248,.06);
@@ -371,6 +384,17 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
 .st-key-pg_rail {{
   border-right:1px solid {LINE}; padding-right:1.4rem; min-height:70vh;
 }}
+
+/* scrollable watchlist — shows every scored zone instead of a hard cutoff */
+.st-key-pg_watchscroll {{
+  max-height:460px; overflow-y:auto; padding-right:6px;
+}}
+.st-key-pg_watchscroll::-webkit-scrollbar {{ width:7px; }}
+.st-key-pg_watchscroll::-webkit-scrollbar-track {{ background:transparent; }}
+.st-key-pg_watchscroll::-webkit-scrollbar-thumb {{
+  background:{LINE}; border-radius:4px;
+}}
+.st-key-pg_watchscroll::-webkit-scrollbar-thumb:hover {{ background:{MUTED}; }}
 
 /* guaranteed chart frame — pure CSS, independent of Plotly's own theming.
    Gives every visualization a visible border distinct from both the outer
@@ -400,10 +424,13 @@ details[data-testid="stExpander"] summary {{
 details[data-testid="stExpander"] summary:hover {{ color:{SKY}; }}
 
 .pg-footer {{
-  margin-top:3rem; padding-top:1.1rem; border-top:1px solid {LINE};
+  position:relative; left:50%; right:50%;
+  margin-left:-50vw; margin-right:-50vw; width:100vw;
+  padding:1.1rem max(24px, calc(50vw - 780px)) 1.6rem max(24px, calc(50vw - 780px));
+  margin-top:3rem; border-top:1px solid {LINE};
   display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
   gap:.8rem; font-family:{FONT_MONO}; font-size:.665rem; letter-spacing:.05em;
-  color:{MUTED};
+  color:{MUTED}; box-sizing:border-box;
 }}
 .pg-footer b {{ color:{TEXT}; font-weight:500; }}
 .pg-footer a {{ color:{AMBER}; text-decoration:none; }}
@@ -443,7 +470,7 @@ def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
     """
     axis_common = dict(
         gridcolor="rgba(29,43,71,.6)", zerolinecolor=LINE,
-        linecolor=LINE, linewidth=1, showline=True, mirror=True,
+        linecolor=LINE, linewidth=1, showline=False,
         automargin=True,
         tickfont=dict(family="JetBrains Mono", size=10, color=MUTED),
         title_font=dict(family="Inter, sans-serif", size=11, color=MUTED),
