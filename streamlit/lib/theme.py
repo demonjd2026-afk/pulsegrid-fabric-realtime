@@ -178,7 +178,7 @@ div[data-testid="stPageLink"] a p {{ color:inherit !important; font-size:.87rem 
 }}
 .pg-title em {{ font-style:normal; color:{SKY};
   text-shadow:0 0 34px rgba(56,189,248,.45); }}
-.pg-sub {{ font-size:.96rem; color:{MUTED}; max-width:80ch; line-height:1.65; margin:0; }}
+.pg-sub {{ font-size:.96rem; color:{MUTED}; max-width:105ch; line-height:1.5; margin:0; }}
 
 /* ── KPI cards ────────────────────────────────────────────────────────── */
 .pg-kpis {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:13px; }}
@@ -219,20 +219,22 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
   background:{PANEL} !important;
   border:1px solid {LINE} !important; border-radius:14px !important;
   padding:12px 10px !important; box-shadow:0 8px 28px rgba(2,8,23,.35) !important;
-  overflow:hidden !important;
+  overflow:hidden !important; box-sizing:border-box !important;
 }}
+[class*="st-key-pg_panel_"] * {{ box-sizing:border-box; }}
 [class*="st-key-pg_panel_"] .js-plotly-plot,
 [class*="st-key-pg_panel_"] .plot-container {{
   max-width:100% !important;
 }}
 .pg-ph {{
   display:flex; align-items:baseline; justify-content:space-between;
-  gap:1rem; padding:6px 6px 12px 6px; margin-bottom:4px;
+  gap:.8rem; padding:6px 14px 12px 6px; margin-bottom:4px; overflow:hidden;
 }}
-.pg-ph h3 {{ font-size:1.02rem; font-weight:600; margin:0; color:{TEXT}; }}
+.pg-ph h3 {{ font-size:1.02rem; font-weight:600; margin:0; color:{TEXT}; flex-shrink:0; }}
 .pg-ph span {{
-  font-family:{FONT_MONO}; font-size:.575rem; letter-spacing:.15em;
+  font-family:{FONT_MONO}; font-size:.575rem; letter-spacing:.13em;
   text-transform:uppercase; color:{MUTED}; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; min-width:0;
 }}
 
 /* ── zone board (signature) ───────────────────────────────────────────── */
@@ -490,7 +492,7 @@ details[data-testid="stExpander"] summary:hover {{ color:{SKY}; }}
 # dark (as authored), since dark text reads fine on either.
 _CHART_FLOOR = "#050810"
 _HOVER_BG    = "#FFFFFF"
-_HOVER_FONT  = "#0B0F1A"
+_HOVER_FONT  = "#000000"
 
 
 def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",

@@ -81,8 +81,8 @@ def render() -> None:
     T.hero(
         title="Market",
         accent="Analyst",
-        subtitle="Ask about prices, spike risk, generation mix or model behaviour. "
-                 "Answers cite the live Gold tables, not general knowledge.",
+        subtitle="Ask about prices, spikes, generation mix or model behaviour — "
+                 "grounded in the live Gold tables.",
     )
 
     zones = D.latest_zone_prices(frames["gold_price_aggregates"])
@@ -110,12 +110,11 @@ def render() -> None:
     context = D.build_context(frames)
     st.session_state.setdefault("chat", [])
 
-    # Suggestions stay a narrow rail on the left; the conversation gets the
-    # rest of the page. Both columns are stretched to equal height (CSS)
-    # so the divider between them runs the full height of the row, not
-    # just the shorter column's natural content height.
+    # Suggestions stay a rail on the left; the conversation gets the rest
+    # of the page. Ratio widened from the original [1, 3.4] so the rail
+    # has real breathing room instead of feeling squeezed.
     with st.container(key="pg_chatrow"):
-        left, chat = st.columns([1, 3.4], gap="large")
+        left, chat = st.columns([1.3, 3.1], gap="large")
 
         with left:
             with st.container(key="pg_rail"):
@@ -134,21 +133,30 @@ def render() -> None:
                             st.rerun()
 
         with chat:
-            # One border around the whole conversation — history and the
-            # input both sit inside the same card, rather than floating
-            # loose on the page.
+            # One border around the whole conversation. History renders in
+            # its own fixed-height, internally-scrolling sub-box (built-in
+            # to st.container(height=...)) so a long thread scrolls in
+            # place instead of growing past the card's border. The input
+            # is called LAST so it visually docks at the bottom of the
+            # card, below the history — not above it.
             with st.container(border=True, key="pg_panel_chat"):
-                if not st.session_state.chat:
-                    st.markdown(
-                        f'<div style="color:{T.MUTED};font-size:.9rem;padding:.2rem 0 .6rem 2px">'
-                        f"Pick a question on the left, or type your own below.</div>",
-                        unsafe_allow_html=True,
-                    )
+                with st.container(height=460, key="pg_history"):
+                    if not st.session_state.chat:
+                        st.markdown(
+                            f'<div style="color:{T.MUTED};font-size:.9rem;padding:.2rem 0 .6rem 2px">'
+                            f"Pick a question on the left, or type your own below.</div>",
+                            unsafe_allow_html=True,
+                        )
+                    for msg in st.session_state.chat:
+                        avatar = "⚡" if msg["role"] == "assistant" else None
+                        with st.chat_message(msg["role"], avatar=avatar):
+                            st.markdown(msg["content"])
 
-                for msg in st.session_state.chat:
-                    avatar = "⚡" if msg["role"] == "assistant" else None
-                    with st.chat_message(msg["role"], avatar=avatar):
-                        st.markdown(msg["content"])
+                    # A user turn with no reply yet gets streamed right here,
+                    # inside the same scrollable box, appended after history
+                    # — no extra rerun needed for the reply itself.
+                    if st.session_state.chat and st.session_state.chat[-1]["role"] == "user":
+                        _stream_reply(key, context)
 
                 typed = st.chat_input(
                     "Ask about prices, spikes, generation or model drivers")
@@ -156,9 +164,6 @@ def render() -> None:
 
                 if question:
                     st.session_state.chat.append({"role": "user", "content": question})
-                    with st.chat_message("user"):
-                        st.markdown(question)
-                    _stream_reply(key, context)
                     st.rerun()
 
     T.page_footer(stamp, loaded)

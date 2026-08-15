@@ -180,7 +180,7 @@ def render() -> None:
     # ── hero panel: zone board ───────────────────────────────────────────
     st.markdown("<div style='height:22px'></div>", unsafe_allow_html=True)
     with st.container(border=True, key="pg_panel_1"):
-        T.panel_header("Zone price board", "ranked high → low · latest hour")
+        T.panel_header("Zone price board", "high → low")
         if zones.empty:
             T.empty("No prices loaded",
                     "Run the Gold pipeline, then Cell 11 in 03_gold_features "
@@ -228,7 +228,7 @@ def render() -> None:
 
     with right:
         with st.container(border=True, key="pg_panel_3"):
-            T.panel_header("Spike watchlist", f"xgboost · 2h horizon · {len(lpred)} zones")
+            T.panel_header("Spike watchlist", f"{len(lpred)} zones · 2h")
             if lpred.empty:
                 T.empty("No predictions scored",
                         "The model runs daily at 02:00 CET and writes back to Gold.")
@@ -253,12 +253,12 @@ def render() -> None:
 
     with a:
         with st.container(border=True, key="pg_panel_4"):
-            T.panel_header("Zone spread", "min — max band, average marked")
+            T.panel_header("Zone spread", "min–max, avg")
             _spread(zones)
 
     with b:
         with st.container(border=True, key="pg_panel_5"):
-            T.panel_header("Generation mix", "updated every 15 min")
+            T.panel_header("Generation mix", "every 15 min")
             _generation(agen)
 
     # ── model drivers ────────────────────────────────────────────────────
