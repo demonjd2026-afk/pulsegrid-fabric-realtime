@@ -495,21 +495,19 @@ details[data-testid="stExpander"] summary:hover {{ color:{SKY}; }}
 # style_fig applies every property as an explicit literal via update_layout,
 # never through pio.templates["pulsegrid"] by name.
 #
-# HOVER COLOUR — deliberately light background with dark text, not the dark-
-# on-dark this app uses everywhere else. In every screenshot seen from the
-# live deployment, the chart's plot area renders with a light background
-# regardless of the explicit dark plot_bgcolor set below — while everything
-# else on the same figure (paper, axis titles, legend) correctly renders
-# dark. That's consistent with something in the deployment pipeline
-# overriding plot-area colour specifically. A dark hoverlabel then becomes
-# invisible dark-text-would-be-fine-on-dark but the box itself was ALSO
-# rendering light, so white text on it disappeared. Rather than keep
-# fighting that one property, the hover box is set light-on-purpose with
-# dark text — legible whether the plot area ends up light (as observed) or
-# dark (as authored), since dark text reads fine on either.
+# HOVER COLOUR — the chart's plot area sometimes renders light/beige in
+# deployment (Streamlit's Plotly renderer can override plot_bgcolor despite
+# explicit layout values). Fix: pin the hover box to a DARK background with
+# LIGHT text so it is always legible regardless of what the plot area ends
+# up being. _HOVER_BG is the same dark navy as PANEL, _HOVER_FONT is a
+# near-white sky tint, and _HOVER_BORDER is the SKY accent so the box edge
+# is always crisp. Both bgcolor AND font.color are set at layout AND trace
+# level (update_traces below) so no individual trace can fall back to the
+# Plotly default beige/cream tooltip.
 _CHART_FLOOR = "#050810"
-_HOVER_BG    = "#12213B"   # dark navy, on-brand — not white/cream
-_HOVER_FONT  = "#5EEAD4"   # bright teal — high contrast on the navy above
+_HOVER_BG    = "#0C1425"   # dark navy matching PANEL — visible on both light and dark plot areas
+_HOVER_FONT  = "#E0F2FE"   # near-white sky tint — max contrast on the dark hover bg above
+_HOVER_BORDER = "#38BDF8"  # SKY accent — crisp boundary against any plot background
 
 
 def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
@@ -526,8 +524,9 @@ def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
         tickfont=dict(family="JetBrains Mono", size=10, color=MUTED),
         title_font=dict(family="Inter, sans-serif", size=11, color=MUTED),
     )
-    hover = dict(bgcolor=_HOVER_BG, bordercolor=SKY,
-                font=dict(family="JetBrains Mono", size=14, color=_HOVER_FONT))
+    hover = dict(bgcolor=_HOVER_BG, bordercolor=_HOVER_BORDER,
+                font=dict(family="JetBrains Mono", size=13, color=_HOVER_FONT),
+                align="left")
 
     fig.update_layout(
         paper_bgcolor=PANEL,
