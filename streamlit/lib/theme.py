@@ -107,8 +107,14 @@ div[data-testid="stSidebarCollapsedControl"] {{ display:none !important; }}
 }}
 .pg-brand-name em {{ font-style:normal; color:{SKY}; }}
 
-.st-key-pg_reload {{ padding-top:.35rem; }}
-.st-key-pg_reload button {{ font-size:.82rem; }}
+/* Reload button matches the segmented pill's exact height/padding/radius
+   so the two read as one row, not two different-sized controls. The
+   column itself is bottom-aligned (app.py) so it lines up with the pill,
+   which sits below the large brand name, not with the brand text itself. */
+.st-key-pg_reload button {{
+  height:32px; padding:0 .9rem; font-size:.76rem;
+  border-radius:9px; display:flex; align-items:center; justify-content:center;
+}}
 
 /* segmented nav toggle — Claude's Home/Code pattern: one pill, two equal
    segments side by side, the active one lit. Built on st.page_link so
@@ -213,6 +219,11 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
   background:{PANEL} !important;
   border:1px solid {LINE} !important; border-radius:14px !important;
   padding:12px 10px !important; box-shadow:0 8px 28px rgba(2,8,23,.35) !important;
+  overflow:hidden !important;
+}}
+[class*="st-key-pg_panel_"] .js-plotly-plot,
+[class*="st-key-pg_panel_"] .plot-container {{
+  max-width:100% !important;
 }}
 .pg-ph {{
   display:flex; align-items:baseline; justify-content:space-between;
@@ -387,21 +398,22 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
 .st-key-pg_clear .stButton button:hover {{ color:{CORAL}; box-shadow:none; }}
 
 /* vertical rule between the suggestion rail and the conversation, the way
-   Claude separates its history sidebar from the chat pane. align-items on
-   the row's own horizontal block stretches both columns to equal height,
-   so the rule runs the FULL height of the row, not just the shorter
-   column's natural content height. */
-.st-key-pg_chatrow [data-testid="stHorizontalBlock"] {{ align-items:stretch; }}
+   Claude separates its history sidebar from the chat pane. Matching FIXED
+   min-heights on both the rail and the chat panel (rather than relying on
+   flexbox stretch across two independent Streamlit columns, which doesn't
+   reliably equalise their heights) guarantees the divider and the chat
+   panel's border both end at the same point regardless of content. */
 .st-key-pg_rail {{
-  border-right:1px solid {LINE}; padding-right:1.4rem; height:100%;
-  margin-left:0 !important;
+  border-right:1px solid {LINE}; padding-right:1.4rem;
+  min-height:600px; margin-left:0 !important;
 }}
 .st-key-pg_sugg {{ margin-left:0 !important; padding-left:0 !important; }}
 
 /* the pg_panel_chat card inherits the standard panel look automatically
    ([class*="st-key-pg_panel_"] above already matches it) — just add the
-   chat-specific extras: comfortable minimum height and input styling */
-.st-key-pg_panel_chat {{ min-height:65vh; }}
+   chat-specific extras: comfortable minimum height (matching pg_rail
+   above) and input styling */
+.st-key-pg_panel_chat {{ min-height:600px; }}
 .st-key-pg_panel_chat div[data-testid="stChatInput"] {{
   background:{RAISED}; border-radius:12px;
 }}
@@ -462,15 +474,23 @@ details[data-testid="stExpander"] summary:hover {{ color:{SKY}; }}
 # Plotly theme
 # ─────────────────────────────────────────────────────────────────────────────
 # style_fig applies every property as an explicit literal via update_layout,
-# never through pio.templates["pulsegrid"] by name. A named template has to
-# be registered before the figure that references it is built; under
-# Streamlit's rerun model that ordering isn't guaranteed, and when the
-# lookup misses, Plotly falls back to its own default light theme — which
-# is exactly the beige background and washed-out tooltip this replaces.
-# Nothing here depends on module import order.
-_CHART_FLOOR = "#050810"   # darker than the card — gives the plot its own frame
-_HOVER_BG    = "#000000"   # pure black: maximum, unmistakable contrast
-_HOVER_FONT  = "#FFFFFF"   # pure white: same reasoning
+# never through pio.templates["pulsegrid"] by name.
+#
+# HOVER COLOUR — deliberately light background with dark text, not the dark-
+# on-dark this app uses everywhere else. In every screenshot seen from the
+# live deployment, the chart's plot area renders with a light background
+# regardless of the explicit dark plot_bgcolor set below — while everything
+# else on the same figure (paper, axis titles, legend) correctly renders
+# dark. That's consistent with something in the deployment pipeline
+# overriding plot-area colour specifically. A dark hoverlabel then becomes
+# invisible dark-text-would-be-fine-on-dark but the box itself was ALSO
+# rendering light, so white text on it disappeared. Rather than keep
+# fighting that one property, the hover box is set light-on-purpose with
+# dark text — legible whether the plot area ends up light (as observed) or
+# dark (as authored), since dark text reads fine on either.
+_CHART_FLOOR = "#050810"
+_HOVER_BG    = "#FFFFFF"
+_HOVER_FONT  = "#0B0F1A"
 
 
 def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",

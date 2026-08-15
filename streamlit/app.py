@@ -47,7 +47,7 @@ nav = st.navigation(pages, position="hidden")
 # action right-aligned on the same row. Full-bleed bottom rule (CSS).
 # ─────────────────────────────────────────────────────────────────────────────
 with st.container(key="pg_topbar"):
-    left, right = st.columns([5, 1.2], gap="medium", vertical_alignment="top")
+    left, right = st.columns([5, 1.2], gap="medium", vertical_alignment="bottom")
     with left:
         T.sidebar_brand()
         with st.container(key="pg_segctl"):
