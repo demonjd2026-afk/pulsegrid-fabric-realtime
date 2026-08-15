@@ -167,12 +167,13 @@ section[data-testid="stSidebar"] [data-testid="stSidebarNav"] span {{
 
 /* ── panels ───────────────────────────────────────────────────────────── */
 div[data-testid="stVerticalBlockBorderWrapper"] {{
-  background:{PANEL};
-  border:1px solid {LINE} !important; border-radius:14px;
-  padding:12px 10px; box-shadow:0 8px 28px rgba(2,8,23,.35);
+  border:none !important; background:transparent !important;
+  box-shadow:none !important; border-radius:0; padding:0;
 }}
-div[data-testid="stVerticalBlockBorderWrapper"] > div {{
-  border:none !important; box-shadow:none !important; background:transparent !important;
+[class*="st-key-pg_panel_"] > div[data-testid="stVerticalBlockBorderWrapper"] {{
+  background:{PANEL} !important;
+  border:1px solid {LINE} !important; border-radius:14px !important;
+  padding:12px 10px !important; box-shadow:0 8px 28px rgba(2,8,23,.35) !important;
 }}
 .pg-ph {{
   display:flex; align-items:baseline; justify-content:space-between;
@@ -290,12 +291,33 @@ div[data-baseweb="tag"] svg {{ fill:#7DD3FC !important; }}
 ul[data-testid="stSelectboxVirtualDropdown"] {{ background:{RAISED}; }}
 
 div[data-testid="stChatMessage"] {{
-  background:transparent; border:none; border-radius:0; padding:2px 0;
+  background:transparent !important; border:none !important; box-shadow:none !important;
+  border-radius:0 !important; padding:14px 0 !important;
+  border-bottom:1px solid rgba(29,43,71,.55) !important;
 }}
+div[data-testid="stChatMessage"]:last-of-type {{ border-bottom:none !important; }}
 div[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {{
-  background:{RAISED}; border-radius:14px; padding:6px 14px;
+  background:{RAISED} !important; border-radius:14px !important;
+  padding:12px 16px !important; border-bottom:none !important; margin-bottom:6px;
 }}
-div[data-testid="stChatMessage"] p {{ font-size:.92rem; line-height:1.68; }}
+div[data-testid="stChatMessage"] p {{ font-size:.92rem; line-height:1.7; }}
+div[data-testid="stChatMessage"] table {{
+  font-size:.83rem; border-collapse:collapse; width:100%;
+}}
+div[data-testid="stChatMessage"] th {{
+  color:{SKY}; font-family:{FONT_MONO}; font-size:.62rem; letter-spacing:.08em;
+  text-transform:uppercase; text-align:left; padding:8px 10px;
+  border-bottom:1px solid {LINE};
+}}
+div[data-testid="stChatMessage"] td {{
+  padding:8px 10px; border-bottom:1px solid rgba(29,43,71,.4); color:{TEXT};
+}}
+div[data-testid="stChatMessage"] code {{
+  background:{RAISED}; color:{TEAL}; padding:1px 6px; border-radius:5px; font-size:.82em;
+}}
+div[data-testid="stChatMessage"] h1,
+div[data-testid="stChatMessage"] h2,
+div[data-testid="stChatMessage"] h3 {{ font-size:1.05rem; margin:.3rem 0 .6rem 0; }}
 div[data-testid="stChatInput"] {{ border-color:{LINE}; }}
 div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
 
@@ -365,8 +387,9 @@ pio.templates["pulsegrid"] = go.layout.Template(
                    tickfont=dict(family="JetBrains Mono", size=10, color=MUTED)),
         legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(size=11, color=MUTED),
                     orientation="h", y=1.02, yanchor="bottom", x=0),
-        hoverlabel=dict(bgcolor=RAISED, bordercolor=LINE,
-                        font=dict(family="JetBrains Mono", size=11, color=TEXT)),
+        hoverlabel=dict(bgcolor="#050810", bordercolor=SKY,
+                        font=dict(family="JetBrains Mono", size=12, color=TEXT),
+                        align="left"),
         margin=dict(l=56, r=18, t=46, b=44),
     )
 )
@@ -415,6 +438,25 @@ def hero(badge: str, eyebrow: str, title: str, accent: str,
         f'<span class="pg-eyebrow-text">{eyebrow}</span></div>'
         f'<h1 class="pg-title">{title} <em>{accent}</em></h1>'
         f'<p class="pg-sub">{subtitle}</p></div>',
+        unsafe_allow_html=True,
+    )
+
+
+def status_line(items: list[tuple[str, str]]) -> None:
+    """Slim inline status strip — the AI Analyst's answer to the KPI grid.
+
+    Deliberately not a card row: the chat page reads as a conversation
+    surface, not a dashboard, so context is one quiet line, not four boxes.
+    """
+    chips = "".join(
+        f'<span style="margin-right:1.6rem"><span style="color:{c}">●</span> '
+        f'<span style="color:{TEXT}">{label}</span></span>'
+        for label, c in items
+    )
+    st.markdown(
+        f'<div style="font-family:{FONT_MONO};font-size:.72rem;'
+        f'letter-spacing:.02em;color:{MUTED};margin:-.4rem 0 1.7rem 2px;">'
+        f"{chips}</div>",
         unsafe_allow_html=True,
     )
 

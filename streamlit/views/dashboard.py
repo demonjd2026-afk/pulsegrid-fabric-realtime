@@ -144,7 +144,7 @@ def render() -> None:
 
     # ── hero panel: zone board ───────────────────────────────────────────
     st.markdown("<div style='height:22px'></div>", unsafe_allow_html=True)
-    with st.container(border=True):
+    with st.container(border=True, key=f"pg_panel_1"):
         T.panel_header("Zone price board", "ranked high → low · latest hour")
         if zones.empty:
             T.empty("No prices loaded",
@@ -173,7 +173,7 @@ def render() -> None:
     left, right = st.columns([1.62, 1], gap="medium")
 
     with left:
-        with st.container(border=True):
+        with st.container(border=True, key=f"pg_panel_2"):
             T.panel_header("Price movement", "hourly averages")
             picked = st.multiselect(
                 "Bidding zones",
@@ -186,7 +186,7 @@ def render() -> None:
             _price_curve(prices, picked)
 
     with right:
-        with st.container(border=True):
+        with st.container(border=True, key=f"pg_panel_3"):
             T.panel_header("Spike watchlist", "xgboost · 2h horizon")
             if lpred.empty:
                 T.empty("No predictions scored",
@@ -208,18 +208,18 @@ def render() -> None:
     a, b = st.columns(2, gap="medium")
 
     with a:
-        with st.container(border=True):
+        with st.container(border=True, key=f"pg_panel_4"):
             T.panel_header("Zone spread", "min — max band, average marked")
             _spread(zones)
 
     with b:
-        with st.container(border=True):
+        with st.container(border=True, key=f"pg_panel_5"):
             T.panel_header("Generation mix", "updated every 15 min")
             _generation(agen)
 
     # ── model drivers ────────────────────────────────────────────────────
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-    with st.container(border=True):
+    with st.container(border=True, key=f"pg_panel_6"):
         T.panel_header("What drives the prediction", "mean absolute shap")
         pick = st.selectbox("Zone", ["All zones"] + all_zones,
                             format_func=lambda z: z if z == "All zones" else D.zone_label(z),

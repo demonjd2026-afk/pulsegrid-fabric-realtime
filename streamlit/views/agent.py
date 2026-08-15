@@ -83,6 +83,18 @@ def render() -> None:
         kind="model",
     )
 
+    zones = D.latest_zone_prices(frames["gold_price_aggregates"])
+    preds = D.latest_predictions(frames["gold_price_predictions"])
+    agen = D.active_generation(frames["gold_generation_summary"])
+    shap = frames["gold_shap_values"]
+
+    T.status_line([
+        (f'{zones["region"].nunique() if not zones.empty else 0} zones priced', T.SKY),
+        (f'{len(preds) if not preds.empty else 0} scored', T.CORAL),
+        (f'{len(agen) if not agen.empty else 0} generating', T.TEAL),
+        (f'{len(shap):,} SHAP records' if not shap.empty else "0 SHAP records", T.VIOLET),
+    ])
+
     key = _api_key()
     if not key:
         T.empty(

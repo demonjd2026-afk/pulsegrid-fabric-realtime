@@ -1,8 +1,15 @@
 """
 PulseGrid — electricity market intelligence.
 
-Entry point: registers the three pages and renders the persistent sidebar.
+Entry point: renders the sidebar and registers the two pages.
 Run locally with:  streamlit run streamlit/app.py
+
+Sidebar ordering note: st.navigation() renders its page-picker widget into
+the sidebar at the moment it is called, not at the position implied by
+nav.run(). To get the logo above the nav links, the brand block must be
+written to the sidebar BEFORE st.navigation() is invoked; everything else
+(pipeline metadata, footer) is written after, in a second `with st.sidebar`
+block, so it lands below the nav links.
 """
 
 import os
@@ -24,13 +31,17 @@ st.set_page_config(
 
 T.inject_css()
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Navigation
-# ─────────────────────────────────────────────────────────────────────────────
 from views import agent, dashboard  # noqa: E402
 
-# url_path is explicit: all three view functions are named `render`, so
-# Streamlit would otherwise infer the same pathname for each and raise.
+# ─────────────────────────────────────────────────────────────────────────────
+# Sidebar — top: brand
+# ─────────────────────────────────────────────────────────────────────────────
+with st.sidebar:
+    T.sidebar_brand()
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Navigation — registers here so the picker sits directly under the brand
+# ─────────────────────────────────────────────────────────────────────────────
 nav = st.navigation([
     st.Page(dashboard.render, title="Dashboard",  icon="📊",
             url_path="dashboard", default=True),
@@ -39,11 +50,9 @@ nav = st.navigation([
 ])
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Sidebar
+# Sidebar — below nav: pipeline metadata, footer
 # ─────────────────────────────────────────────────────────────────────────────
 with st.sidebar:
-    T.sidebar_brand()
-
     frames = D.load_all()
     stamp, age = D.freshness(frames)
     loaded = sum(1 for f in frames.values() if not f.empty)
