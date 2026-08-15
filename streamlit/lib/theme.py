@@ -252,17 +252,16 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
 .pg-board-scroll::-webkit-scrollbar-thumb:hover {{ background:{MUTED}; }}
 .pg-board {{
   display:flex; align-items:flex-end; gap:5px; height:132px; padding-top:8px;
-  width:max-content; min-width:100%;
 }}
 .pg-col {{
-  flex:0 0 28px; width:28px; border-radius:4px 4px 2px 2px;
+  flex:1 1 0%; min-width:22px; border-radius:4px 4px 2px 2px;
   transition:filter .14s ease; cursor:default;
   box-shadow:0 0 14px -6px currentColor;
 }}
 .pg-col:hover {{ filter:brightness(1.45); }}
-.pg-board-x {{ display:flex; gap:5px; margin-top:9px; width:max-content; min-width:100%; }}
+.pg-board-x {{ display:flex; gap:5px; margin-top:9px; }}
 .pg-board-x div {{
-  flex:0 0 28px; width:28px; text-align:center; font-family:{FONT_MONO};
+  flex:1 1 0%; min-width:22px; text-align:center; font-family:{FONT_MONO};
   font-size:.545rem; color:{MUTED}; overflow:hidden; white-space:nowrap;
 }}
 .pg-scale {{
@@ -271,7 +270,10 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
 }}
 .pg-scale i {{ display:inline-block; width:22px; height:5px; border-radius:3px;
   margin-right:.5rem; vertical-align:middle; }}
-.pg-extremes {{ display:flex; gap:10px; margin-top:1.05rem; flex-wrap:wrap; }}
+.pg-extremes {{
+  display:flex; gap:10px; margin-top:1.05rem; padding-right:20px;
+  box-sizing:border-box; flex-wrap:wrap;
+}}
 .pg-ex {{
   flex:1 1 150px; min-width:150px; background:{RAISED}; border:2px solid {LINE};
   border-radius:11px; padding:11px 12px; text-align:center; box-sizing:border-box;
@@ -395,9 +397,9 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
   text-transform:uppercase; color:{MUTED}; margin:0 0 .6rem 2px;
 }}
 .st-key-pg_sugg .stButton button {{
-  font-size:.72rem; font-weight:400; color:{MUTED};
+  font-size:.665rem; font-weight:400; color:{MUTED};
   text-align:left; justify-content:flex-start;
-  padding:.48rem .65rem; border-radius:8px; line-height:1.3;
+  padding:.4rem .55rem; border-radius:7px; line-height:1.25;
   background:transparent; border:3px solid {LINE}; width:100%;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;
 }}

@@ -114,7 +114,7 @@ def render() -> None:
     # of the page. Ratio widened from the original [1, 3.4] so the rail
     # has real breathing room instead of feeling squeezed.
     with st.container(key="pg_chatrow"):
-        left, chat = st.columns([1.7, 2.7], gap="medium")
+        left, chat = st.columns([1, 3.6], gap="medium")
 
         with left:
             with st.container(key="pg_rail"):
