@@ -491,8 +491,8 @@ details[data-testid="stExpander"] summary:hover {{ color:{SKY}; }}
 # dark text — legible whether the plot area ends up light (as observed) or
 # dark (as authored), since dark text reads fine on either.
 _CHART_FLOOR = "#050810"
-_HOVER_BG    = "#FFFFFF"
-_HOVER_FONT  = "#047857"   # dark emerald green — bold and unmistakable on white
+_HOVER_BG    = "#12213B"   # dark navy, on-brand — not white/cream
+_HOVER_FONT  = "#5EEAD4"   # bright teal — high contrast on the navy above
 
 
 def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
