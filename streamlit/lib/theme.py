@@ -112,7 +112,7 @@ div[data-testid="stSidebarCollapsedControl"] {{ display:none !important; }}
    column itself is bottom-aligned (app.py) so it lines up with the pill,
    which sits below the large brand name, not with the brand text itself. */
 .st-key-pg_reload button {{
-  height:32px; padding:0 .9rem; font-size:.76rem;
+  height:32px; padding:0 .9rem; font-size:.76rem; box-sizing:border-box;
   border-radius:9px; display:flex; align-items:center; justify-content:center;
 }}
 
@@ -122,7 +122,7 @@ div[data-testid="stSidebarCollapsedControl"] {{ display:none !important; }}
    keyed container's row to flex. */
 .st-key-pg_segctl {{
   display:flex !important; flex-direction:row !important; gap:2px;
-  background:{RAISED}; border:1px solid {LINE};
+  background:{RAISED}; border:2px solid {LINE};
   border-radius:9px; padding:2px; max-width:210px;
 }}
 .st-key-pg_segctl > div {{ display:contents !important; }}
@@ -184,7 +184,7 @@ div[data-testid="stPageLink"] a p {{ color:inherit !important; font-size:.87rem 
 .pg-kpis {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:13px; }}
 .pg-kpi {{
   background:{PANEL};
-  border:1px solid {LINE}; border-radius:13px; padding:19px 16px 16px 16px;
+  border:2px solid {LINE}; border-radius:13px; padding:19px 16px 16px 16px;
   text-align:center; box-shadow:0 6px 22px rgba(2,8,23,.30);
 }}
 .pg-kpi-v {{
@@ -217,7 +217,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
 }}
 [class*="st-key-pg_panel_"] {{
   background:{PANEL} !important;
-  border:1px solid {LINE} !important; border-radius:14px !important;
+  border:2px solid {LINE} !important; border-radius:14px !important;
   padding:12px 10px !important; box-shadow:0 8px 28px rgba(2,8,23,.35) !important;
   overflow:hidden !important; box-sizing:border-box !important;
 }}
@@ -258,7 +258,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
   margin-right:.5rem; vertical-align:middle; }}
 .pg-extremes {{ display:flex; gap:11px; margin-top:1.05rem; flex-wrap:wrap; }}
 .pg-ex {{
-  flex:1; min-width:170px; background:{RAISED}; border:1px solid {LINE};
+  flex:1; min-width:170px; background:{RAISED}; border:2px solid {LINE};
   border-radius:11px; padding:12px 15px; text-align:center;
 }}
 .pg-ex-k {{ font-family:{FONT_MONO}; font-size:.555rem; letter-spacing:.16em;
@@ -322,7 +322,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
 
 /* ── widget overrides ─────────────────────────────────────────────────── */
 .stButton button {{
-  background:{RAISED}; color:{TEXT}; border:1px solid {LINE}; border-radius:11px;
+  background:{RAISED}; color:{TEXT}; border:2px solid {LINE}; border-radius:11px;
   font-family:{FONT_BODY}; font-size:.82rem; font-weight:500;
   padding:.65rem 1.05rem; transition:all .16s ease;
 }}
@@ -383,7 +383,7 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
   font-size:.685rem; font-weight:400; color:{MUTED};
   text-align:left; justify-content:flex-start;
   padding:.42rem .6rem; border-radius:8px; line-height:1.3;
-  background:transparent; border:1px solid {LINE}; width:100%;
+  background:transparent; border:2px solid {LINE}; width:100%;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;
 }}
 .st-key-pg_sugg .stButton button p {{
@@ -406,7 +406,7 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
    reliably equalise their heights) guarantees the divider and the chat
    panel's border both end at the same point regardless of content. */
 .st-key-pg_rail {{
-  border-right:1px solid {LINE}; padding-right:1.4rem;
+  border-right:2px solid {LINE}; padding-right:1.4rem;
   min-height:600px; margin-left:0 !important;
 }}
 .st-key-pg_sugg {{ margin-left:0 !important; padding-left:0 !important; }}
