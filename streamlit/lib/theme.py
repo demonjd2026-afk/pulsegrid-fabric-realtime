@@ -492,7 +492,7 @@ details[data-testid="stExpander"] summary:hover {{ color:{SKY}; }}
 # dark (as authored), since dark text reads fine on either.
 _CHART_FLOOR = "#050810"
 _HOVER_BG    = "#FFFFFF"
-_HOVER_FONT  = "#000000"
+_HOVER_FONT  = "#047857"   # dark emerald green — bold and unmistakable on white
 
 
 def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
@@ -510,7 +510,7 @@ def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
         title_font=dict(family="Inter, sans-serif", size=11, color=MUTED),
     )
     hover = dict(bgcolor=_HOVER_BG, bordercolor=SKY,
-                font=dict(family="JetBrains Mono", size=13, color=_HOVER_FONT))
+                font=dict(family="JetBrains Mono", size=14, color=_HOVER_FONT))
 
     fig.update_layout(
         paper_bgcolor=PANEL,
