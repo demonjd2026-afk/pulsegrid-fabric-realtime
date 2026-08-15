@@ -9,6 +9,15 @@ from lib import data as D
 from lib import theme as T
 
 
+def _axis_note(text: str) -> None:
+    """Plain-English explanation of what the chart's axes show."""
+    st.markdown(
+        f'<div style="font-size:.735rem;color:{T.MUTED};margin:-.35rem 0 .7rem 2px">'
+        f"{text}</div>",
+        unsafe_allow_html=True,
+    )
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Charts
 # ─────────────────────────────────────────────────────────────────────────────
@@ -24,12 +33,16 @@ def _price_curve(prices: pd.DataFrame, picked: list[str]) -> None:
         T.empty("No zones selected", "Choose at least one bidding zone above.")
         return
 
+    _axis_note("X-axis: time of day&nbsp;&nbsp;·&nbsp;&nbsp;"
+               "Y-axis: electricity price in EUR per MWh")
+
     fig = px.line(df, x="period_start", y="avg_price", color="region")
     for tr in fig.data:
         tr.hovertemplate = (f"{D.zone_label(tr.name)} — "
                             "%{y:,.1f} EUR/MWh<extra></extra>")
     fig.update_traces(line=dict(width=2.1))
-    st.plotly_chart(T.style_fig(fig, 372, "EUR / MWh"), use_container_width=True, theme=None)
+    st.plotly_chart(T.style_fig(fig, 360, ytitle="EUR / MWh", xtitle="Hour"),
+                    use_container_width=True, theme=None)
 
 
 def _spread(zones: pd.DataFrame) -> None:
@@ -37,6 +50,10 @@ def _spread(zones: pd.DataFrame) -> None:
     if zones.empty:
         T.empty("No zone comparison yet", "Needs one completed price poll.")
         return
+
+    _axis_note("X-axis: price range this hour (lowest to highest, EUR/MWh)"
+               "&nbsp;&nbsp;·&nbsp;&nbsp;Y-axis: bidding zone")
+
     z = zones.head(16).iloc[::-1]
     fig = go.Figure()
     for _, r in z.iterrows():
@@ -53,7 +70,10 @@ def _spread(zones: pd.DataFrame) -> None:
         hovertemplate="%{y} · %{customdata} — %{x:,.1f} EUR/MWh<extra></extra>",
         showlegend=False,
     ))
-    st.plotly_chart(T.style_fig(fig, 372, ""), use_container_width=True, theme=None)
+    st.plotly_chart(
+        T.style_fig(fig, 360, ytitle="", xtitle="EUR / MWh"),
+        use_container_width=True, theme=None,
+    )
 
 
 def _generation(gen: pd.DataFrame) -> None:
@@ -62,6 +82,10 @@ def _generation(gen: pd.DataFrame) -> None:
                 "Zones publish output every 15 minutes. None are reporting "
                 "for the current interval.")
         return
+
+    _axis_note("X-axis: bidding zone&nbsp;&nbsp;·&nbsp;&nbsp;"
+               "Y-axis: share of electricity generated, by fuel type (%)")
+
     df = gen.head(18)
     fig = go.Figure()
     for name, col, colour in [("Renewable", "renewable_pct", T.TEAL),
@@ -72,7 +96,10 @@ def _generation(gen: pd.DataFrame) -> None:
                         marker_color=colour, marker_line_width=0,
                         hovertemplate=f"%{{x}} · {name} %{{y:.1f}}%<extra></extra>")
     fig.update_layout(barmode="stack", bargap=0.36)
-    st.plotly_chart(T.style_fig(fig, 330, "% of output"), use_container_width=True, theme=None)
+    st.plotly_chart(
+        T.style_fig(fig, 320, ytitle="% of output", xtitle="Zone"),
+        use_container_width=True, theme=None,
+    )
     st.caption(f"{len(gen)} zones reporting output. Zones publishing nothing for "
                "this interval are excluded rather than drawn as empty bars.")
 
@@ -83,13 +110,20 @@ def _drivers(shap: pd.DataFrame, region: str) -> None:
         T.empty("No model explanations yet",
                 "SHAP values are written when the ML pipeline runs, daily at 02:00 CET.")
         return
+
+    _axis_note("X-axis: how strongly this factor pushes the spike prediction "
+               "up or down&nbsp;&nbsp;·&nbsp;&nbsp;Y-axis: model input (feature)")
+
     df = imp.head(9).iloc[::-1]
     fig = go.Figure(go.Bar(
         x=df["impact"], y=df["feature_name"], orientation="h",
         marker=dict(color=T.SKY, line=dict(width=0)),
         hovertemplate="%{y} · %{x:.3f}<extra></extra>",
     ))
-    st.plotly_chart(T.style_fig(fig, 330, ""), use_container_width=True, theme=None)
+    st.plotly_chart(
+        T.style_fig(fig, 320, ytitle="", xtitle="Impact on prediction"),
+        use_container_width=True, theme=None,
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -101,6 +135,7 @@ def render() -> None:
     gen, shap = frames["gold_generation_summary"], frames["gold_shap_values"]
 
     stamp, _ = D.freshness(frames)
+    loaded = sum(1 for f in frames.values() if not f.empty)
     zones = D.latest_zone_prices(prices)
     lpred = D.latest_predictions(preds)
     agen = D.active_generation(gen)
@@ -144,13 +179,19 @@ def render() -> None:
 
     # ── hero panel: zone board ───────────────────────────────────────────
     st.markdown("<div style='height:22px'></div>", unsafe_allow_html=True)
-    with st.container(border=True, key=f"pg_panel_1"):
+    with st.container(border=True, key="pg_panel_1"):
         T.panel_header("Zone price board", "ranked high → low · latest hour")
         if zones.empty:
             T.empty("No prices loaded",
                     "Run the Gold pipeline, then Cell 11 in 03_gold_features "
                     "to publish a fresh snapshot to this repo.")
         else:
+            st.markdown(
+                f'<div style="font-size:.735rem;color:{T.MUTED};margin:-.2rem 0 .8rem 2px">'
+                f"Each bar is one bidding zone. Taller and redder = more "
+                f"expensive right now; shorter and greener = cheaper.</div>",
+                unsafe_allow_html=True,
+            )
             T.zone_board([
                 (r, D.zone_name(r), p, q)
                 for r, p, q in zip(zones["region"], zones["avg_price"], zones["percentile"])
@@ -173,7 +214,7 @@ def render() -> None:
     left, right = st.columns([1.62, 1], gap="medium")
 
     with left:
-        with st.container(border=True, key=f"pg_panel_2"):
+        with st.container(border=True, key="pg_panel_2"):
             T.panel_header("Price movement", "hourly averages")
             picked = st.multiselect(
                 "Bidding zones",
@@ -186,7 +227,7 @@ def render() -> None:
             _price_curve(prices, picked)
 
     with right:
-        with st.container(border=True, key=f"pg_panel_3"):
+        with st.container(border=True, key="pg_panel_3"):
             T.panel_header("Spike watchlist", "xgboost · 2h horizon")
             if lpred.empty:
                 T.empty("No predictions scored",
@@ -208,18 +249,18 @@ def render() -> None:
     a, b = st.columns(2, gap="medium")
 
     with a:
-        with st.container(border=True, key=f"pg_panel_4"):
+        with st.container(border=True, key="pg_panel_4"):
             T.panel_header("Zone spread", "min — max band, average marked")
             _spread(zones)
 
     with b:
-        with st.container(border=True, key=f"pg_panel_5"):
+        with st.container(border=True, key="pg_panel_5"):
             T.panel_header("Generation mix", "updated every 15 min")
             _generation(agen)
 
     # ── model drivers ────────────────────────────────────────────────────
     st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
-    with st.container(border=True, key=f"pg_panel_6"):
+    with st.container(border=True, key="pg_panel_6"):
         T.panel_header("What drives the prediction", "mean absolute shap")
         pick = st.selectbox("Zone", ["All zones"] + all_zones,
                             format_func=lambda z: z if z == "All zones" else D.zone_label(z),
@@ -227,3 +268,5 @@ def render() -> None:
         _drivers(shap, pick)
         st.caption("Higher bars move the spike probability further from its baseline. "
                    "Open the analyst to ask why a specific zone was flagged.")
+
+    T.page_footer(stamp, loaded)

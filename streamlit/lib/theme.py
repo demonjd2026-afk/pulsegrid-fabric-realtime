@@ -73,23 +73,25 @@ section[data-testid="stSidebar"] {{
 }}
 section[data-testid="stSidebar"] .block-container {{ padding-top:1.6rem; }}
 
-/* nav links */
-section[data-testid="stSidebar"] [data-testid="stSidebarNav"] a {{
-  border-radius:10px; padding:.55rem .8rem; margin:2px 0;
-  color:{MUTED};
+/* manual nav — built with st.page_link so we control ordering:
+   the built-in st.navigation widget always claims the top of the sidebar
+   regardless of call order, which is why the logo kept ending up below it. */
+div[data-testid="stPageLink"] {{ margin:1px 0; }}
+div[data-testid="stPageLink"] a {{
+  border-radius:10px; padding:.5rem .75rem !important; gap:.6rem;
+  color:{MUTED} !important; font-family:{FONT_BODY}; font-size:.9rem; font-weight:500;
+  text-decoration:none !important;
 }}
-section[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:hover {{
-  background:rgba(56,189,248,.07); color:{TEXT};
+div[data-testid="stPageLink"] a:hover {{
+  background:rgba(56,189,248,.07); color:{TEXT} !important;
 }}
-section[data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"] {{
-  background:rgba(56,189,248,.12); color:{TEXT};
+div[data-testid="stPageLink"] a[aria-current="page"] {{
+  background:rgba(56,189,248,.12); color:{TEXT} !important;
   box-shadow:inset 3px 0 0 {SKY};
 }}
-section[data-testid="stSidebar"] [data-testid="stSidebarNav"] span {{
-  font-family:{FONT_BODY}; font-size:.9rem; font-weight:500;
-}}
+div[data-testid="stPageLink"] a p {{ color:inherit !important; font-size:.9rem !important; }}
 
-.pg-logo {{ text-align:center; margin-bottom:.6rem; }}
+.pg-logo {{ text-align:center; margin-bottom:.3rem; padding-top:.2rem; }}
 .pg-logo-mark {{
   width:52px; height:52px; margin:0 auto .75rem auto; border-radius:15px;
   background:linear-gradient(140deg,{SKY},{VIOLET});
@@ -206,7 +208,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
   margin-right:.5rem; vertical-align:middle; }}
 .pg-extremes {{ display:flex; gap:11px; margin-top:1.05rem; flex-wrap:wrap; }}
 .pg-ex {{
-  flex:1; min-width:170px; background:{RAISED}; border:none;
+  flex:1; min-width:170px; background:{RAISED}; border:1px solid {LINE};
   border-radius:11px; padding:12px 15px; text-align:center;
 }}
 .pg-ex-k {{ font-family:{FONT_MONO}; font-size:.555rem; letter-spacing:.16em;
@@ -361,6 +363,17 @@ details[data-testid="stExpander"] summary {{
 }}
 details[data-testid="stExpander"] summary:hover {{ color:{SKY}; }}
 
+.pg-footer {{
+  margin-top:3rem; padding-top:1.1rem; border-top:1px solid {LINE};
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:.8rem; font-family:{FONT_MONO}; font-size:.665rem; letter-spacing:.05em;
+  color:{MUTED};
+}}
+.pg-footer b {{ color:{TEXT}; font-weight:500; }}
+.pg-footer a {{ color:{AMBER}; text-decoration:none; }}
+.pg-footer a:hover {{ text-decoration:underline; }}
+.pg-footer .dot {{ opacity:.5; margin:0 .15rem; }}
+
 *:focus-visible {{ outline:2px solid {SKY}; outline-offset:2px; }}
 @media (prefers-reduced-motion: reduce) {{ *{{animation:none!important;transition:none!important}} }}
 @media (max-width:820px) {{ .pg-title{{font-size:2rem}} .pg-board{{height:96px}} }}
@@ -395,11 +408,24 @@ pio.templates["pulsegrid"] = go.layout.Template(
 )
 
 
-def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "") -> go.Figure:
+def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
+              xtitle: str = "") -> go.Figure:
+    """Apply the shared chart look, including a hover style that is fixed
+    and identical across every trace and every chart — never left to
+    Plotly's per-trace default colouring, which is what made some tooltips
+    unreadable depending on the line colour underneath them.
+    """
     fig.update_layout(
-        template="pulsegrid", height=height, yaxis_title=ytitle,
-        xaxis_title="", title=None, legend_title_text="",
+        template="pulsegrid", height=height,
+        yaxis_title=ytitle, xaxis_title=xtitle, title=None,
+        legend_title_text="",
         modebar=dict(bgcolor="rgba(0,0,0,0)", color=MUTED, activecolor=SKY),
+    )
+    # Belt-and-braces: set hoverlabel on every trace directly, not just the
+    # layout default, so no trace can render with a different hover style.
+    fig.update_traces(
+        hoverlabel=dict(bgcolor="#050810", bordercolor=SKY,
+                        font=dict(family="JetBrains Mono", size=12, color=TEXT))
     )
     return fig
 
@@ -418,26 +444,40 @@ def sidebar_brand() -> None:
     )
 
 
-def sidebar_meta(blocks: list[tuple[str, str]]) -> None:
-    st.markdown('<div class="pg-divider"></div>', unsafe_allow_html=True)
+
+
+def hero(title: str, accent: str, subtitle: str,
+         badge: str = "", eyebrow: str = "", kind: str = "") -> None:
+    """Page header. Pass badge="" to omit the status pill entirely —
+    used on the AI Analyst page, which should read as a chat app rather
+    than a branded landing section."""
+    top = ""
+    if badge or eyebrow:
+        pill = (f'<span class="pg-badge {kind}"><span class="pg-dot"></span>'
+                f'{badge}</span>') if badge else ""
+        eb = f'<span class="pg-eyebrow-text">{eyebrow}</span>' if eyebrow else ""
+        top = f'<div class="pg-eyebrow">{pill}{eb}</div>'
     st.markdown(
-        "".join(
-            f'<div class="pg-meta-block"><div class="pg-meta-k">{k}</div>'
-            f'<div class="pg-meta-v">{v}</div></div>'
-            for k, v in blocks
-        ),
+        f'<div class="pg-hero">{top}'
+        f'<h1 class="pg-title">{title} <em>{accent}</em></h1>'
+        f'<p class="pg-sub">{subtitle}</p></div>',
         unsafe_allow_html=True,
     )
 
 
-def hero(badge: str, eyebrow: str, title: str, accent: str,
-         subtitle: str, kind: str = "") -> None:
+def page_footer(stamp: str, loaded: int, total: int = 4) -> None:
+    """One slim line at the bottom of the page — replaces the old sidebar
+    block of pipeline/model/snapshot details, which was too much to read
+    on every page. Full detail still lives in the GitHub README."""
     st.markdown(
-        f'<div class="pg-hero"><div class="pg-eyebrow">'
-        f'<span class="pg-badge {kind}"><span class="pg-dot"></span>{badge}</span>'
-        f'<span class="pg-eyebrow-text">{eyebrow}</span></div>'
-        f'<h1 class="pg-title">{title} <em>{accent}</em></h1>'
-        f'<p class="pg-sub">{subtitle}</p></div>',
+        f'<div class="pg-footer">'
+        f'<div><b>PulseGrid</b><span class="dot">·</span>'
+        f"Microsoft Fabric, Bronze → Silver → Gold"
+        f'<span class="dot">·</span>XGBoost + SHAP, retrained daily 02:00 CET'
+        f'<span class="dot">·</span>Snapshot <b>{stamp}</b> ({loaded}/{total} tables)</div>'
+        f'<div>Built by Jayanth Dolai<span class="dot">·</span>'
+        f'<a href="https://github.com/demonjd2026-afk/pulsegrid-fabric-realtime">'
+        f"Source on GitHub →</a></div></div>",
         unsafe_allow_html=True,
     )
 

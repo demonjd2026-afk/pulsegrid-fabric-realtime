@@ -1,4 +1,6 @@
-"""Claude-powered analyst — a clean, Claude-style chat over the Gold snapshot."""
+"""Claude-powered analyst — a clean, ChatGPT/Claude-style chat over the
+Gold snapshot. No branding pill, no marketing hero — this page should read
+as a chat app, not a landing section."""
 
 import streamlit as st
 
@@ -72,15 +74,15 @@ def _stream_reply(key: str, context: str) -> None:
 def render() -> None:
     frames = D.load_all()
     stamp, _ = D.freshness(frames)
+    loaded = sum(1 for f in frames.values() if not f.empty)
 
+    # Plain heading — no "Claude" badge, no marketing pill. The chat itself
+    # already makes clear what this page does.
     T.hero(
-        badge="Claude",
-        eyebrow=f"Grounded in the {stamp} snapshot",
         title="Market",
         accent="Analyst",
         subtitle="Ask about prices, spike risk, generation mix or model behaviour. "
                  "Answers cite the live Gold tables, not general knowledge.",
-        kind="model",
     )
 
     zones = D.latest_zone_prices(frames["gold_price_aggregates"])
@@ -102,14 +104,17 @@ def render() -> None:
             "Set ANTHROPIC_API_KEY under App settings → Secrets in Streamlit "
             "Cloud. The dashboard works without it.",
         )
+        T.page_footer(stamp, loaded)
         return
 
     context = D.build_context(frames)
     st.session_state.setdefault("chat", [])
 
-    left, chat = st.columns([1, 2.7], gap="large")
+    # Suggestions stay a narrow rail on the left; the conversation gets the
+    # rest of the page — there's no sidebar meta block competing for space
+    # anymore, so this is now genuinely wide.
+    left, chat = st.columns([1, 3.4], gap="large")
 
-    # ── left rail: compact suggestions, always visible ───────────────────
     with left:
         with st.container(key="pg_sugg"):
             st.markdown('<div class="pg-sugg-h">Try asking</div>',
@@ -125,7 +130,6 @@ def render() -> None:
                     st.session_state.chat = []
                     st.rerun()
 
-    # ── conversation ─────────────────────────────────────────────────────
     with chat:
         if not st.session_state.chat:
             st.markdown(
@@ -148,3 +152,5 @@ def render() -> None:
                 st.markdown(question)
             _stream_reply(key, context)
             st.rerun()
+
+    T.page_footer(stamp, loaded)
