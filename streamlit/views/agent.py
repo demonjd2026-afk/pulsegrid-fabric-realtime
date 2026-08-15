@@ -7,7 +7,7 @@ import streamlit as st
 from lib import data as D
 from lib import theme as T
 
-MODEL = "claude-sonnet-4-6"
+MODEL = "claude-haiku-4-5-20251001"
 
 SYSTEM = """You are PulseGrid, an electricity market analyst embedded in a \
 Microsoft Fabric medallion lakehouse covering European bidding zones (ENTSO-E) \
