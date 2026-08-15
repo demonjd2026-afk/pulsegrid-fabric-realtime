@@ -5,3 +5,8 @@ backgroundColor = "#060B16"
 secondaryBackgroundColor = "#0C1425"
 textColor = "#EAF1FB"
 font = "sans serif"
+
+[client]
+# Hides the light/dark toggle from the hamburger menu so users can't flip it.
+# The CSS in theme.py also locks all surfaces as a belt-and-suspenders backup.
+toolbarMode = "minimal"
