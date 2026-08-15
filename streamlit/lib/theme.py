@@ -14,13 +14,21 @@ import plotly.graph_objects as go
 import plotly.io as pio
 import streamlit as st
 
-# Belt-and-suspenders: make the GLOBAL Plotly default a dark theme, not the
-# factory light one. If anything downstream ever fails to apply the explicit
-# per-figure colors below, the chart still renders dark instead of falling
-# back to Plotly's beige "plotly" default — which is the symptom this
-# addresses (charts rendering with a light/beige plot area despite the
-# figure's own layout specifying dark colors).
-pio.templates.default = "plotly_dark"
+# Register a locked PulseGrid Plotly template so that even if Streamlit's
+# renderer merges or overrides per-figure layout props on refresh, the
+# template layer still enforces dark plot/paper colors.  Using a named
+# template registered in pio.templates means the values survive any
+# subsequent template merge that Streamlit may apply internally.
+_PG_TEMPLATE = go.layout.Template()
+_PG_TEMPLATE.layout = go.Layout(
+    paper_bgcolor="#0C1425",
+    plot_bgcolor="#050810",
+    font=dict(color="#8298B8"),
+)
+pio.templates["pulsegrid"] = _PG_TEMPLATE
+# "plotly_dark+pulsegrid" — start from plotly_dark so axes/grid inherit
+# dark defaults, then our template wins on any explicitly set property.
+pio.templates.default = "plotly_dark+pulsegrid"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Tokens
@@ -528,7 +536,10 @@ def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
                 font=dict(family="JetBrains Mono", size=13, color=_HOVER_FONT),
                 align="left")
 
+    # overwrite=True prevents Streamlit's internal template merge from
+    # reverting paper_bgcolor / plot_bgcolor to light defaults on re-render.
     fig.update_layout(
+        overwrite=True,
         paper_bgcolor=PANEL,
         plot_bgcolor=_CHART_FLOOR,
         font=dict(family="Inter, sans-serif", color=MUTED, size=12),
