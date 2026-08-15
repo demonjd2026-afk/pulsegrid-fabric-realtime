@@ -14,12 +14,11 @@ import plotly.graph_objects as go
 import plotly.io as pio
 import streamlit as st
 
-# Belt-and-suspenders: make the GLOBAL Plotly default a dark theme, not the
-# factory light one. If anything downstream ever fails to apply the explicit
-# per-figure colors below, the chart still renders dark instead of falling
-# back to Plotly's beige "plotly" default — which is the symptom this
-# addresses (charts rendering with a light/beige plot area despite the
-# figure's own layout specifying dark colors).
+# Register a locked PulseGrid Plotly template so that even if Streamlit's
+# renderer merges or overrides per-figure layout props on refresh, the
+# template layer still enforces dark plot/paper colors.  Using a named
+# template registered in pio.templates means the values survive any
+# subsequent template merge that Streamlit may apply internally.
 _PG_TEMPLATE = go.layout.Template()
 _PG_TEMPLATE.layout = go.Layout(
     paper_bgcolor="#0C1425",
@@ -27,6 +26,8 @@ _PG_TEMPLATE.layout = go.Layout(
     font=dict(color="#8298B8"),
 )
 pio.templates["pulsegrid"] = _PG_TEMPLATE
+# "plotly_dark+pulsegrid" — start from plotly_dark so axes/grid inherit
+# dark defaults, then our template wins on any explicitly set property.
 pio.templates.default = "plotly_dark+pulsegrid"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -66,81 +67,6 @@ def inject_css() -> None:
   --void:{VOID}; --panel:{PANEL}; --raised:{RAISED}; --line:{LINE};
   --text:{TEXT}; --muted:{MUTED}; --sky:{SKY}; --amber:{AMBER};
   --coral:{CORAL}; --teal:{TEAL}; --violet:{VIOLET};
-}}
-
-/* ── force dark mode regardless of Streamlit light/dark toggle ─────────── */
-/* Streamlit writes a data-theme attribute on <html> or <body> when the user
-   switches modes. We override every surface back to the PulseGrid palette
-   with !important so the toggle has no visible effect. The Plotly canvas
-   itself is covered by the svg/canvas rules at the bottom of this block. */
-html, body,
-html[data-theme="light"], html[data-theme="dark"],
-body[data-theme="light"], body[data-theme="dark"] {{
-  background-color:{VOID} !important;
-  color:{TEXT} !important;
-}}
-
-/* Streamlit injects --background-color / --secondary-background-color CSS
-   vars that some internal widgets pick up. Re-declare them here so they
-   can't flip to light values. */
-:root, [data-theme="light"], [data-theme="dark"] {{
-  --background-color:{VOID} !important;
-  --secondary-background-color:{PANEL} !important;
-  --text-color:{TEXT} !important;
-  --primary-color:{SKY} !important;
-  --void:{VOID}; --panel:{PANEL}; --raised:{RAISED}; --line:{LINE};
-  --text:{TEXT}; --muted:{MUTED}; --sky:{SKY}; --amber:{AMBER};
-  --coral:{CORAL}; --teal:{TEAL}; --violet:{VIOLET};
-}}
-
-/* Lock every Streamlit surface container to dark */
-.stApp,
-.stApp > div,
-[data-testid="stAppViewContainer"],
-[data-testid="stAppViewContainer"] > section,
-[data-testid="stMain"],
-[data-testid="stMainBlockContainer"],
-[data-testid="stBottom"],
-[data-testid="stHeader"],
-[data-testid="stDecoration"],
-.main {{
-  background-color:{VOID} !important;
-  color:{TEXT} !important;
-}}
-
-/* Streamlit light-mode also flips stMarkdown, metric cards, expanders */
-[data-testid="stMarkdownContainer"],
-[data-testid="metric-container"],
-[data-testid="stExpander"],
-[data-testid="stExpanderDetails"],
-[data-testid="stForm"],
-[data-testid="stSelectbox"] > div,
-[data-testid="stMultiSelect"] > div {{
-  background-color:transparent !important;
-  color:{TEXT} !important;
-}}
-
-/* Plotly SVG canvas and its parent div — this is the plot_bgcolor surface */
-.js-plotly-plot .plotly,
-.js-plotly-plot .plotly .plot-container,
-.js-plotly-plot .plotly .svg-container,
-.js-plotly-plot .plotly .main-svg,
-.js-plotly-plot .plotly .main-svg .bg {{
-  background:{_CHART_FLOOR} !important;
-  background-color:{_CHART_FLOOR} !important;
-}}
-/* The actual rect that Plotly fills as plot_bgcolor */
-.js-plotly-plot .plotly .main-svg g.cartesianlayer,
-.js-plotly-plot rect.bg {{
-  fill:{_CHART_FLOOR} !important;
-}}
-
-/* Suppress prefers-color-scheme: light from ever flipping anything */
-@media (prefers-color-scheme: light) {{
-  html, body, .stApp, [data-testid="stAppViewContainer"] {{
-    background-color:{VOID} !important;
-    color:{TEXT} !important;
-  }}
 }}
 
 /* ── base ─────────────────────────────────────────────────────────────── */
@@ -577,22 +503,19 @@ details[data-testid="stExpander"] summary:hover {{ color:{SKY}; }}
 # style_fig applies every property as an explicit literal via update_layout,
 # never through pio.templates["pulsegrid"] by name.
 #
-# HOVER COLOUR — deliberately light background with dark text, not the dark-
-# on-dark this app uses everywhere else. In every screenshot seen from the
-# live deployment, the chart's plot area renders with a light background
-# regardless of the explicit dark plot_bgcolor set below — while everything
-# else on the same figure (paper, axis titles, legend) correctly renders
-# dark. That's consistent with something in the deployment pipeline
-# overriding plot-area colour specifically. A dark hoverlabel then becomes
-# invisible dark-text-would-be-fine-on-dark but the box itself was ALSO
-# rendering light, so white text on it disappeared. Rather than keep
-# fighting that one property, the hover box is set light-on-purpose with
-# dark text — legible whether the plot area ends up light (as observed) or
-# dark (as authored), since dark text reads fine on either.
-_CHART_FLOOR  = "#050810"
-_HOVER_BG     = "#0C1425"   # dark navy matching PANEL
-_HOVER_FONT   = "#E0F2FE"   # near-white — max contrast on dark bg
-_HOVER_BORDER = "#38BDF8"   # SKY accent border
+# HOVER COLOUR — the chart's plot area sometimes renders light/beige in
+# deployment (Streamlit's Plotly renderer can override plot_bgcolor despite
+# explicit layout values). Fix: pin the hover box to a DARK background with
+# LIGHT text so it is always legible regardless of what the plot area ends
+# up being. _HOVER_BG is the same dark navy as PANEL, _HOVER_FONT is a
+# near-white sky tint, and _HOVER_BORDER is the SKY accent so the box edge
+# is always crisp. Both bgcolor AND font.color are set at layout AND trace
+# level (update_traces below) so no individual trace can fall back to the
+# Plotly default beige/cream tooltip.
+_CHART_FLOOR = "#050810"
+_HOVER_BG    = "#0C1425"   # dark navy matching PANEL — visible on both light and dark plot areas
+_HOVER_FONT  = "#E0F2FE"   # near-white sky tint — max contrast on the dark hover bg above
+_HOVER_BORDER = "#38BDF8"  # SKY accent — crisp boundary against any plot background
 
 
 def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
@@ -613,6 +536,8 @@ def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
                 font=dict(family="JetBrains Mono", size=13, color=_HOVER_FONT),
                 align="left")
 
+    # overwrite=True prevents Streamlit's internal template merge from
+    # reverting paper_bgcolor / plot_bgcolor to light defaults on re-render.
     fig.update_layout(
         overwrite=True,
         paper_bgcolor=PANEL,
