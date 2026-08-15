@@ -218,3 +218,35 @@ def build_context(frames: dict[str, pd.DataFrame], max_rows: int = 40) -> str:
         )
 
     return "\n\n".join(parts) if parts else "No market data is currently loaded."
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Zone code → human-readable name
+# ─────────────────────────────────────────────────────────────────────────────
+ZONE_NAMES: dict[str, str] = {
+    "AT": "Austria", "BE": "Belgium", "BG": "Bulgaria", "CH": "Switzerland",
+    "CZ": "Czechia", "DE-LU": "Germany–Lux.", "DK-1": "Denmark West",
+    "DK-2": "Denmark East", "EE": "Estonia", "ES": "Spain", "FI": "Finland",
+    "FR": "France", "GR": "Greece", "HR": "Croatia", "HU": "Hungary",
+    "IT-NO": "Italy North", "LT": "Lithuania", "LV": "Latvia",
+    "NL": "Netherlands", "NO-2": "Norway South", "PL": "Poland",
+    "PT": "Portugal", "RO": "Romania", "RS": "Serbia", "SE-3": "Sweden Central",
+    "SI": "Slovenia", "SK": "Slovakia",
+    "US-BPAT": "Bonneville (US)", "US-CISO": "California ISO",
+    "US-ERCOT": "Texas ERCOT", "US-ISNE": "New England ISO",
+    "US-MISO": "Midcontinent ISO", "US-NYIS": "New York ISO",
+    "US-PJM": "PJM Mid-Atlantic", "US-SWPP": "Southwest Power Pool",
+    "US-NEVP": "Nevada Power", "US-PACE": "PacifiCorp East",
+    "US-PACW": "PacifiCorp West", "US-SRP": "Salt River (AZ)",
+}
+
+
+def zone_name(code: str) -> str:
+    """Human-readable name for a bidding-zone code; the code itself if unknown."""
+    return ZONE_NAMES.get(code, code)
+
+
+def zone_label(code: str) -> str:
+    """'PL · Poland' — used in pickers and tooltips."""
+    name = ZONE_NAMES.get(code)
+    return f"{code} · {name}" if name else code

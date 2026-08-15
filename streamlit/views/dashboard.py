@@ -25,10 +25,10 @@ def _price_curve(prices: pd.DataFrame, picked: list[str]) -> None:
         return
 
     fig = px.line(df, x="period_start", y="avg_price", color="region")
-    fig.update_traces(
-        line=dict(width=2.1),
-        hovertemplate="%{y:,.1f} EUR/MWh<extra>%{fullData.name}</extra>",
-    )
+    for tr in fig.data:
+        tr.hovertemplate = (f"{D.zone_label(tr.name)} — "
+                            "%{y:,.1f} EUR/MWh<extra></extra>")
+    fig.update_traces(line=dict(width=2.1))
     st.plotly_chart(T.style_fig(fig, 372, "EUR / MWh"), use_container_width=True, theme=None)
 
 
@@ -47,9 +47,11 @@ def _spread(zones: pd.DataFrame) -> None:
         ))
     fig.add_trace(go.Scatter(
         x=z["avg_price"], y=z["region"], mode="markers",
+        customdata=[D.zone_name(r) for r in z["region"]],
         marker=dict(size=10, color=[T.price_colour(p) for p in z["percentile"]],
                     line=dict(width=0)),
-        hovertemplate="%{y} · %{x:,.1f} EUR/MWh<extra></extra>", showlegend=False,
+        hovertemplate="%{y} · %{customdata} — %{x:,.1f} EUR/MWh<extra></extra>",
+        showlegend=False,
     ))
     st.plotly_chart(T.style_fig(fig, 372, ""), use_container_width=True, theme=None)
 
@@ -149,7 +151,20 @@ def render() -> None:
                     "Run the Gold pipeline, then Cell 11 in 03_gold_features "
                     "to publish a fresh snapshot to this repo.")
         else:
-            T.zone_board(list(zip(zones["region"], zones["avg_price"], zones["percentile"])))
+            T.zone_board([
+                (r, D.zone_name(r), p, q)
+                for r, p, q in zip(zones["region"], zones["avg_price"], zones["percentile"])
+            ])
+            with st.expander("Zone code reference"):
+                st.markdown(
+                    '<div class="pg-zoneref">'
+                    + "".join(
+                        f"<div><b>{c}</b>{D.zone_name(c)}</div>"
+                        for c in sorted(zones["region"].unique())
+                    )
+                    + "</div>",
+                    unsafe_allow_html=True,
+                )
 
     all_zones = sorted(zones["region"].unique()) if not zones.empty else []
 
@@ -164,6 +179,7 @@ def render() -> None:
                 "Bidding zones",
                 all_zones,
                 default=list(zones.head(5)["region"]) if not zones.empty else [],
+                format_func=D.zone_label,
                 label_visibility="collapsed",
                 placeholder="Filter bidding zones",
             )
@@ -177,7 +193,8 @@ def render() -> None:
                         "The model runs daily at 02:00 CET and writes back to Gold.")
             else:
                 T.watchlist([
-                    (r["region"], float(r["spike_probability"]),
+                    (r["region"], D.zone_name(r["region"]),
+                     float(r["spike_probability"]),
                      int(r.get("predicted_spike", 0)))
                     for _, r in lpred.head(9).iterrows()
                 ])
@@ -205,6 +222,7 @@ def render() -> None:
     with st.container(border=True):
         T.panel_header("What drives the prediction", "mean absolute shap")
         pick = st.selectbox("Zone", ["All zones"] + all_zones,
+                            format_func=lambda z: z if z == "All zones" else D.zone_label(z),
                             label_visibility="collapsed")
         _drivers(shap, pick)
         st.caption("Higher bars move the spike probability further from its baseline. "

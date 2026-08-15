@@ -176,8 +176,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {{
 }}
 .pg-ph {{
   display:flex; align-items:baseline; justify-content:space-between;
-  gap:1rem; padding:6px 6px 14px 6px; margin-bottom:8px;
-  border-bottom:1px solid {LINE};
+  gap:1rem; padding:6px 6px 12px 6px; margin-bottom:4px;
 }}
 .pg-ph h3 {{ font-size:1.02rem; font-weight:600; margin:0; color:{TEXT}; }}
 .pg-ph span {{
@@ -193,14 +192,13 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {{
   box-shadow:0 0 14px -6px currentColor;
 }}
 .pg-col:hover {{ filter:brightness(1.45); }}
-.pg-board-x {{ display:flex; gap:5px; margin-top:9px; padding-top:9px; border-top:1px solid {LINE}; }}
+.pg-board-x {{ display:flex; gap:5px; margin-top:9px; }}
 .pg-board-x div {{
   flex:1; min-width:8px; text-align:center; font-family:{FONT_MONO};
   font-size:.545rem; color:{MUTED}; overflow:hidden; white-space:nowrap;
 }}
 .pg-scale {{
-  display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:1.05rem; padding-top:.9rem;
-  border-top:1px solid {LINE};
+  display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:1.05rem;
   font-family:{FONT_MONO}; font-size:.6rem; color:{MUTED}; letter-spacing:.1em;
 }}
 .pg-scale i {{ display:inline-block; width:22px; height:5px; border-radius:3px;
@@ -221,9 +219,11 @@ div[data-testid="stVerticalBlockBorderWrapper"] > div {{
   display:flex; align-items:center; gap:12px; padding:11px 14px;
   border:1px solid transparent; border-radius:11px; background:{RAISED}; margin-bottom:8px;
 }}
-.pg-row.hot {{ border-color:rgba(251,113,133,.45); background:rgba(251,113,133,.08); }}
-.pg-row-z {{ font-family:{FONT_MONO}; font-weight:700; font-size:.82rem;
-  color:{TEXT}; width:58px; flex-shrink:0; }}
+.pg-row.hot {{ background:rgba(251,113,133,.08);
+  box-shadow:inset 3px 0 0 {CORAL}; }}
+.pg-row-z {{ width:118px; flex-shrink:0; line-height:1.25; }}
+.pg-row-z b {{ font-family:{FONT_MONO}; font-weight:700; font-size:.82rem; color:{TEXT}; }}
+.pg-row-z i {{ display:block; font-style:normal; font-size:.63rem; color:{MUTED}; }}
 .pg-row-m {{ flex:1; height:6px; background:rgba(255,255,255,.055); border-radius:3px; overflow:hidden; }}
 .pg-row-f {{ height:100%; border-radius:3px; }}
 .pg-row-p {{ font-family:{FONT_MONO}; font-size:.78rem; color:{TEXT}; width:52px;
@@ -290,12 +290,54 @@ div[data-baseweb="tag"] svg {{ fill:#7DD3FC !important; }}
 ul[data-testid="stSelectboxVirtualDropdown"] {{ background:{RAISED}; }}
 
 div[data-testid="stChatMessage"] {{
-  background:{PANEL}; border:1px solid {LINE}; border-radius:14px; padding:4px 8px;
+  background:transparent; border:none; border-radius:0; padding:2px 0;
 }}
+div[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {{
+  background:{RAISED}; border-radius:14px; padding:6px 14px;
+}}
+div[data-testid="stChatMessage"] p {{ font-size:.92rem; line-height:1.68; }}
 div[data-testid="stChatInput"] {{ border-color:{LINE}; }}
 div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
 
 [data-testid="stCaptionContainer"] p {{ color:{MUTED}; font-size:.735rem; }}
+
+.st-key-pg_sugg .pg-sugg-h {{
+  font-family:{FONT_MONO}; font-size:.6rem; letter-spacing:.16em;
+  text-transform:uppercase; color:{MUTED}; margin:0 0 .6rem 2px;
+}}
+.st-key-pg_sugg .stButton button {{
+  font-size:.755rem; font-weight:400; color:{MUTED};
+  text-align:left; justify-content:flex-start;
+  padding:.5rem .7rem; border-radius:9px; line-height:1.4;
+  background:transparent; border:1px solid {LINE}; width:100%;
+}}
+.st-key-pg_sugg .stButton button:hover {{
+  color:{TEXT}; border-color:{SKY}; background:rgba(56,189,248,.06);
+  box-shadow:none;
+}}
+.st-key-pg_clear .stButton button {{
+  font-size:.7rem; color:{MUTED}; background:transparent;
+  border:none; padding:.3rem .4rem;
+}}
+.st-key-pg_clear .stButton button:hover {{ color:{CORAL}; box-shadow:none; }}
+
+/* zone code reference grid */
+.pg-zoneref {{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
+  gap:4px 18px; padding:4px 2px;
+}}
+.pg-zoneref div {{ font-size:.7rem; color:{MUTED}; }}
+.pg-zoneref b {{ font-family:{FONT_MONO}; font-weight:600; font-size:.68rem;
+  color:{TEXT}; display:inline-block; width:52px; }}
+
+details[data-testid="stExpander"] {{
+  border:1px solid {LINE}; border-radius:11px; background:transparent;
+}}
+details[data-testid="stExpander"] summary {{
+  font-family:{FONT_MONO}; font-size:.66rem; letter-spacing:.1em;
+  text-transform:uppercase; color:{MUTED};
+}}
+details[data-testid="stExpander"] summary:hover {{ color:{SKY}; }}
 
 *:focus-visible {{ outline:2px solid {SKY}; outline-offset:2px; }}
 @media (prefers-reduced-motion: reduce) {{ *{{animation:none!important;transition:none!important}} }}
@@ -408,26 +450,29 @@ def price_colour(pct: float) -> str:
     return TEAL
 
 
-def zone_board(zones: list[tuple[str, float, float]]) -> None:
-    """Signature element — every bidding zone as one column, ranked by price."""
+def zone_board(zones: list[tuple[str, str, float, float]]) -> None:
+    """Signature element — every bidding zone as one column, ranked by price.
+
+    zones: [(code, name, avg_price, percentile)]
+    """
     if not zones:
         return
     cols, labels = [], []
-    for code, price, pct in zones:
+    for code, name, price, pct in zones:
         c = price_colour(pct)
         cols.append(
             f'<div class="pg-col" style="height:{15 + pct*85:.0f}%;'
-            f'background:{c};color:{c}" title="{code} — {price:,.1f} EUR/MWh"></div>'
+            f'background:{c};color:{c}" title="{code} · {name} — {price:,.1f} EUR/MWh"></div>'
         )
         labels.append(f"<div>{code}</div>")
 
     hi, lo = zones[0], zones[-1]
-    mid = sum(z[1] for z in zones) / len(zones)
+    mid = sum(z[2] for z in zones) / len(zones)
     ex = [
-        ("Highest zone", f"{hi[1]:,.0f}", hi[0], CORAL),
+        ("Highest zone", f"{hi[2]:,.0f}", hi[1], CORAL),
         ("Market average", f"{mid:,.0f}", f"{len(zones)} zones", SKY),
-        ("Lowest zone", f"{lo[1]:,.0f}", lo[0], TEAL),
-        ("Spread", f"{hi[1]-lo[1]:,.0f}", "high − low", VIOLET),
+        ("Lowest zone", f"{lo[2]:,.0f}", lo[1], TEAL),
+        ("Spread", f"{hi[2]-lo[2]:,.0f}", "high − low", VIOLET),
     ]
 
     st.markdown(
@@ -450,18 +495,19 @@ def zone_board(zones: list[tuple[str, float, float]]) -> None:
     )
 
 
-def watchlist(rows: list[tuple[str, float, int]]) -> None:
+def watchlist(rows: list[tuple[str, str, float, int]]) -> None:
+    """rows: [(code, name, probability, spike_flag)]"""
     st.markdown(
         "".join(
             f'<div class="pg-row{" hot" if flag else ""}">'
-            f'<div class="pg-row-z">{zone}</div>'
+            f'<div class="pg-row-z"><b>{zone}</b><i>{name}</i></div>'
             f'<div class="pg-row-m"><div class="pg-row-f" '
             f'style="width:{max(prob*100,2):.0f}%;background:'
             f'{CORAL if flag else (AMBER if prob>=.25 else TEAL)}"></div></div>'
             f'<div class="pg-row-p">{prob*100:.1f}%</div>'
             f'<div class="pg-row-t {"pg-t-hot" if flag else "pg-t-ok"}">'
             f'{"spike" if flag else "normal"}</div></div>'
-            for zone, prob, flag in rows
+            for zone, name, prob, flag in rows
         ),
         unsafe_allow_html=True,
     )

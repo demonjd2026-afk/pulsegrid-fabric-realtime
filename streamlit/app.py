@@ -27,17 +27,15 @@ T.inject_css()
 # ─────────────────────────────────────────────────────────────────────────────
 # Navigation
 # ─────────────────────────────────────────────────────────────────────────────
-from views import about, agent, dashboard  # noqa: E402
+from views import agent, dashboard  # noqa: E402
 
 # url_path is explicit: all three view functions are named `render`, so
 # Streamlit would otherwise infer the same pathname for each and raise.
 nav = st.navigation([
-    st.Page(dashboard.render, title="Dashboard",    icon="📊",
+    st.Page(dashboard.render, title="Dashboard",  icon="📊",
             url_path="dashboard", default=True),
-    st.Page(agent.render,     title="AI Analyst",   icon="🤖",
+    st.Page(agent.render,     title="AI Analyst", icon="🤖",
             url_path="analyst"),
-    st.Page(about.render,     title="Architecture", icon="🏗️",
-            url_path="architecture"),
 ])
 
 # ─────────────────────────────────────────────────────────────────────────────
