@@ -111,50 +111,54 @@ def render() -> None:
     st.session_state.setdefault("chat", [])
 
     # Suggestions stay a narrow rail on the left; the conversation gets the
-    # rest of the page — there's no sidebar meta block competing for space
-    # anymore, so this is now genuinely wide.
-    left, chat = st.columns([1, 3.4], gap="large")
+    # rest of the page. Both columns are stretched to equal height (CSS)
+    # so the divider between them runs the full height of the row, not
+    # just the shorter column's natural content height.
+    with st.container(key="pg_chatrow"):
+        left, chat = st.columns([1, 3.4], gap="large")
 
-    # Suggestion rail gets a right-hand vertical rule, the way Claude
-    # separates its sidebar from the conversation pane, instead of relying
-    # on column spacing alone.
-    with left:
-        with st.container(key="pg_rail"):
-            with st.container(key="pg_sugg"):
-                st.markdown('<div class="pg-sugg-h">Try asking</div>',
-                            unsafe_allow_html=True)
-                for i, p in enumerate(PROMPTS):
-                    if st.button(p, key=f"sg{i}", use_container_width=True):
-                        st.session_state.pending = p
-                        st.rerun()
+        with left:
+            with st.container(key="pg_rail"):
+                with st.container(key="pg_sugg"):
+                    st.markdown('<div class="pg-sugg-h">Try asking</div>',
+                                unsafe_allow_html=True)
+                    for i, p in enumerate(PROMPTS):
+                        if st.button(p, key=f"sg{i}", use_container_width=True):
+                            st.session_state.pending = p
+                            st.rerun()
 
-            if st.session_state.chat:
-                with st.container(key="pg_clear"):
-                    if st.button("Clear conversation"):
-                        st.session_state.chat = []
-                        st.rerun()
+                if st.session_state.chat:
+                    with st.container(key="pg_clear"):
+                        if st.button("Clear conversation"):
+                            st.session_state.chat = []
+                            st.rerun()
 
-    with chat:
-        if not st.session_state.chat:
-            st.markdown(
-                f'<div style="color:{T.MUTED};font-size:.9rem;padding:.4rem 0 0 2px">'
-                f"Pick a question on the left, or type your own below.</div>",
-                unsafe_allow_html=True,
-            )
+        with chat:
+            # One border around the whole conversation — history and the
+            # input both sit inside the same card, rather than floating
+            # loose on the page.
+            with st.container(border=True, key="pg_panel_chat"):
+                if not st.session_state.chat:
+                    st.markdown(
+                        f'<div style="color:{T.MUTED};font-size:.9rem;padding:.2rem 0 .6rem 2px">'
+                        f"Pick a question on the left, or type your own below.</div>",
+                        unsafe_allow_html=True,
+                    )
 
-        for msg in st.session_state.chat:
-            avatar = "⚡" if msg["role"] == "assistant" else None
-            with st.chat_message(msg["role"], avatar=avatar):
-                st.markdown(msg["content"])
+                for msg in st.session_state.chat:
+                    avatar = "⚡" if msg["role"] == "assistant" else None
+                    with st.chat_message(msg["role"], avatar=avatar):
+                        st.markdown(msg["content"])
 
-        typed = st.chat_input("Ask about prices, spikes, generation or model drivers")
-        question = typed or st.session_state.pop("pending", None)
+                typed = st.chat_input(
+                    "Ask about prices, spikes, generation or model drivers")
+                question = typed or st.session_state.pop("pending", None)
 
-        if question:
-            st.session_state.chat.append({"role": "user", "content": question})
-            with st.chat_message("user"):
-                st.markdown(question)
-            _stream_reply(key, context)
-            st.rerun()
+                if question:
+                    st.session_state.chat.append({"role": "user", "content": question})
+                    with st.chat_message("user"):
+                        st.markdown(question)
+                    _stream_reply(key, context)
+                    st.rerun()
 
     T.page_footer(stamp, loaded)

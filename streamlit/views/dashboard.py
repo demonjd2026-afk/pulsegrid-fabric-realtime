@@ -41,9 +41,8 @@ def _price_curve(prices: pd.DataFrame, picked: list[str]) -> None:
         tr.hovertemplate = (f"{D.zone_label(tr.name)} — "
                             "%{y:,.1f} EUR/MWh<extra></extra>")
     fig.update_traces(line=dict(width=2.1))
-    with T.chart_frame("price"):
-        st.plotly_chart(T.style_fig(fig, 340, ytitle="EUR / MWh", xtitle="Hour"),
-                        use_container_width=True, theme=None)
+    st.plotly_chart(T.style_fig(fig, 340, ytitle="EUR / MWh", xtitle="Hour"),
+                    use_container_width=True, theme=None)
 
 
 def _spread(zones: pd.DataFrame) -> None:
@@ -71,11 +70,10 @@ def _spread(zones: pd.DataFrame) -> None:
         hovertemplate="%{y} · %{customdata} — %{x:,.1f} EUR/MWh<extra></extra>",
         showlegend=False,
     ))
-    with T.chart_frame("spread"):
-        st.plotly_chart(
-            T.style_fig(fig, 340, ytitle="", xtitle="EUR / MWh"),
-            use_container_width=True, theme=None,
-        )
+    st.plotly_chart(
+        T.style_fig(fig, 340, ytitle="", xtitle="EUR / MWh"),
+        use_container_width=True, theme=None,
+    )
 
 
 def _generation(gen: pd.DataFrame) -> None:
@@ -98,11 +96,10 @@ def _generation(gen: pd.DataFrame) -> None:
                         marker_color=colour, marker_line_width=0,
                         hovertemplate=f"%{{x}} · {name} %{{y:.1f}}%<extra></extra>")
     fig.update_layout(barmode="stack", bargap=0.36)
-    with T.chart_frame("gen"):
-        st.plotly_chart(
-            T.style_fig(fig, 300, ytitle="% of output", xtitle="Zone"),
-            use_container_width=True, theme=None,
-        )
+    st.plotly_chart(
+        T.style_fig(fig, 300, ytitle="% of output", xtitle="Zone"),
+        use_container_width=True, theme=None,
+    )
     st.caption(f"{len(gen)} zones reporting output. Zones publishing nothing for "
                "this interval are excluded rather than drawn as empty bars.")
 
@@ -123,11 +120,10 @@ def _drivers(shap: pd.DataFrame, region: str) -> None:
         marker=dict(color=T.SKY, line=dict(width=0)),
         hovertemplate="%{y} · %{x:.3f}<extra></extra>",
     ))
-    with T.chart_frame("shap"):
-        st.plotly_chart(
-            T.style_fig(fig, 300, ytitle="", xtitle="Impact on prediction"),
-            use_container_width=True, theme=None,
-        )
+    st.plotly_chart(
+        T.style_fig(fig, 300, ytitle="", xtitle="Impact on prediction"),
+        use_container_width=True, theme=None,
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────────

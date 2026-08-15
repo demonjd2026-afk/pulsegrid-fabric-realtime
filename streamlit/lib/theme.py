@@ -198,11 +198,18 @@ div[data-testid="stPageLink"] a p {{ color:inherit !important; font-size:.87rem 
 .pg-synced b {{ color:{SKY}; font-weight:500; }}
 
 /* ── panels ───────────────────────────────────────────────────────────── */
+/* Streamlit puts the st-key-X class on the INNER stVerticalBlock div, not
+   on the stVerticalBlockBorderWrapper ancestor two levels up (confirmed by
+   DOM inspection) — so panels are styled by targeting that element
+   directly, not by reaching for a wrapper "child" that doesn't exist in
+   that direction. This also means the border-reset below only needs to
+   strip Streamlit's own native border look, not fight a selector that
+   can't reach it. */
 div[data-testid="stVerticalBlockBorderWrapper"] {{
   border:none !important; background:transparent !important;
-  box-shadow:none !important; border-radius:0; padding:0;
+  box-shadow:none !important;
 }}
-[class*="st-key-pg_panel_"] > div[data-testid="stVerticalBlockBorderWrapper"] {{
+[class*="st-key-pg_panel_"] {{
   background:{PANEL} !important;
   border:1px solid {LINE} !important; border-radius:14px !important;
   padding:12px 10px !important; box-shadow:0 8px 28px rgba(2,8,23,.35) !important;
@@ -380,9 +387,23 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
 .st-key-pg_clear .stButton button:hover {{ color:{CORAL}; box-shadow:none; }}
 
 /* vertical rule between the suggestion rail and the conversation, the way
-   Claude separates its history sidebar from the chat pane */
+   Claude separates its history sidebar from the chat pane. align-items on
+   the row's own horizontal block stretches both columns to equal height,
+   so the rule runs the FULL height of the row, not just the shorter
+   column's natural content height. */
+.st-key-pg_chatrow [data-testid="stHorizontalBlock"] {{ align-items:stretch; }}
 .st-key-pg_rail {{
-  border-right:1px solid {LINE}; padding-right:1.4rem; min-height:70vh;
+  border-right:1px solid {LINE}; padding-right:1.4rem; height:100%;
+  margin-left:0 !important;
+}}
+.st-key-pg_sugg {{ margin-left:0 !important; padding-left:0 !important; }}
+
+/* the pg_panel_chat card inherits the standard panel look automatically
+   ([class*="st-key-pg_panel_"] above already matches it) — just add the
+   chat-specific extras: comfortable minimum height and input styling */
+.st-key-pg_panel_chat {{ min-height:65vh; }}
+.st-key-pg_panel_chat div[data-testid="stChatInput"] {{
+  background:{RAISED}; border-radius:12px;
 }}
 
 /* scrollable watchlist — shows every scored zone instead of a hard cutoff */
@@ -395,15 +416,6 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
   background:{LINE}; border-radius:4px;
 }}
 .st-key-pg_watchscroll::-webkit-scrollbar-thumb:hover {{ background:{MUTED}; }}
-
-/* guaranteed chart frame — pure CSS, independent of Plotly's own theming.
-   Gives every visualization a visible border distinct from both the outer
-   panel card and its caption text, and never overlaps a neighbouring
-   chart since each one gets its own inset box. */
-[class*="st-key-pg_frame_"] {{
-  background:#050810; border:1px solid {LINE}; border-radius:12px;
-  padding:10px 12px 4px 12px; margin-top:.3rem;
-}}
 
 /* zone code reference grid */
 .pg-zoneref {{
@@ -591,22 +603,6 @@ def panel_header(title: str, meta: str = "") -> None:
         f'<div class="pg-ph"><h3>{title}</h3><span>{meta}</span></div>',
         unsafe_allow_html=True,
     )
-
-
-import contextlib
-
-
-@contextlib.contextmanager
-def chart_frame(key: str):
-    """A visible border around the plot area itself, separate from the
-    caption text and from the outer panel card. This is pure CSS on a
-    Streamlit container, so the border renders regardless of anything
-    Plotly does internally — it does not depend on the chart's own theme
-    resolving correctly, which is the layer that kept intermittently
-    failing to apply on its own.
-    """
-    with st.container(key=f"pg_frame_{key}"):
-        yield
 
 
 def price_colour(pct: float) -> str:
