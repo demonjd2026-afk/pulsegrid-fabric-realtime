@@ -238,16 +238,31 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
 }}
 
 /* ── zone board (signature) ───────────────────────────────────────────── */
-.pg-board {{ display:flex; align-items:flex-end; gap:5px; height:132px; padding-top:8px; }}
+/* Fixed-width columns (not flex-shrink-to-fit) inside a horizontally
+   scrolling wrapper: with 27+ zones, shrink-to-fit occasionally clipped
+   the last column or two depending on the container's computed width at
+   render time. Fixed widths plus a scrollbar guarantee every zone is
+   always reachable — nothing is ever invisibly cut off. */
+.pg-board-scroll {{
+  overflow-x:auto; overflow-y:hidden; padding-bottom:6px;
+}}
+.pg-board-scroll::-webkit-scrollbar {{ height:6px; }}
+.pg-board-scroll::-webkit-scrollbar-track {{ background:transparent; }}
+.pg-board-scroll::-webkit-scrollbar-thumb {{ background:{LINE}; border-radius:4px; }}
+.pg-board-scroll::-webkit-scrollbar-thumb:hover {{ background:{MUTED}; }}
+.pg-board {{
+  display:flex; align-items:flex-end; gap:5px; height:132px; padding-top:8px;
+  width:max-content; min-width:100%;
+}}
 .pg-col {{
-  flex:1; min-width:8px; border-radius:4px 4px 2px 2px;
+  flex:0 0 28px; width:28px; border-radius:4px 4px 2px 2px;
   transition:filter .14s ease; cursor:default;
   box-shadow:0 0 14px -6px currentColor;
 }}
 .pg-col:hover {{ filter:brightness(1.45); }}
-.pg-board-x {{ display:flex; gap:5px; margin-top:9px; }}
+.pg-board-x {{ display:flex; gap:5px; margin-top:9px; width:max-content; min-width:100%; }}
 .pg-board-x div {{
-  flex:1; min-width:8px; text-align:center; font-family:{FONT_MONO};
+  flex:0 0 28px; width:28px; text-align:center; font-family:{FONT_MONO};
   font-size:.545rem; color:{MUTED}; overflow:hidden; white-space:nowrap;
 }}
 .pg-scale {{
@@ -256,16 +271,16 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
 }}
 .pg-scale i {{ display:inline-block; width:22px; height:5px; border-radius:3px;
   margin-right:.5rem; vertical-align:middle; }}
-.pg-extremes {{ display:flex; gap:11px; margin-top:1.05rem; flex-wrap:wrap; }}
+.pg-extremes {{ display:flex; gap:10px; margin-top:1.05rem; flex-wrap:wrap; }}
 .pg-ex {{
-  flex:1; min-width:170px; background:{RAISED}; border:2px solid {LINE};
-  border-radius:11px; padding:12px 15px; text-align:center;
+  flex:1 1 150px; min-width:150px; background:{RAISED}; border:2px solid {LINE};
+  border-radius:11px; padding:11px 12px; text-align:center; box-sizing:border-box;
 }}
-.pg-ex-k {{ font-family:{FONT_MONO}; font-size:.555rem; letter-spacing:.16em;
-  text-transform:uppercase; color:{MUTED}; }}
-.pg-ex-v {{ font-family:{FONT_MONO}; font-size:1.22rem; font-weight:700;
-  margin-top:.32rem; font-variant-numeric:tabular-nums; }}
-.pg-ex-v small {{ font-size:.64rem; color:{MUTED}; font-weight:400; margin-left:.32rem; }}
+.pg-ex-k {{ font-family:{FONT_MONO}; font-size:.54rem; letter-spacing:.13em;
+  text-transform:uppercase; color:{MUTED}; white-space:nowrap; }}
+.pg-ex-v {{ font-family:{FONT_MONO}; font-size:1.14rem; font-weight:700;
+  margin-top:.32rem; font-variant-numeric:tabular-nums; white-space:nowrap; }}
+.pg-ex-v small {{ font-size:.62rem; color:{MUTED}; font-weight:400; margin-left:.28rem; }}
 
 /* ── watchlist ────────────────────────────────────────────────────────── */
 .pg-row {{
@@ -380,10 +395,10 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
   text-transform:uppercase; color:{MUTED}; margin:0 0 .6rem 2px;
 }}
 .st-key-pg_sugg .stButton button {{
-  font-size:.685rem; font-weight:400; color:{MUTED};
+  font-size:.72rem; font-weight:400; color:{MUTED};
   text-align:left; justify-content:flex-start;
-  padding:.42rem .6rem; border-radius:8px; line-height:1.3;
-  background:transparent; border:2px solid {LINE}; width:100%;
+  padding:.48rem .65rem; border-radius:8px; line-height:1.3;
+  background:transparent; border:3px solid {LINE}; width:100%;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;
 }}
 .st-key-pg_sugg .stButton button p {{
@@ -406,7 +421,7 @@ div[data-testid="stChatInput"] textarea {{ font-family:{FONT_BODY}; }}
    reliably equalise their heights) guarantees the divider and the chat
    panel's border both end at the same point regardless of content. */
 .st-key-pg_rail {{
-  border-right:2px solid {LINE}; padding-right:1.4rem;
+  border-right:3px solid {LINE}; padding-right:1.4rem;
   min-height:600px; margin-left:0 !important;
 }}
 .st-key-pg_sugg {{ margin-left:0 !important; padding-left:0 !important; }}
@@ -524,7 +539,7 @@ def style_fig(fig: go.Figure, height: int = 340, ytitle: str = "",
         yaxis=dict(title=ytitle, title_standoff=14, **axis_common),
         legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(size=11, color=MUTED),
                     orientation="h", y=1.05, yanchor="bottom", x=0),
-        margin=dict(l=58, r=20, t=40, b=46),
+        margin=dict(l=58, r=32, t=40, b=46),
         modebar=dict(bgcolor="rgba(0,0,0,0)", color=MUTED, activecolor=SKY),
         hoverlabel=hover,
         hovermode="closest",
@@ -663,8 +678,10 @@ def zone_board(zones: list[tuple[str, str, float, float]]) -> None:
     ]
 
     st.markdown(
+        f'<div class="pg-board-scroll">'
         f'<div class="pg-board">{"".join(cols)}</div>'
         f'<div class="pg-board-x">{"".join(labels)}</div>'
+        f'</div>'
         f'<div class="pg-scale">'
         f'<span><i style="background:{TEAL}"></i>BOTTOM 30%</span>'
         f'<span><i style="background:{SKY}"></i>30–60%</span>'
