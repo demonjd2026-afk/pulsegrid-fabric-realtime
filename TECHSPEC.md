@@ -110,6 +110,7 @@ Establish the real-time ingestion foundation. Raw electricity market data from f
 
 ### 1.6 Bronze Tables — Live Record Counts
 
+![Bronze Table Created](screenshots/phase1_bronze_table_created.png)
 ![All Bronze Tables](screenshots/phase1_bronze_all_tables_created.png)
 ![Live Data Verified](screenshots/phase1_bronze_live_data_verified.png)
 
@@ -215,6 +216,7 @@ Read all 5 Bronze KQL tables into Spark, apply table-specific cleansing rules an
 
 All 5 tables processed simultaneously. Execution order determined by Spark job completion, not submission order.
 
+![Bronze Seed Data Verified](screenshots/phase2_bronze_seed_data_verified.png)
 ![Silver Parallel Output](screenshots/phase2_silver_parallel_output.png)
 
 | Table | Bronze Records | Silver Records | Status |
@@ -232,6 +234,8 @@ All 5 tables processed simultaneously. Execution order determined by Spark job c
 ### 2.5 Silver Validation Report
 
 ![Silver Validation Output](screenshots/phase2_silver_validation_output.png)
+![Silver Tables Validated](screenshots/phase2_silver_tables_validated.png)
+![Silver Tables in Lakehouse](screenshots/phase2_lakehouse_silver_tables.png)
 
 | Table | Rows | Nulls | Date Range |
 |---|---|---|---|
@@ -258,87 +262,6 @@ All 5 tables processed simultaneously. Execution order determined by Spark job c
 | All 5 Silver Delta tables written | ✅ |
 | Idempotent MERGE validated | ✅ |
 | Data quality validation passed | ✅ |
-
----
-
-## Phase 3 — Gold Layer (Feature Engineering)
-
-> 🔄 In Progress — details will be added upon completion.
-
----
-
-## Phase 4 — ML (XGBoost Spike Predictor)
-
-> ⬜ Pending
-
----
-
-## Phase 5 — Power BI Semantic Model
-
-> ⬜ Pending
-
----
-
-## Phase 6 — AI Agent (Claude API + Streamlit)
-
-> ⬜ Pending
-
----
-
-## Appendix A — Spark Optimization Techniques
-
-| Technique | Phase | Rationale |
-|---|---|---|
-| Predicate pushdown on `ingestion_date`, `region` | Silver | Avoids full scan; leverages KQL + Delta file skipping |
-| Native Spark functions only (no UDFs) | Silver | Catalyst can optimize; no serialization overhead |
-| `repartition()` by `region` + `hour` | Silver | Aligns write partitions to Gold aggregation patterns |
-| Parallel processing via `ThreadPoolExecutor` | Silver | All 5 tables simultaneously; total time ≈ slowest table |
-| Window function dedup `row_number()` | Silver | Deterministic dedup; fully distributed; no `collect()` |
-| `broadcast()` hint on holidays table | Gold | ~300 row table; eliminates shuffle on large price table |
-| Window functions for lag features | Gold | Fully distributed lag computation; no `collect()` |
-| AQE (Adaptive Query Execution) | Gold | Post-shuffle partition coalescing on aggregations |
-| `cache()` on feature table | ML | Feature table read twice; avoids re-scan |
-| `persist(MEMORY_AND_DISK)` before train/test split | ML | Split computed twice otherwise |
-| Delta `OPTIMIZE` + `ZORDER BY (region, event_time)` | Gold | Improves read performance for Semantic Model + agent |
-| `partitionBy("year","month","day")` at write | Silver/Gold | Right-sized partitioning; avoids small-files problem |
-
----
-
-## Appendix B — ENTSO-E Bidding Zone Codes (27 Zones)
-
-| Region | Zone Key |
-|---|---|
-| FR | 10YFR-RTE------C |
-| ES | 10YES-REE------0 |
-| NL | 10YNL----------L |
-| BE | 10YBE----------2 |
-| PL | 10YPL-AREA-----S |
-| AT | 10YAT-APG------L |
-| CH | 10YCH-SWISSGRIDZ |
-| PT | 10YPT-REN------W |
-| FI | 10YFI-1--------U |
-| CZ | 10YCZ-CEPS-----N |
-| SK | 10YSK-SEPS-----K |
-| HU | 10YHU-MAVIR----U |
-| RO | 10YRO-TEL------P |
-| BG | 10YCA-BULGARIA-R |
-| HR | 10YHR-HEP------M |
-| GR | 10YGR-HTSO-----Y |
-| SI | 10YSI-ELES-----O |
-| RS | 10YCS-SERBIATSOV |
-| LT | 10YLT-1001A0008Q |
-| LV | 10YLV-1001A00074 |
-| DE-LU | 10Y1001A1001A82H |
-| IT-NO | 10Y1001A1001A73I |
-| DK-1 | 10YDK-1--------W |
-| DK-2 | 10YDK-2--------M |
-| SE-3 | 10Y1001A1001A46L |
-| NO-2 | 10YNO-2--------T |
-| EE | 10Y1001A1001A39I |
-
----
-
-*Last updated: Phase 2 complete — August 2026*
 
 ---
 
@@ -427,8 +350,7 @@ Columns: `avg_price`, `min_price`, `max_price`, `price_range`, `record_count`, `
 
 ### 3.4 Gold Validation Results
 
-![Gold Validated](screenshots/phase3_gold_validated.png)
-![Gold Tables in Lakehouse](screenshots/phase3_gold_tables_in_lakehouse.png)
+![Gold Tables in Lakehouse](screenshots/phase3_lakehouse_gold_tables.png)
 
 | Table | Rows | Notes |
 |---|---|---|
@@ -552,6 +474,7 @@ This enables the AI agent to query: *"What were the top 3 factors driving the sp
 ### 4.6 Validation Results
 
 ![ML Validated](screenshots/phase4_ml_validated.png)
+![ML Tables in Lakehouse](screenshots/phase4_lakehouse_ml_tables.png)
 
 | Output | Value | Notes |
 |---|---|---|
@@ -564,11 +487,50 @@ This enables the AI agent to query: *"What were the top 3 factors driving the sp
 | ROC AUC | 0.0000 | Undefined — single class in test set |
 | SHAP mean abs | 0.0 | All zero — no class separation to explain yet |
 
-**Note on metrics:** All metrics reflect the current data state — only 2 days of live data with no price spikes. Once pollers accumulate several days of data with real European price spikes, rerunning this notebook will produce meaningful SHAP values, real F1/ROC scores, and a fully validated spike predictor. The pipeline architecture, MLflow tracking, and SHAP storage are all fully validated.
+**Note on metrics:** All metrics reflect the seed data state — only 2 days of live data with no price spikes. Once pollers accumulate several days of data with real European price spikes, rerunning this notebook produces meaningful SHAP values and real F1/ROC scores. See §4.7 for the first production run, which did exactly that.
 
 ---
 
-### 4.7 Phase 4 Summary
+### 4.7 Production Run — First Run With Real Spikes
+
+Once the pollers had accumulated enough data for the p90 threshold to separate a real positive class, the notebook was rerun. This is the run whose output is published to the Streamlit snapshot.
+
+**MLflow Run ID:** `9c0e9b3e-b8fd-4387-90fd-92fdf1ac37f1`
+**Scored rows:** 530 across 27 bidding zones · **Window:** 2026-08-14 17:00 → 22:00
+
+| Metric | Value |
+|---|---|
+| Accuracy | 0.723 (383 / 530) |
+| Precision | 0.736 |
+| Recall | 0.407 |
+| F1 score | 0.524 |
+| True positives | 81 |
+| False positives | 29 |
+| False negatives | 118 |
+| True negatives | 302 |
+
+**Reading the confusion matrix.** High precision with modest recall means the model rarely cries wolf but does miss marginal spikes. For an alerting surface that is the correct asymmetry — a false alarm costs an operator's attention, a missed marginal spike costs very little. Recall improves as more history accumulates and the lag features stop being null for early records per region.
+
+**SHAP — mean |SHAP| across all 7,700 published explanations:**
+
+| Feature | Mean \|SHAP\| |
+|---|---|
+| `price_eur_mwh` | 1.8872 |
+| `price_rolling_avg_6h` | 1.6718 |
+| `price_lag_1h` | 0.7731 |
+| `price_lag_24h` | 0.6710 |
+| `price_rolling_std_6h` | 0.6691 |
+| `price_lag_12h` | 0.5576 |
+| `hour_of_day` | 0.5253 |
+| `load_mw` | 0.0284 |
+| `day_of_week` | 0.0035 |
+| `wind_speed_ms`, `temperature_c`, `solar_radiation`, `is_weekend`, `humidity_pct` | 0.0000 |
+
+Price level, recent 6-hour average and short lags carry the signal. The weather block contributes exactly zero — with two days of data there is no seasonal variance for the trees to split on, so those features are never selected. This is a data-volume finding, not a modelling defect, and it is visible directly in the app's driver chart.
+
+---
+
+### 4.8 Phase 4 Summary
 
 | Item | Status |
 |---|---|
@@ -672,3 +634,268 @@ Before creating the Semantic Model, all Gold tables were registered in the Lakeh
 | 5 visuals built and validated | ✅ |
 | Report saved as `PulseGrid — Energy Market Dashboard` | ✅ |
 
+
+---
+
+## Phase 6 — AI Analyst (Claude API + Streamlit)
+
+### Objective
+
+Ship a public, credential-free analytics surface over the Gold layer: a market dashboard anyone can open, plus a Claude-powered analyst that answers plain-English questions grounded in the real Gold tables. Deployed on Streamlit Community Cloud at **https://pulsegrid-energy.streamlit.app/**.
+
+---
+
+### 6.1 The Snapshot Problem — and the Decision
+
+The obvious design is for the app to query the Fabric Lakehouse live. It does not work for a public deployment:
+
+| Problem | Consequence |
+|---|---|
+| Fabric bearer tokens expire in roughly an hour | A deployed app breaks mid-session with no way to re-auth |
+| Service-principal auth against a Trial capacity | Not available; and it would put a secret in a public app |
+| SQL endpoint latency on cold Trial capacity | Multi-second page loads on every interaction |
+
+**Decision:** publish the Gold tables the app reads as JSON, committed to this repo. The app then has **zero runtime auth dependency** and loads instantly from disk.
+
+**Implementation — `03_gold_features` Cell 11.** Reads each Delta table, serialises to a JSON records string in memory, and pushes straight to the GitHub contents API (`PUT /repos/{repo}/contents/{path}` with the current blob SHA for updates). The PAT lives in `pulsegrid_env` as `spark.pulsegrid.github_token`, never inline.
+
+**Why in-memory and not via the Lakehouse Files area.** The earlier version wrote JSON with `mssparkutils.fs.put` and read it back with `fs.head` to push. `fs.head` is hard-capped at 100 KB regardless of the `maxBytes` argument, so every table over that cap was truncated mid-record and became invalid JSON:
+
+```
+gold_price_aggregates.json    102,400 bytes  <- cut off
+gold_price_predictions.json   102,400 bytes  <- cut off
+gold_shap_values.json         102,400 bytes  <- cut off
+gold_generation_summary.json   56,482 bytes  <- under the cap, fine
+```
+
+`pandas.read_json` raised on the three truncated files, the app fell back to empty DataFrames, and every metric rendered as 0 — only the generation mix, the one table under the cap, displayed. Serialising in memory removes the round trip and the cap.
+
+**Tables published:** `gold_price_aggregates`, `gold_price_predictions`, `gold_shap_values`, `gold_generation_summary`.
+
+---
+
+### 6.2 Application Structure
+
+| File | Role |
+|---|---|
+| `streamlit/app.py` | Entry point — page config, top-bar brand + nav + reload, routing |
+| `streamlit/lib/data.py` | Snapshot loader, derived views, freshness, Claude context builder |
+| `streamlit/lib/theme.py` | Design tokens, injected CSS, shared Plotly template, custom components |
+| `streamlit/views/dashboard.py` | Market dashboard |
+| `streamlit/views/agent.py` | Claude analyst chat |
+| `streamlit/views/about.py` | Architecture reference page |
+
+**Navigation.** `st.navigation(pages, position="hidden")` suppresses Streamlit's sidebar nav; the brand, page links and reload action are rendered manually in a top bar and the sidebar is hidden in CSS. Dashboard apps read better with a top bar than a collapsible side panel.
+
+**Caching.** `@st.cache_data(ttl=600)` on every table read. The **Reload snapshot** button calls `st.cache_data.clear()` then `st.rerun()`.
+
+**Resilience.** `load_table()` tries four candidate paths and returns an empty DataFrame on a missing or malformed file rather than raising — callers render an empty state, so a bad publish degrades the page instead of crashing it.
+
+---
+
+### 6.3 Dashboard Page
+
+| Element | What it shows |
+|---|---|
+| KPI row | Zones priced, mean price, peak zone, spike alerts, renewable share, SHAP record count |
+| Zone price board | One bar per bidding zone, high → low, coloured by cross-zone price percentile |
+| Price movement | Multi-select hourly price curve per zone |
+| Spike watchlist | Latest prediction per zone, highest probability first |
+| Zone spread | Min–max price band per zone with the average marked |
+| Generation mix | Stacked renewable / nuclear / fossil share per reporting zone |
+| Model drivers | Mean absolute SHAP per feature, filterable by zone |
+
+**Zones reporting nothing are excluded, not drawn.** ENTSO-E publishes a row for every zone on every interval; many TSOs report nothing for the current window and arrive as 0 MW across all fuels. `active_generation()` filters `total_generation_mw > 0` so the chart shows 11 real zones rather than a wall of empty bars.
+
+**Future timestamps are clamped, not reported negative.** Day-ahead prices carry future delivery timestamps, so the newest record can legitimately sit ahead of now; `freshness()` clamps the computed age at zero.
+
+![Dashboard](screenshots/phase6_streamlit_dashboard_top.png)
+![Price Watchlist](screenshots/phase6_streamlit_price_watchlist.png)
+![Zone Spread and Generation](screenshots/phase6_streamlit_spread_generation.png)
+![SHAP Drivers](screenshots/phase6_streamlit_shap_drivers.png)
+![Hover Tooltip](screenshots/phase6_streamlit_hover_tooltip.png)
+
+---
+
+### 6.4 Claude Analyst
+
+**Grounding.** `build_context()` assembles a compact market summary — latest price per zone, spike predictions, generation mix, and mean-absolute SHAP importance — and injects it into the system prompt. Aggregates are sent, not raw rows; the model needs the current state of the market, not 7,700 SHAP records.
+
+**System prompt rules:**
+- Quote real figures from the snapshot; prices in EUR/MWh, load in MW, shares in %
+- When explaining a spike, name the SHAP drivers and the direction each pushed the probability
+- Refer to zones by code *and* name, e.g. "DE-LU (Germany–Luxembourg)"
+- If the snapshot lacks the answer, name the Gold table that would hold it and when it refreshes — never invent a number
+
+**Streaming.** Replies stream through `client.messages.stream()` into a placeholder inside the scrollable history container, so the answer appears token by token without a second rerun. On failure the user turn is popped so the thread stays consistent.
+
+**Degradation without a key.** `ANTHROPIC_API_KEY` is read from `st.secrets`. If absent, the chat page renders a setup empty-state and the dashboard continues to work — the app is never fully blocked by a missing credential.
+
+![Chat Empty State](screenshots/phase6_streamlit_chat_empty.png)
+![Chat Reply](screenshots/phase6_streamlit_chat_reply.png)
+
+---
+
+### 6.5 Deployment
+
+| Item | Value |
+|---|---|
+| Host | Streamlit Community Cloud |
+| URL | https://pulsegrid-energy.streamlit.app/ |
+| Entry point | `streamlit/app.py` |
+| Dependencies | `streamlit 1.40.0`, `anthropic 0.40.0`, `httpx 0.27.2`, `pandas 2.2.2`, `plotly 5.20.0` |
+| Secrets | `ANTHROPIC_API_KEY` under App settings → Secrets |
+| Theme | `.streamlit/config.toml` — dark base, `#38BDF8` primary on `#060B16` |
+| Data refresh | Automatic on each `03_gold_features` run (hourly) via the Cell 11 GitHub push |
+
+---
+
+### 6.6 Phase 6 Summary
+
+| Item | Status |
+|---|---|
+| Gold snapshot publisher (Cell 11) rewritten to bypass the 100 KB `fs.head` cap | ✅ |
+| Snapshot committed to repo — app has no runtime auth dependency | ✅ |
+| Dashboard with 6 KPIs and 6 analytical panels | ✅ |
+| Claude analyst grounded in live Gold context, streaming replies | ✅ |
+| Graceful degradation without an API key | ✅ |
+| Deployed publicly on Streamlit Community Cloud | ✅ |
+
+---
+
+## Phase 7 — Orchestration & Monitoring
+
+### Objective
+
+Take the six notebooks off manual execution. Each is wrapped in a Fabric Data Pipeline with its own schedule and failure notification, and Bronze ingestion is watched by an Activator rule so a silent poller failure surfaces as an email rather than as a stale dashboard nobody noticed.
+
+---
+
+### 7.1 Pipelines
+
+Each pipeline contains a single **Notebook** activity bound to the `PulseGrid` workspace, with failure email notification enabled.
+
+| Pipeline | Notebook | Schedule | Time Zone |
+|---|---|---|---|
+| `pipeline_01a_daily_price` | `01a_daily_price_poller` | Daily 13:00 | UTC+01:00 CET |
+| `pipeline_01b_realtime` | `01b_realtime_poller` | Every 15 minutes | UTC+01:00 CET |
+| `pipeline_01c_weather_eia` | `01c_weather_eia_poller` | Every 30 minutes | UTC+01:00 CET |
+| `pipeline_02_silver` | `02_silver_cleansing` | Every 30 minutes | UTC+01:00 CET |
+| `pipeline_03_gold` | `03_gold_features` | Every 1 hour | UTC+01:00 CET |
+| `pipeline_04_ml` | `04_ml_spike_predictor` | Daily 02:00 | UTC+01:00 CET |
+
+**Max concurrency is 1 on every schedule.** Fabric Trial capacity returns a 430 error when Spark sessions overlap; serialising each pipeline against itself keeps a slow run from stacking on the next tick.
+
+**Cadence rationale.** Silver runs at 30 minutes because that is the fastest cadence at which every Bronze table has something new (the 15-minute realtime poller writes twice per Silver run, which the idempotent MERGE absorbs). Gold runs hourly because the aggregates are hour-grained — running faster would recompute identical rows. The ML notebook retrains daily at 02:00 CET, off-peak for both the market and the Trial capacity.
+
+![01a Pipeline](screenshots/pipeline_01a_scheduled.png)
+![01b Pipeline](screenshots/pipeline_01b_scheduled.png)
+![01c Pipeline](screenshots/pipeline_01c_scheduled.png)
+![Silver Pipeline](screenshots/pipeline_02_silver_scheduled.png)
+![Gold Pipeline](screenshots/pipeline_03_gold_scheduled.png)
+![ML Pipeline](screenshots/pipeline_04_ml_scheduled.png)
+
+---
+
+### 7.2 Library Management — Why `%pip` Had To Go
+
+`%pip install` magic is disabled in pipeline-triggered notebook runs. Every dependency moved into the `pulsegrid_env` Environment as a public library, pinned to versions that resolve against the Spark runtime's Python 3.10 — notably `xgboost < 3.3`, since 3.3 and above require Python 3.12 and will not install there.
+
+---
+
+### 7.3 Freshness Alert — `pulsegrid_bronze_freshness_alert`
+
+A Fabric Activator rule monitoring the `pulsegrid_bronze` KQL database.
+
+```kusto
+raw_electricity_prices
+| where ingestion_time > ago(2h)
+| count
+| where Count == 0
+```
+
+| Setting | Value |
+|---|---|
+| Source | `pulsegrid_bronze` |
+| Run query every | 30 minutes |
+| Condition | On each event |
+| Action | Message to individuals — email |
+| Headline | PulseGrid — Bronze Data Freshness Alert |
+| Notes | No electricity price data received in Bronze in the last 2 hours. Check pollers 01a/01b/01c in Fabric. |
+| Saved in | `PulseGrid` workspace |
+
+**Why this specific check.** A real-time platform's worst failure is not a crash — it is a poller that quietly stops writing while every downstream surface keeps rendering the last good numbers. Pipeline failure emails cover the case where a run errors; this rule covers the case where runs succeed but produce nothing. The two-hour window is wider than the slowest ingest cadence (30 minutes) so a single skipped run does not page anyone.
+
+![Freshness Alert Rule](screenshots/alert_bronze_freshness.png)
+
+---
+
+### 7.4 Phase 7 Summary
+
+| Item | Status |
+|---|---|
+| 6 Fabric Data Pipelines created, one per notebook | ✅ |
+| Schedules matched to each layer's natural cadence | ✅ |
+| Max concurrency 1 — avoids Trial 430 capacity errors | ✅ |
+| Failure email notification on every pipeline | ✅ |
+| Dependencies moved from `%pip` into `pulsegrid_env` libraries | ✅ |
+| Bronze freshness Activator rule live on a 30-minute check | ✅ |
+
+---
+
+## Appendix A — Spark Optimization Techniques
+
+| Technique | Phase | Rationale |
+|---|---|---|
+| Predicate pushdown on `ingestion_date`, `region` | Silver | Avoids full scan; leverages KQL + Delta file skipping |
+| Native Spark functions only (no UDFs) | Silver | Catalyst can optimize; no serialization overhead |
+| `repartition()` by `region` + `hour` | Silver | Aligns write partitions to Gold aggregation patterns |
+| Parallel processing via `ThreadPoolExecutor` | Silver | All 5 tables simultaneously; total time ≈ slowest table |
+| Window function dedup `row_number()` | Silver | Deterministic dedup; fully distributed; no `collect()` |
+| `broadcast()` hint on holidays table | Gold | ~300 row table; eliminates shuffle on large price table |
+| Window functions for lag features | Gold | Fully distributed lag computation; no `collect()` |
+| AQE (Adaptive Query Execution) | Gold | Post-shuffle partition coalescing on aggregations |
+| `cache()` on feature table | ML | Feature table read twice; avoids re-scan |
+| `persist(MEMORY_AND_DISK)` before train/test split | ML | Split computed twice otherwise |
+| Delta `OPTIMIZE` + `ZORDER BY (region, event_time)` | Gold | Improves read performance for Semantic Model + agent |
+| `partitionBy("year","month","day")` at write | Silver/Gold | Right-sized partitioning; avoids small-files problem |
+
+---
+
+## Appendix B — ENTSO-E Bidding Zone Codes (27 Zones)
+
+| Region | Zone Key |
+|---|---|
+| FR | 10YFR-RTE------C |
+| ES | 10YES-REE------0 |
+| NL | 10YNL----------L |
+| BE | 10YBE----------2 |
+| PL | 10YPL-AREA-----S |
+| AT | 10YAT-APG------L |
+| CH | 10YCH-SWISSGRIDZ |
+| PT | 10YPT-REN------W |
+| FI | 10YFI-1--------U |
+| CZ | 10YCZ-CEPS-----N |
+| SK | 10YSK-SEPS-----K |
+| HU | 10YHU-MAVIR----U |
+| RO | 10YRO-TEL------P |
+| BG | 10YCA-BULGARIA-R |
+| HR | 10YHR-HEP------M |
+| GR | 10YGR-HTSO-----Y |
+| SI | 10YSI-ELES-----O |
+| RS | 10YCS-SERBIATSOV |
+| LT | 10YLT-1001A0008Q |
+| LV | 10YLV-1001A00074 |
+| DE-LU | 10Y1001A1001A82H |
+| IT-NO | 10Y1001A1001A73I |
+| DK-1 | 10YDK-1--------W |
+| DK-2 | 10YDK-2--------M |
+| SE-3 | 10Y1001A1001A46L |
+| NO-2 | 10YNO-2--------T |
+| EE | 10Y1001A1001A39I |
+
+---
+
+*Last updated: Phase 7 complete — all phases delivered · August 2026*
+
+---
